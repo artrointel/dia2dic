@@ -516,8 +516,164 @@ main {
 
 .runewords-page,
 .runes-page,
-.equipment-upgrades-page {
+.equipment-upgrades-page,
+.leveling-page {
   padding: 56px 0 72px;
+}
+
+.leveling-table-wrap {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-top: 34px;
+  overflow: visible;
+}
+
+.leveling-table {
+  border-collapse: collapse;
+  min-width: 1080px;
+  width: 100%;
+}
+
+.leveling-table th,
+.leveling-table td {
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
+  padding: 7px 9px;
+  text-align: center;
+}
+
+.leveling-table th {
+  background: var(--surface-strong);
+  color: var(--text-strong);
+  font-size: 12px;
+  position: sticky;
+  top: 0;
+  white-space: nowrap;
+  z-index: 2;
+}
+
+.leveling-table thead tr:nth-child(2) th {
+  top: 31px;
+}
+
+.leveling-table thead tr:nth-child(3) th {
+  top: 62px;
+}
+
+.leveling-table tbody tr.is-level-marker td {
+  border-top: 3px solid color-mix(in srgb, var(--accent) 62%, var(--border));
+}
+
+.leveling-table tbody tr {
+  cursor: help;
+}
+
+.leveling-table tbody tr:hover td {
+  filter: brightness(1.04);
+}
+
+.leveling-level-header,
+.leveling-average-label,
+.leveling-level {
+  left: 0;
+  position: sticky;
+  z-index: 3;
+}
+
+.leveling-level-header {
+  min-width: 58px;
+}
+
+.leveling-average-label {
+  background: var(--surface-strong);
+  color: var(--text-muted) !important;
+  font-size: 11px !important;
+  min-width: 76px;
+  z-index: 4 !important;
+}
+
+.leveling-level {
+  background: var(--surface-strong);
+  color: var(--text-strong);
+  font-weight: 800;
+}
+
+.leveling-difficulty-header {
+  color: var(--table-name) !important;
+  font-size: 13px !important;
+  text-shadow: var(--table-text-shadow);
+}
+
+.leveling-average-exp {
+  color: var(--table-name-sub) !important;
+}
+
+.leveling-efficiency-cell {
+  color: #24201a;
+  font-size: 12px;
+  font-weight: 800;
+  min-width: 54px;
+}
+
+.leveling-efficiency-cell.is-low {
+  background: #f7c9aa;
+}
+
+.leveling-efficiency-cell.is-mid {
+  background: #f7ebb0;
+}
+
+.leveling-efficiency-cell.is-high {
+  background: #ccebd9;
+}
+
+.leveling-efficiency-cell.is-peak {
+  background: #b9cdfa;
+  color: #173466;
+}
+
+.leveling-mini-card {
+  background: var(--surface-strong);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-strong);
+  color: var(--text);
+  display: grid;
+  gap: 10px;
+  min-width: 220px;
+  padding: 12px;
+  pointer-events: none;
+  position: fixed;
+  text-align: left;
+  text-shadow: none;
+  width: 240px;
+  z-index: 20;
+}
+
+.leveling-mini-card-title {
+  color: var(--table-name);
+  font-weight: 800;
+  line-height: 1.25;
+  text-shadow: var(--table-text-shadow);
+}
+
+.leveling-mini-card-row {
+  border-top: 1px solid var(--border);
+  display: grid;
+  gap: 6px 12px;
+  grid-template-columns: auto minmax(0, 1fr);
+  padding-top: 10px;
+}
+
+.leveling-mini-card-row span {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.leveling-mini-card-row strong {
+  color: var(--text-strong);
+  font-size: 13px;
 }
 
 .upgrade-recipe-groups {

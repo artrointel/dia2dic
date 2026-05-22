@@ -1,0 +1,2091 @@
+{
+  "columns": [
+    {
+      "id": "normal-act-1",
+      "difficulty": "노말",
+      "difficultyEn": "Normal",
+      "act": "Act 1",
+      "averageExp": 78
+    },
+    {
+      "id": "normal-act-2",
+      "difficulty": "노말",
+      "difficultyEn": "Normal",
+      "act": "Act 2",
+      "averageExp": 219
+    },
+    {
+      "id": "normal-act-3",
+      "difficulty": "노말",
+      "difficultyEn": "Normal",
+      "act": "Act 3",
+      "averageExp": 391
+    },
+    {
+      "id": "normal-act-4",
+      "difficulty": "노말",
+      "difficultyEn": "Normal",
+      "act": "Act 4",
+      "averageExp": 647
+    },
+    {
+      "id": "normal-act-5",
+      "difficulty": "노말",
+      "difficultyEn": "Normal",
+      "act": "Act 5",
+      "averageExp": 2740
+    },
+    {
+      "id": "nightmare-act-1",
+      "difficulty": "나이트메어",
+      "difficultyEn": "Nightmare",
+      "act": "Act 1",
+      "averageExp": 3463
+    },
+    {
+      "id": "nightmare-act-2",
+      "difficulty": "나이트메어",
+      "difficultyEn": "Nightmare",
+      "act": "Act 2",
+      "averageExp": 7009
+    },
+    {
+      "id": "nightmare-act-3",
+      "difficulty": "나이트메어",
+      "difficultyEn": "Nightmare",
+      "act": "Act 3",
+      "averageExp": 8471
+    },
+    {
+      "id": "nightmare-act-4",
+      "difficulty": "나이트메어",
+      "difficultyEn": "Nightmare",
+      "act": "Act 4",
+      "averageExp": 11053
+    },
+    {
+      "id": "nightmare-act-5",
+      "difficulty": "나이트메어",
+      "difficultyEn": "Nightmare",
+      "act": "Act 5",
+      "averageExp": 14748
+    },
+    {
+      "id": "hell-act-1",
+      "difficulty": "헬",
+      "difficultyEn": "Hell",
+      "act": "Act 1",
+      "averageExp": 34364
+    },
+    {
+      "id": "hell-act-2",
+      "difficulty": "헬",
+      "difficultyEn": "Hell",
+      "act": "Act 2",
+      "averageExp": 53949
+    },
+    {
+      "id": "hell-act-3",
+      "difficulty": "헬",
+      "difficultyEn": "Hell",
+      "act": "Act 3",
+      "averageExp": 54147
+    },
+    {
+      "id": "hell-act-4",
+      "difficulty": "헬",
+      "difficultyEn": "Hell",
+      "act": "Act 4",
+      "averageExp": 55251
+    },
+    {
+      "id": "hell-act-5",
+      "difficulty": "헬",
+      "difficultyEn": "Hell",
+      "act": "Act 5",
+      "averageExp": 56680
+    }
+  ],
+  "rows": [
+    {
+      "level": 1,
+      "values": {
+        "normal-act-1": 52,
+        "normal-act-2": 7,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 2,
+      "values": {
+        "normal-act-1": 63,
+        "normal-act-2": 14,
+        "normal-act-3": 10,
+        "normal-act-4": 7,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 3,
+      "values": {
+        "normal-act-1": 72,
+        "normal-act-2": 20,
+        "normal-act-3": 14,
+        "normal-act-4": 11,
+        "normal-act-5": 8,
+        "nightmare-act-1": 8,
+        "nightmare-act-2": 7,
+        "nightmare-act-3": 6,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 4,
+      "values": {
+        "normal-act-1": 80,
+        "normal-act-2": 27,
+        "normal-act-3": 19,
+        "normal-act-4": 15,
+        "normal-act-5": 11,
+        "nightmare-act-1": 10,
+        "nightmare-act-2": 9,
+        "nightmare-act-3": 8,
+        "nightmare-act-4": 7,
+        "nightmare-act-5": 6,
+        "hell-act-1": 6,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 5,
+      "values": {
+        "normal-act-1": 87,
+        "normal-act-2": 34,
+        "normal-act-3": 24,
+        "normal-act-4": 18,
+        "normal-act-5": 14,
+        "nightmare-act-1": 13,
+        "nightmare-act-2": 11,
+        "nightmare-act-3": 10,
+        "nightmare-act-4": 9,
+        "nightmare-act-5": 8,
+        "hell-act-1": 7,
+        "hell-act-2": 6,
+        "hell-act-3": 6,
+        "hell-act-4": 6,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 6,
+      "values": {
+        "normal-act-1": 92,
+        "normal-act-2": 41,
+        "normal-act-3": 28,
+        "normal-act-4": 22,
+        "normal-act-5": 16,
+        "nightmare-act-1": 15,
+        "nightmare-act-2": 13,
+        "nightmare-act-3": 12,
+        "nightmare-act-4": 11,
+        "nightmare-act-5": 10,
+        "hell-act-1": 9,
+        "hell-act-2": 8,
+        "hell-act-3": 7,
+        "hell-act-4": 7,
+        "hell-act-5": 6
+      }
+    },
+    {
+      "level": 7,
+      "values": {
+        "normal-act-1": 90,
+        "normal-act-2": 54,
+        "normal-act-3": 33,
+        "normal-act-4": 26,
+        "normal-act-5": 19,
+        "nightmare-act-1": 18,
+        "nightmare-act-2": 16,
+        "nightmare-act-3": 14,
+        "nightmare-act-4": 12,
+        "nightmare-act-5": 11,
+        "hell-act-1": 10,
+        "hell-act-2": 9,
+        "hell-act-3": 9,
+        "hell-act-4": 8,
+        "hell-act-5": 7
+      }
+    },
+    {
+      "level": 8,
+      "values": {
+        "normal-act-1": 88,
+        "normal-act-2": 64,
+        "normal-act-3": 37,
+        "normal-act-4": 30,
+        "normal-act-5": 22,
+        "nightmare-act-1": 20,
+        "nightmare-act-2": 18,
+        "nightmare-act-3": 16,
+        "nightmare-act-4": 14,
+        "nightmare-act-5": 13,
+        "hell-act-1": 12,
+        "hell-act-2": 10,
+        "hell-act-3": 10,
+        "hell-act-4": 9,
+        "hell-act-5": 8
+      }
+    },
+    {
+      "level": 9,
+      "values": {
+        "normal-act-1": 82,
+        "normal-act-2": 74,
+        "normal-act-3": 42,
+        "normal-act-4": 33,
+        "normal-act-5": 24,
+        "nightmare-act-1": 23,
+        "nightmare-act-2": 20,
+        "nightmare-act-3": 18,
+        "nightmare-act-4": 16,
+        "nightmare-act-5": 15,
+        "hell-act-1": 13,
+        "hell-act-2": 12,
+        "hell-act-3": 11,
+        "hell-act-4": 10,
+        "hell-act-5": 9
+      }
+    },
+    {
+      "level": 10,
+      "values": {
+        "normal-act-1": 77,
+        "normal-act-2": 83,
+        "normal-act-3": 47,
+        "normal-act-4": 37,
+        "normal-act-5": 27,
+        "nightmare-act-1": 25,
+        "nightmare-act-2": 22,
+        "nightmare-act-3": 20,
+        "nightmare-act-4": 18,
+        "nightmare-act-5": 16,
+        "hell-act-1": 15,
+        "hell-act-2": 13,
+        "hell-act-3": 12,
+        "hell-act-4": 11,
+        "hell-act-5": 10
+      }
+    },
+    {
+      "level": 11,
+      "values": {
+        "normal-act-1": 72,
+        "normal-act-2": 89,
+        "normal-act-3": 52,
+        "normal-act-4": 40,
+        "normal-act-5": 30,
+        "nightmare-act-1": 28,
+        "nightmare-act-2": 24,
+        "nightmare-act-3": 22,
+        "nightmare-act-4": 19,
+        "nightmare-act-5": 18,
+        "hell-act-1": 16,
+        "hell-act-2": 14,
+        "hell-act-3": 13,
+        "hell-act-4": 13,
+        "hell-act-5": 11
+      }
+    },
+    {
+      "level": 12,
+      "values": {
+        "normal-act-1": 67,
+        "normal-act-2": 95,
+        "normal-act-3": 56,
+        "normal-act-4": 44,
+        "normal-act-5": 33,
+        "nightmare-act-1": 30,
+        "nightmare-act-2": 27,
+        "nightmare-act-3": 24,
+        "nightmare-act-4": 21,
+        "nightmare-act-5": 19,
+        "hell-act-1": 18,
+        "hell-act-2": 16,
+        "hell-act-3": 15,
+        "hell-act-4": 14,
+        "hell-act-5": 12
+      }
+    },
+    {
+      "level": 13,
+      "values": {
+        "normal-act-1": 63,
+        "normal-act-2": 100,
+        "normal-act-3": 61,
+        "normal-act-4": 48,
+        "normal-act-5": 35,
+        "nightmare-act-1": 33,
+        "nightmare-act-2": 29,
+        "nightmare-act-3": 26,
+        "nightmare-act-4": 23,
+        "nightmare-act-5": 21,
+        "hell-act-1": 19,
+        "hell-act-2": 17,
+        "hell-act-3": 16,
+        "hell-act-4": 15,
+        "hell-act-5": 13
+      }
+    },
+    {
+      "level": 14,
+      "values": {
+        "normal-act-1": 58,
+        "normal-act-2": 100,
+        "normal-act-3": 70,
+        "normal-act-4": 51,
+        "normal-act-5": 38,
+        "nightmare-act-1": 35,
+        "nightmare-act-2": 31,
+        "nightmare-act-3": 28,
+        "nightmare-act-4": 24,
+        "nightmare-act-5": 23,
+        "hell-act-1": 21,
+        "hell-act-2": 18,
+        "hell-act-3": 17,
+        "hell-act-4": 16,
+        "hell-act-5": 14
+      }
+    },
+    {
+      "level": 15,
+      "values": {
+        "normal-act-1": 54,
+        "normal-act-2": 100,
+        "normal-act-3": 78,
+        "normal-act-4": 55,
+        "normal-act-5": 41,
+        "nightmare-act-1": 38,
+        "nightmare-act-2": 33,
+        "nightmare-act-3": 30,
+        "nightmare-act-4": 26,
+        "nightmare-act-5": 24,
+        "hell-act-1": 22,
+        "hell-act-2": 19,
+        "hell-act-3": 18,
+        "hell-act-4": 17,
+        "hell-act-5": 15
+      }
+    },
+    {
+      "level": 16,
+      "values": {
+        "normal-act-1": 50,
+        "normal-act-2": 100,
+        "normal-act-3": 85,
+        "normal-act-4": 59,
+        "normal-act-5": 43,
+        "nightmare-act-1": 40,
+        "nightmare-act-2": 35,
+        "nightmare-act-3": 32,
+        "nightmare-act-4": 28,
+        "nightmare-act-5": 26,
+        "hell-act-1": 24,
+        "hell-act-2": 21,
+        "hell-act-3": 20,
+        "hell-act-4": 18,
+        "hell-act-5": 16
+      }
+    },
+    {
+      "level": 17,
+      "values": {
+        "normal-act-1": 45,
+        "normal-act-2": 100,
+        "normal-act-3": 91,
+        "normal-act-4": 62,
+        "normal-act-5": 46,
+        "nightmare-act-1": 43,
+        "nightmare-act-2": 38,
+        "nightmare-act-3": 34,
+        "nightmare-act-4": 30,
+        "nightmare-act-5": 27,
+        "hell-act-1": 25,
+        "hell-act-2": 22,
+        "hell-act-3": 21,
+        "hell-act-4": 19,
+        "hell-act-5": 18
+      }
+    },
+    {
+      "level": 18,
+      "values": {
+        "normal-act-1": 41,
+        "normal-act-2": 95,
+        "normal-act-3": 96,
+        "normal-act-4": 66,
+        "normal-act-5": 49,
+        "nightmare-act-1": 45,
+        "nightmare-act-2": 40,
+        "nightmare-act-3": 36,
+        "nightmare-act-4": 32,
+        "nightmare-act-5": 29,
+        "hell-act-1": 27,
+        "hell-act-2": 23,
+        "hell-act-3": 22,
+        "hell-act-4": 20,
+        "hell-act-5": 19
+      }
+    },
+    {
+      "level": 19,
+      "values": {
+        "normal-act-1": 37,
+        "normal-act-2": 90,
+        "normal-act-3": 100,
+        "normal-act-4": 72,
+        "normal-act-5": 52,
+        "nightmare-act-1": 48,
+        "nightmare-act-2": 42,
+        "nightmare-act-3": 38,
+        "nightmare-act-4": 33,
+        "nightmare-act-5": 31,
+        "hell-act-1": 28,
+        "hell-act-2": 25,
+        "hell-act-3": 23,
+        "hell-act-4": 22,
+        "hell-act-5": 20
+      }
+    },
+    {
+      "level": 20,
+      "values": {
+        "normal-act-1": 35,
+        "normal-act-2": 85,
+        "normal-act-3": 100,
+        "normal-act-4": 78,
+        "normal-act-5": 55,
+        "nightmare-act-1": 50,
+        "nightmare-act-2": 44,
+        "nightmare-act-3": 40,
+        "nightmare-act-4": 35,
+        "nightmare-act-5": 32,
+        "hell-act-1": 29,
+        "hell-act-2": 26,
+        "hell-act-3": 24,
+        "hell-act-4": 23,
+        "hell-act-5": 21
+      }
+    },
+    {
+      "level": 21,
+      "values": {
+        "normal-act-1": 33,
+        "normal-act-2": 80,
+        "normal-act-3": 100,
+        "normal-act-4": 83,
+        "normal-act-5": 57,
+        "nightmare-act-1": 53,
+        "nightmare-act-2": 47,
+        "nightmare-act-3": 42,
+        "nightmare-act-4": 37,
+        "nightmare-act-5": 34,
+        "hell-act-1": 31,
+        "hell-act-2": 27,
+        "hell-act-3": 26,
+        "hell-act-4": 24,
+        "hell-act-5": 22
+      }
+    },
+    {
+      "level": 22,
+      "values": {
+        "normal-act-1": 32,
+        "normal-act-2": 74,
+        "normal-act-3": 100,
+        "normal-act-4": 87,
+        "normal-act-5": 60,
+        "nightmare-act-1": 55,
+        "nightmare-act-2": 49,
+        "nightmare-act-3": 44,
+        "nightmare-act-4": 38,
+        "nightmare-act-5": 35,
+        "hell-act-1": 32,
+        "hell-act-2": 29,
+        "hell-act-3": 27,
+        "hell-act-4": 25,
+        "hell-act-5": 23
+      }
+    },
+    {
+      "level": 23,
+      "values": {
+        "normal-act-1": 30,
+        "normal-act-2": 68,
+        "normal-act-3": 100,
+        "normal-act-4": 91,
+        "normal-act-5": 63,
+        "nightmare-act-1": 58,
+        "nightmare-act-2": 51,
+        "nightmare-act-3": 46,
+        "nightmare-act-4": 40,
+        "nightmare-act-5": 37,
+        "hell-act-1": 34,
+        "hell-act-2": 30,
+        "hell-act-3": 28,
+        "hell-act-4": 26,
+        "hell-act-5": 24
+      }
+    },
+    {
+      "level": 24,
+      "values": {
+        "normal-act-1": 29,
+        "normal-act-2": 63,
+        "normal-act-3": 100,
+        "normal-act-4": 95,
+        "normal-act-5": 66,
+        "nightmare-act-1": 60,
+        "nightmare-act-2": 53,
+        "nightmare-act-3": 48,
+        "nightmare-act-4": 42,
+        "nightmare-act-5": 39,
+        "hell-act-1": 35,
+        "hell-act-2": 31,
+        "hell-act-3": 29,
+        "hell-act-4": 27,
+        "hell-act-5": 25
+      }
+    },
+    {
+      "level": 25,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 21,
+        "normal-act-3": 97,
+        "normal-act-4": 98,
+        "normal-act-5": 15,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 26,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 13,
+        "normal-act-3": 91,
+        "normal-act-4": 100,
+        "normal-act-5": 22,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 27,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 8,
+        "normal-act-3": 81,
+        "normal-act-4": 100,
+        "normal-act-5": 31,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 28,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 68,
+        "normal-act-4": 100,
+        "normal-act-5": 40,
+        "nightmare-act-1": 8,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 29,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 53,
+        "normal-act-4": 100,
+        "normal-act-5": 48,
+        "nightmare-act-1": 13,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 30,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 37,
+        "normal-act-4": 98,
+        "normal-act-5": 57,
+        "nightmare-act-1": 21,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 31,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 24,
+        "normal-act-4": 93,
+        "normal-act-5": 65,
+        "nightmare-act-1": 32,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 32,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 15,
+        "normal-act-4": 86,
+        "normal-act-5": 74,
+        "nightmare-act-1": 46,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 33,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 8,
+        "normal-act-4": 76,
+        "normal-act-5": 83,
+        "nightmare-act-1": 59,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 34,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 64,
+        "normal-act-5": 90,
+        "nightmare-act-1": 73,
+        "nightmare-act-2": 8,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 35,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 53,
+        "normal-act-5": 95,
+        "nightmare-act-1": 84,
+        "nightmare-act-2": 15,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 36,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 41,
+        "normal-act-5": 98,
+        "nightmare-act-1": 92,
+        "nightmare-act-2": 24,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 37,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 29,
+        "normal-act-5": 100,
+        "nightmare-act-1": 97,
+        "nightmare-act-2": 37,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 38,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 19,
+        "normal-act-5": 98,
+        "nightmare-act-1": 100,
+        "nightmare-act-2": 53,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 39,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 12,
+        "normal-act-5": 95,
+        "nightmare-act-1": 100,
+        "nightmare-act-2": 68,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 40,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 7,
+        "normal-act-5": 90,
+        "nightmare-act-1": 100,
+        "nightmare-act-2": 81,
+        "nightmare-act-3": 10,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 41,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 83,
+        "nightmare-act-1": 100,
+        "nightmare-act-2": 91,
+        "nightmare-act-3": 19,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 42,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 74,
+        "nightmare-act-1": 100,
+        "nightmare-act-2": 97,
+        "nightmare-act-3": 34,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 43,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 65,
+        "nightmare-act-1": 97,
+        "nightmare-act-2": 100,
+        "nightmare-act-3": 53,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 44,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 57,
+        "nightmare-act-1": 92,
+        "nightmare-act-2": 100,
+        "nightmare-act-3": 72,
+        "nightmare-act-4": 7,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 45,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 48,
+        "nightmare-act-1": 84,
+        "nightmare-act-2": 100,
+        "nightmare-act-3": 86,
+        "nightmare-act-4": 11,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 46,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 40,
+        "nightmare-act-1": 73,
+        "nightmare-act-2": 100,
+        "nightmare-act-3": 95,
+        "nightmare-act-4": 16,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 47,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 31,
+        "nightmare-act-1": 59,
+        "nightmare-act-2": 100,
+        "nightmare-act-3": 100,
+        "nightmare-act-4": 24,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 48,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 22,
+        "nightmare-act-1": 46,
+        "nightmare-act-2": 100,
+        "nightmare-act-3": 100,
+        "nightmare-act-4": 34,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 49,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 15,
+        "nightmare-act-1": 32,
+        "nightmare-act-2": 97,
+        "nightmare-act-3": 100,
+        "nightmare-act-4": 43,
+        "nightmare-act-5": 7,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 50,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 10,
+        "nightmare-act-1": 21,
+        "nightmare-act-2": 91,
+        "nightmare-act-3": 100,
+        "nightmare-act-4": 53,
+        "nightmare-act-5": 11,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 51,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 7,
+        "nightmare-act-1": 13,
+        "nightmare-act-2": 81,
+        "nightmare-act-3": 100,
+        "nightmare-act-4": 62,
+        "nightmare-act-5": 18,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 52,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 8,
+        "nightmare-act-2": 68,
+        "nightmare-act-3": 100,
+        "nightmare-act-4": 72,
+        "nightmare-act-5": 26,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 53,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 53,
+        "nightmare-act-3": 100,
+        "nightmare-act-4": 81,
+        "nightmare-act-5": 37,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 54,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 37,
+        "nightmare-act-3": 100,
+        "nightmare-act-4": 89,
+        "nightmare-act-5": 47,
+        "hell-act-1": 7,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 55,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 24,
+        "nightmare-act-3": 95,
+        "nightmare-act-4": 94,
+        "nightmare-act-5": 58,
+        "hell-act-1": 10,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 56,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 15,
+        "nightmare-act-3": 86,
+        "nightmare-act-4": 98,
+        "nightmare-act-5": 68,
+        "hell-act-1": 15,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 57,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 8,
+        "nightmare-act-3": 72,
+        "nightmare-act-4": 100,
+        "nightmare-act-5": 79,
+        "hell-act-1": 22,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 58,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 53,
+        "nightmare-act-4": 100,
+        "nightmare-act-5": 87,
+        "hell-act-1": 31,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 59,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 34,
+        "nightmare-act-4": 98,
+        "nightmare-act-5": 94,
+        "hell-act-1": 40,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 60,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 19,
+        "nightmare-act-4": 94,
+        "nightmare-act-5": 98,
+        "hell-act-1": 48,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 61,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 10,
+        "nightmare-act-4": 89,
+        "nightmare-act-5": 100,
+        "hell-act-1": 57,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 62,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 81,
+        "nightmare-act-5": 100,
+        "hell-act-1": 65,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 63,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 72,
+        "nightmare-act-5": 100,
+        "hell-act-1": 74,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 64,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 62,
+        "nightmare-act-5": 98,
+        "hell-act-1": 83,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 65,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 53,
+        "nightmare-act-5": 94,
+        "hell-act-1": 90,
+        "hell-act-2": 8,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 66,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 43,
+        "nightmare-act-5": 87,
+        "hell-act-1": 95,
+        "hell-act-2": 13,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 67,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 34,
+        "nightmare-act-5": 79,
+        "hell-act-1": 98,
+        "hell-act-2": 21,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 68,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 24,
+        "nightmare-act-5": 68,
+        "hell-act-1": 100,
+        "hell-act-2": 32,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 69,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 16,
+        "nightmare-act-5": 58,
+        "hell-act-1": 98,
+        "hell-act-2": 46,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 70,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 11,
+        "nightmare-act-5": 47,
+        "hell-act-1": 95,
+        "hell-act-2": 59,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 71,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 7,
+        "nightmare-act-5": 37,
+        "hell-act-1": 90,
+        "hell-act-2": 73,
+        "hell-act-3": 5,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 72,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 26,
+        "hell-act-1": 83,
+        "hell-act-2": 84,
+        "hell-act-3": 11,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 73,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 18,
+        "hell-act-1": 74,
+        "hell-act-2": 92,
+        "hell-act-3": 24,
+        "hell-act-4": 5,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 74,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 11,
+        "hell-act-1": 65,
+        "hell-act-2": 97,
+        "hell-act-3": 43,
+        "hell-act-4": 7,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 75,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 7,
+        "hell-act-1": 57,
+        "hell-act-2": 100,
+        "hell-act-3": 62,
+        "hell-act-4": 10,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 76,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 48,
+        "hell-act-2": 100,
+        "hell-act-3": 81,
+        "hell-act-4": 15,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 77,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 40,
+        "hell-act-2": 100,
+        "hell-act-3": 94,
+        "hell-act-4": 21,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 78,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 31,
+        "hell-act-2": 100,
+        "hell-act-3": 100,
+        "hell-act-4": 29,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 79,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 22,
+        "hell-act-2": 100,
+        "hell-act-3": 100,
+        "hell-act-4": 37,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 80,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 15,
+        "hell-act-2": 97,
+        "hell-act-3": 100,
+        "hell-act-4": 45,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 81,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 10,
+        "hell-act-2": 92,
+        "hell-act-3": 100,
+        "hell-act-4": 53,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 82,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 7,
+        "hell-act-2": 84,
+        "hell-act-3": 100,
+        "hell-act-4": 60,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 83,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 73,
+        "hell-act-3": 100,
+        "hell-act-4": 68,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 84,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 59,
+        "hell-act-3": 100,
+        "hell-act-4": 76,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 85,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 46,
+        "hell-act-3": 100,
+        "hell-act-4": 84,
+        "hell-act-5": 5
+      }
+    },
+    {
+      "level": 86,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 32,
+        "hell-act-3": 100,
+        "hell-act-4": 91,
+        "hell-act-5": 9
+      }
+    },
+    {
+      "level": 87,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 21,
+        "hell-act-3": 94,
+        "hell-act-4": 95,
+        "hell-act-5": 16
+      }
+    },
+    {
+      "level": 88,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 13,
+        "hell-act-3": 81,
+        "hell-act-4": 98,
+        "hell-act-5": 28
+      }
+    },
+    {
+      "level": 89,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 8,
+        "hell-act-3": 62,
+        "hell-act-4": 98,
+        "hell-act-5": 43
+      }
+    },
+    {
+      "level": 90,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 43,
+        "hell-act-4": 95,
+        "hell-act-5": 62
+      }
+    },
+    {
+      "level": 91,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 24,
+        "hell-act-4": 91,
+        "hell-act-5": 77
+      }
+    },
+    {
+      "level": 92,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 11,
+        "hell-act-4": 84,
+        "hell-act-5": 89
+      }
+    },
+    {
+      "level": 93,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 76,
+        "hell-act-5": 96
+      }
+    },
+    {
+      "level": 94,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 68,
+        "hell-act-5": 100
+      }
+    },
+    {
+      "level": 95,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 60,
+        "hell-act-5": 100
+      }
+    },
+    {
+      "level": 96,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 53,
+        "hell-act-5": 100
+      }
+    },
+    {
+      "level": 97,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 45,
+        "hell-act-5": 100
+      }
+    },
+    {
+      "level": 98,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 37,
+        "hell-act-5": 100
+      }
+    },
+    {
+      "level": 99,
+      "values": {
+        "normal-act-1": 5,
+        "normal-act-2": 5,
+        "normal-act-3": 5,
+        "normal-act-4": 5,
+        "normal-act-5": 5,
+        "nightmare-act-1": 5,
+        "nightmare-act-2": 5,
+        "nightmare-act-3": 5,
+        "nightmare-act-4": 5,
+        "nightmare-act-5": 5,
+        "hell-act-1": 5,
+        "hell-act-2": 5,
+        "hell-act-3": 5,
+        "hell-act-4": 29,
+        "hell-act-5": 100
+      }
+    }
+  ]
+}

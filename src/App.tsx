@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo, useRef, useState } from 'react'
+import { Fragment, useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent } from 'react'
 import {
   BookOpen,
   Boxes,
@@ -19,6 +19,7 @@ import {
 } from 'lucide-react'
 import { NavLink, Route, Routes } from 'react-router-dom'
 import equipmentUpgradesData from './data/equipment-upgrades.json'
+import levelingEfficiencyData from './data/leveling-efficiency.json'
 import runeUpgradesData from './data/rune-upgrades.json'
 import runewordsData from './data/runewords.json'
 import './App.css'
@@ -94,7 +95,22 @@ type EquipmentUpgrade = {
   결과: string
 }
 
+type LevelingEfficiency = {
+  columns: Array<{
+    id: string
+    difficulty: string
+    difficultyEn: string
+    act: string
+    averageExp: number
+  }>
+  rows: Array<{
+    level: number
+    values: Record<string, number>
+  }>
+}
+
 const equipmentUpgrades = equipmentUpgradesData as EquipmentUpgrade[]
+const levelingEfficiency = levelingEfficiencyData as LevelingEfficiency
 const runeUpgrades = runeUpgradesData as RuneUpgrade[]
 const runewords = runewordsData as Runeword[]
 
@@ -184,10 +200,10 @@ const pages: Page[] = [
     icon: FlaskConical,
   },
   {
-    path: '/cube/gem-upgrades',
-    title: '보석 업글',
-    description: '보석 등급별 업그레이드 재료와 활용처를 제공합니다.',
-    icon: Gem,
+    path: '/cube/crafting',
+    title: '크래프트 조합',
+    description: '캐스터, 블러드, 힛파워, 세이프티 크래프트 조합식을 정리합니다.',
+    icon: FlaskConical,
   },
   {
     path: '/cube/recipes',
@@ -247,8 +263,8 @@ const navigationItems: NavigationItem[] = [
     icon: FlaskConical,
     children: [
       { title: '룬워드 조합', path: '/cube/runewords', icon: Gem },
+      { title: '크래프트 조합', path: '/cube/crafting', icon: FlaskConical },
       { title: '장비 업글', path: '/cube/equipment-upgrades', icon: PackageSearch },
-      { title: '보석 업글', path: '/cube/gem-upgrades', icon: Gem },
       { title: '기타 조합', path: '/cube/recipes', icon: FlaskConical },
     ],
   },
@@ -686,6 +702,169 @@ function EquipmentUpgradesPage() {
       </div>
     </section>
   )
+}
+
+function LevelingPage() {
+  const [hoveredLevel, setHoveredLevel] = useState<{
+    row: LevelingEfficiency['rows'][number]
+    x: number
+    y: number
+  } | null>(null)
+  const difficultyGroups = useMemo(
+    () =>
+      [...new Set(levelingEfficiency.columns.map((column) => column.difficulty))].map(
+        (difficulty) => ({
+          difficulty,
+          columns: levelingEfficiency.columns.filter((column) => column.difficulty === difficulty),
+        }),
+      ),
+    [],
+  )
+  const updateHoveredLevel = (
+    event: MouseEvent<HTMLTableRowElement>,
+    row: LevelingEfficiency['rows'][number],
+  ) => {
+    const position = getLevelingCardPosition(event.clientX, event.clientY)
+
+    setHoveredLevel({
+      row,
+      ...position,
+    })
+  }
+
+  return (
+    <section className="leveling-page">
+      <div className="category-heading">
+        <TrendingUp aria-hidden="true" />
+        <span>레벨업</span>
+        <h1>레벨업 효율표</h1>
+        <p>캐릭터 레벨별 난이도와 액트의 경험치 획득 효율을 비교합니다.</p>
+      </div>
+
+      <div className="leveling-table-wrap">
+        <table className="leveling-table">
+          <thead>
+            <tr>
+              <th className="leveling-level-header" rowSpan={2}>레벨</th>
+              {difficultyGroups.map((group) => (
+                <th className="leveling-difficulty-header" colSpan={group.columns.length} key={group.difficulty}>
+                  {group.difficulty}
+                </th>
+              ))}
+            </tr>
+            <tr>
+              {levelingEfficiency.columns.map((column) => (
+                <th key={`${column.id}-act`}>{column.act}</th>
+              ))}
+            </tr>
+            <tr>
+              <th className="leveling-average-label">평균 경험치</th>
+              {levelingEfficiency.columns.map((column) => (
+                <th className="leveling-average-exp" key={`${column.id}-average`}>
+                  {column.averageExp.toLocaleString()}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {levelingEfficiency.rows.map((row) => (
+              <tr
+                className={row.level % 5 === 0 ? 'is-level-marker' : undefined}
+                key={row.level}
+                onMouseEnter={(event) => updateHoveredLevel(event, row)}
+                onMouseLeave={() => setHoveredLevel(null)}
+                onMouseMove={(event) => updateHoveredLevel(event, row)}
+              >
+                <td className="leveling-level">{row.level}</td>
+                {levelingEfficiency.columns.map((column) => {
+                  const efficiency = row.values[column.id]
+
+                  return (
+                    <td className={levelingEfficiencyClass(efficiency)} key={column.id}>
+                      {efficiency}%
+                    </td>
+                  )
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {hoveredLevel ? (
+        <LevelingMiniCard
+          row={hoveredLevel.row}
+          style={{
+            left: hoveredLevel.x,
+            top: hoveredLevel.y,
+          }}
+        />
+      ) : null}
+    </section>
+  )
+}
+
+function getLevelingCardPosition(clientX: number, clientY: number) {
+  const offset = 14
+  const cardWidth = 260
+  const cardHeight = 260
+  const maxX = window.innerWidth - cardWidth - offset
+  const maxY = window.innerHeight - cardHeight - offset
+
+  return {
+    x: Math.max(offset, Math.min(clientX + offset, maxX)),
+    y: Math.max(offset, Math.min(clientY + offset, maxY)),
+  }
+}
+
+function LevelingMiniCard({
+  row,
+  style,
+}: {
+  row: LevelingEfficiency['rows'][number]
+  style?: CSSProperties
+}) {
+  const bestColumns = levelingEfficiency.columns
+    .map((column) => ({
+      ...column,
+      efficiency: row.values[column.id],
+    }))
+    .toSorted((left, right) => right.efficiency - left.efficiency)
+  const bestEfficiency = bestColumns[0]?.efficiency ?? 0
+  const recommendations = bestColumns.filter((column) => column.efficiency === bestEfficiency)
+
+  return (
+    <span className="leveling-mini-card" role="tooltip" style={style}>
+      <span className="leveling-mini-card-title">레벨 {row.level}</span>
+      {recommendations.map((recommendation) => (
+        <span className="leveling-mini-card-row" key={recommendation.id}>
+          <span>난이도</span>
+          <strong>{recommendation.difficulty}</strong>
+          <span>액트</span>
+          <strong>{recommendation.act}</strong>
+          <span>효율</span>
+          <strong>{recommendation.efficiency}%</strong>
+          <span>평균 경험치</span>
+          <strong>{recommendation.averageExp.toLocaleString()}</strong>
+        </span>
+      ))}
+    </span>
+  )
+}
+
+function levelingEfficiencyClass(value: number) {
+  if (value >= 95) {
+    return 'leveling-efficiency-cell is-peak'
+  }
+
+  if (value >= 75) {
+    return 'leveling-efficiency-cell is-high'
+  }
+
+  if (value >= 45) {
+    return 'leveling-efficiency-cell is-mid'
+  }
+
+  return 'leveling-efficiency-cell is-low'
 }
 
 function UpgradeIngredient({ ingredient }: { ingredient: string }) {
@@ -1343,7 +1522,8 @@ function App() {
           <Route path="/cube/runewords" element={<RunewordsPage />} />
           <Route path="/cube/equipment-upgrades" element={<EquipmentUpgradesPage />} />
           <Route path="/items/runes" element={<RunesPage />} />
-          {routePages.filter((page) => !['/cube/runewords', '/cube/equipment-upgrades', '/items/runes'].includes(page.path)).map((page) => (
+          <Route path="/leveling" element={<LevelingPage />} />
+          {routePages.filter((page) => !['/cube/runewords', '/cube/equipment-upgrades', '/items/runes', '/leveling'].includes(page.path)).map((page) => (
             <Route
               key={page.path}
               path={page.path}
