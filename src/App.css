@@ -75,6 +75,75 @@
   margin-top: 3px;
 }
 
+.terror-zone-refresh {
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  padding: 0;
+  position: relative;
+}
+
+.terror-zone-refresh::after {
+  border: 2px solid var(--accent);
+  border-radius: inherit;
+  content: '';
+  inset: -5px;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  transform: scale(0.96);
+}
+
+.terror-zone-refresh.is-refreshing::after {
+  animation: refresh-pulse 0.7s ease-out;
+}
+
+.terror-zone-refresh.is-refreshing .terror-zone-banner {
+  animation: refresh-pop 0.7s ease-out;
+}
+
+.terror-zone-banner {
+  display: block;
+  height: 74px;
+  max-width: min(744px, calc(100vw - 260px));
+  object-fit: contain;
+}
+
+@keyframes refresh-pulse {
+  0% {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+
+  28% {
+    opacity: 0.86;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes refresh-pop {
+  0% {
+    filter: brightness(1);
+    transform: translateY(0) scale(1);
+  }
+
+  35% {
+    filter: brightness(1.24);
+    transform: translateY(-1px) scale(1.025);
+  }
+
+  100% {
+    filter: brightness(1);
+    transform: translateY(0) scale(1);
+  }
+}
+
 main {
   margin: 0 auto;
   width: min(1180px, calc(100% - 40px));
@@ -445,11 +514,227 @@ main {
   color: var(--accent);
 }
 
+.runewords-page {
+  padding: 56px 0 72px;
+}
+
+.table-toolbar {
+  align-items: flex-start;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  margin-top: 36px;
+}
+
+.filter-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.filter-panel-header {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.filter-panel-header strong,
+.sort-control span {
+  color: var(--text-strong);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.add-filter-button,
+.delete-filter-button {
+  align-items: center;
+  background: var(--control-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-strong);
+  cursor: pointer;
+  display: inline-flex;
+  gap: 8px;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0 12px;
+}
+
+.add-filter-button:hover,
+.delete-filter-button:hover {
+  border-color: rgba(196, 138, 69, 0.72);
+  color: var(--accent);
+}
+
+.filter-empty {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-top: 14px;
+}
+
+.filter-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.filter-row {
+  align-items: center;
+  background: color-mix(in srgb, var(--surface-strong) 74%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: auto 138px minmax(220px, 1fr) auto;
+  padding: 10px;
+}
+
+.filter-row.is-disabled {
+  opacity: 0.52;
+}
+
+.filter-row input[type='checkbox'] {
+  accent-color: var(--accent);
+  height: 18px;
+  width: 18px;
+}
+
+.filter-row select,
+.filter-row input,
+.sort-control select {
+  background: var(--search-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-strong);
+  min-height: 38px;
+  padding: 0 10px;
+  width: 100%;
+}
+
+.filter-config {
+  min-width: 0;
+}
+
+.range-filter {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.range-filter label {
+  align-items: center;
+  color: var(--text-muted);
+  display: grid;
+  font-size: 12px;
+  gap: 4px;
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+.sort-control {
+  align-items: flex-start;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: grid;
+  gap: 10px;
+  min-width: 240px;
+  padding: 16px;
+}
+
+.table-meta {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin: 18px 0 10px;
+  text-align: right;
+}
+
+.runewords-table-wrap {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: auto;
+}
+
+.runewords-table {
+  border-collapse: collapse;
+  min-width: 1120px;
+  width: 100%;
+}
+
+.runewords-table th,
+.runewords-table td {
+  border-bottom: 1px solid var(--border);
+  padding: 14px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.runewords-table th {
+  background: var(--surface-strong);
+  color: var(--text-strong);
+  font-size: 13px;
+  position: sticky;
+  top: 0;
+  white-space: nowrap;
+  z-index: 1;
+}
+
+.runewords-table td {
+  background: color-mix(in srgb, var(--surface) 86%, transparent);
+  font-size: 14px;
+}
+
+.runewords-table tr:hover td {
+  background: var(--surface);
+}
+
+.runeword-name {
+  color: var(--text-strong);
+  font-weight: 800;
+  min-width: 190px;
+}
+
+.table-line,
+.version-badge {
+  display: block;
+}
+
+.version-badge {
+  color: var(--accent-strong);
+  font-size: 13px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.muted-text {
+  color: var(--text-muted);
+}
+
+.option-list {
+  display: grid;
+  gap: 3px;
+  list-style: none;
+  margin: 0;
+  max-width: 520px;
+  padding: 0;
+}
+
+.option-list li {
+  line-height: 1.35;
+}
+
 @media (max-width: 860px) {
   .site-header {
     align-items: center;
     flex-direction: row;
     padding: 16px 20px;
+  }
+
+  .terror-zone-banner {
+    height: 61px;
+    max-width: calc(100vw - 190px);
   }
 
   main {
@@ -477,5 +762,22 @@ main {
 
   .section-grid {
     grid-template-columns: 1fr;
+  }
+
+  .table-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-row {
+    align-items: stretch;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .filter-config {
+    grid-column: 1 / -1;
+  }
+
+  .sort-control {
+    min-width: 0;
   }
 }

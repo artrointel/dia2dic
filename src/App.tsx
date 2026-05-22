@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   BookOpen,
   Boxes,
@@ -9,16 +9,22 @@ import {
   Menu,
   Moon,
   PackageSearch,
+  Plus,
   Search,
   Sun,
+  Trash2,
   TrendingUp,
   X,
   type LucideIcon,
 } from 'lucide-react'
 import { NavLink, Route, Routes } from 'react-router-dom'
+import runewordsData from './data/runewords.json'
 import './App.css'
 
 type Theme = 'dark' | 'light'
+
+const TERROR_ZONE_IMAGE_URL = 'https://www.d2emu.com/tz/tz_KR.png'
+const TERROR_ZONE_REFRESH_MS = 30 * 60 * 1000 + 5000
 
 type Page = {
   path: string
@@ -34,6 +40,33 @@ type NavigationItem = {
   icon?: LucideIcon
   children?: NavigationItem[]
 }
+
+type Runeword = {
+  id: string
+  이름: string
+  렙제: number
+  '소켓 수': number
+  '방어구 부위': string
+  룬조합: string[]
+  버전: string[]
+  options: string[]
+  sourceUrl: string
+}
+
+type FilterType = 'socket' | 'equipment' | 'rune' | 'option'
+type SortType = 'level-asc' | 'level-desc' | 'socket-asc' | 'socket-desc'
+
+type RunewordFilter = {
+  id: number
+  enabled: boolean
+  type: FilterType
+  socketMin: string
+  socketMax: string
+  equipmentType: string
+  text: string
+}
+
+const runewords = runewordsData as Runeword[]
 
 const pages: Page[] = [
   {
@@ -157,6 +190,8 @@ function Header({ theme, onToggleTheme }: { theme: Theme; onToggleTheme: () => v
             <small>Diablo II Archive</small>
           </span>
         </NavLink>
+
+        <TerrorZoneBanner />
       </header>
 
       <SideNavigation
@@ -166,6 +201,53 @@ function Header({ theme, onToggleTheme }: { theme: Theme; onToggleTheme: () => v
         onToggleTheme={onToggleTheme}
       />
     </>
+  )
+}
+
+function TerrorZoneBanner() {
+  const [cacheKey, setCacheKey] = useState(() => Date.now())
+  const [isRefreshing, setIsRefreshing] = useState(false)
+  const feedbackTimerRef = useRef<number | null>(null)
+
+  const refreshImage = () => {
+    setCacheKey(Date.now())
+    setIsRefreshing(true)
+
+    if (feedbackTimerRef.current) {
+      window.clearTimeout(feedbackTimerRef.current)
+    }
+
+    feedbackTimerRef.current = window.setTimeout(() => {
+      setIsRefreshing(false)
+      feedbackTimerRef.current = null
+    }, 700)
+  }
+
+  useEffect(() => {
+    const intervalId = window.setInterval(refreshImage, TERROR_ZONE_REFRESH_MS)
+
+    return () => {
+      window.clearInterval(intervalId)
+
+      if (feedbackTimerRef.current) {
+        window.clearTimeout(feedbackTimerRef.current)
+      }
+    }
+  }, [])
+
+  return (
+    <button
+      className={`terror-zone-refresh ${isRefreshing ? 'is-refreshing' : ''}`}
+      type="button"
+      aria-label="테러존 이미지 새로고침"
+      onClick={refreshImage}
+    >
+      <img
+        className="terror-zone-banner"
+        src={`${TERROR_ZONE_IMAGE_URL}?v=${cacheKey}`}
+        alt="디아블로2 테러존 정보"
+      />
+    </button>
   )
 }
 
@@ -391,6 +473,295 @@ function CategoryPage({ title, description, icon: Icon }: Page) {
   )
 }
 
+function createFilter(): RunewordFilter {
+  return {
+    id: Date.now() + Math.floor(Math.random() * 1000),
+    enabled: true,
+    type: 'socket',
+    socketMin: '',
+    socketMax: '',
+    equipmentType: '',
+    text: '',
+  }
+}
+
+function RunewordsPage() {
+  const [filters, setFilters] = useState<RunewordFilter[]>([])
+  const [sortType, setSortType] = useState<SortType>('level-asc')
+  const equipmentTypes = useMemo(
+    () => [...new Set(runewords.map((item) => item['방어구 부위']))].sort((a, b) => a.localeCompare(b)),
+    [],
+  )
+
+  const updateFilter = (id: number, next: Partial<RunewordFilter>) => {
+    setFilters((current) =>
+      current.map((filter) => (filter.id === id ? { ...filter, ...next } : filter)),
+    )
+  }
+
+  const removeFilter = (id: number) => {
+    setFilters((current) => current.filter((filter) => filter.id !== id))
+  }
+
+  const filteredRunewords = useMemo(() => {
+    const activeFilters = filters.filter((filter) => filter.enabled)
+
+    return runewords
+      .filter((item) =>
+        activeFilters.every((filter) => {
+          if (filter.type === 'socket') {
+            if (!filter.socketMin && !filter.socketMax) {
+              return true
+            }
+
+            const min = Number(filter.socketMin || filter.socketMax)
+            const max = Number(filter.socketMax || filter.socketMin)
+
+            return item['소켓 수'] >= min && item['소켓 수'] <= max
+          }
+
+          if (filter.type === 'equipment') {
+            return filter.equipmentType ? item['방어구 부위'] === filter.equipmentType : true
+          }
+
+          if (filter.type === 'rune') {
+            const keyword = filter.text.trim().toLowerCase()
+
+            return keyword
+              ? item.룬조합.some((runeLine) => runeLine.toLowerCase().includes(keyword))
+              : true
+          }
+
+          const keyword = filter.text.trim().toLowerCase()
+
+          return keyword
+            ? item.options.some((option) => option.toLowerCase().includes(keyword))
+            : true
+        }),
+      )
+      .toSorted((left, right) => {
+        if (sortType === 'level-desc') {
+          return right.렙제 - left.렙제
+        }
+
+        if (sortType === 'socket-asc') {
+          return left['소켓 수'] - right['소켓 수'] || left.렙제 - right.렙제
+        }
+
+        if (sortType === 'socket-desc') {
+          return right['소켓 수'] - left['소켓 수'] || left.렙제 - right.렙제
+        }
+
+        return left.렙제 - right.렙제
+      })
+  }, [filters, sortType])
+
+  return (
+    <section className="runewords-page">
+      <div className="category-heading">
+        <Gem aria-hidden="true" />
+        <span>호라드릭 함</span>
+        <h1>룬워드 조합</h1>
+        <p>렙제, 소켓 수, 장비 부위, 룬 조합, 버전, 옵션을 필터링하고 정렬합니다.</p>
+      </div>
+
+      <div className="table-toolbar">
+        <div className="filter-panel">
+          <div className="filter-panel-header">
+            <strong>필터</strong>
+            <button className="add-filter-button" type="button" onClick={() => setFilters((current) => [...current, createFilter()])}>
+              <Plus aria-hidden="true" size={18} />
+              필터 추가
+            </button>
+          </div>
+
+          {filters.length > 0 ? (
+            <div className="filter-list">
+              {filters.map((filter) => (
+                <RunewordFilterRow
+                  key={filter.id}
+                  equipmentTypes={equipmentTypes}
+                  filter={filter}
+                  onRemove={() => removeFilter(filter.id)}
+                  onUpdate={(next) => updateFilter(filter.id, next)}
+                />
+              ))}
+            </div>
+          ) : (
+            <p className="filter-empty">필터를 추가하면 조건을 AND로 조합해 검색할 수 있습니다.</p>
+          )}
+        </div>
+
+        <label className="sort-control">
+          <span>정렬</span>
+          <select value={sortType} onChange={(event) => setSortType(event.target.value as SortType)}>
+            <option value="level-asc">레벨제한 오름차순</option>
+            <option value="level-desc">레벨제한 내림차순</option>
+            <option value="socket-asc">소켓수 오름차순</option>
+            <option value="socket-desc">소켓수 내림차순</option>
+          </select>
+        </label>
+      </div>
+
+      <div className="table-meta">
+        총 {runewords.length}개 중 {filteredRunewords.length}개 표시
+      </div>
+
+      <div className="runewords-table-wrap">
+        <table className="runewords-table">
+          <thead>
+            <tr>
+              <th>이름</th>
+              <th>렙제</th>
+              <th>소켓</th>
+              <th>장비 부위</th>
+              <th>룬조합</th>
+              <th>버전</th>
+              <th>옵션</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredRunewords.map((item) => (
+              <tr key={item.id}>
+                <td className="runeword-name">{item.이름}</td>
+                <td>{item.렙제}</td>
+                <td>{item['소켓 수']}</td>
+                <td>{item['방어구 부위']}</td>
+                <td>
+                  {item.룬조합.map((line) => (
+                    <span className="table-line" key={line}>
+                      {line}
+                    </span>
+                  ))}
+                </td>
+                <td>
+                  {item.버전.length > 0 ? (
+                    item.버전.map((line) => (
+                      <span className="version-badge" key={line}>
+                        {line}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="muted-text">-</span>
+                  )}
+                </td>
+                <td>
+                  <ul className="option-list">
+                    {item.options.map((option) => (
+                      <li key={option}>{option}</li>
+                    ))}
+                  </ul>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  )
+}
+
+function RunewordFilterRow({
+  equipmentTypes,
+  filter,
+  onRemove,
+  onUpdate,
+}: {
+  equipmentTypes: string[]
+  filter: RunewordFilter
+  onRemove: () => void
+  onUpdate: (next: Partial<RunewordFilter>) => void
+}) {
+  const updateSocket = (key: 'socketMin' | 'socketMax', value: string) => {
+    const otherKey = key === 'socketMin' ? 'socketMax' : 'socketMin'
+    const next: Partial<RunewordFilter> = { [key]: value }
+
+    if (!filter[otherKey]) {
+      next[otherKey] = value
+    }
+
+    onUpdate(next)
+  }
+
+  return (
+    <div className={`filter-row ${filter.enabled ? '' : 'is-disabled'}`}>
+      <input
+        aria-label="필터 활성화"
+        checked={filter.enabled}
+        type="checkbox"
+        onChange={(event) => onUpdate({ enabled: event.target.checked })}
+      />
+
+      <select value={filter.type} onChange={(event) => onUpdate({ type: event.target.value as FilterType })}>
+        <option value="socket">소켓 수</option>
+        <option value="equipment">장비 부위</option>
+        <option value="rune">룬</option>
+        <option value="option">옵션</option>
+      </select>
+
+      <div className="filter-config">
+        {filter.type === 'socket' && (
+          <div className="range-filter">
+            <label>
+              MIN
+              <input
+                min="1"
+                max="6"
+                type="number"
+                value={filter.socketMin}
+                onChange={(event) => updateSocket('socketMin', event.target.value)}
+              />
+            </label>
+            <label>
+              MAX
+              <input
+                min="1"
+                max="6"
+                type="number"
+                value={filter.socketMax}
+                onChange={(event) => updateSocket('socketMax', event.target.value)}
+              />
+            </label>
+          </div>
+        )}
+
+        {filter.type === 'equipment' && (
+          <select value={filter.equipmentType} onChange={(event) => onUpdate({ equipmentType: event.target.value })}>
+            <option value="">장비 부위 선택</option>
+            {equipmentTypes.map((equipmentType) => (
+              <option value={equipmentType} key={equipmentType}>
+                {equipmentType}
+              </option>
+            ))}
+          </select>
+        )}
+
+        {filter.type === 'rune' && (
+          <input
+            type="search"
+            placeholder="예: 조드, Jah, 탈"
+            value={filter.text}
+            onChange={(event) => onUpdate({ text: event.target.value })}
+          />
+        )}
+
+        {filter.type === 'option' && (
+          <input
+            type="search"
+            placeholder="예: 공격 속도, 모든 기술"
+            value={filter.text}
+            onChange={(event) => onUpdate({ text: event.target.value })}
+          />
+        )}
+      </div>
+
+      <button className="delete-filter-button" type="button" aria-label="필터 제거" onClick={onRemove}>
+        <Trash2 aria-hidden="true" size={18} />
+      </button>
+    </div>
+  )
+}
+
 function App() {
   const [theme, setTheme] = useState<Theme>(getInitialTheme)
 
@@ -410,7 +781,8 @@ function App() {
       <main>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          {pages.map((page) => (
+          <Route path="/cube/runewords" element={<RunewordsPage />} />
+          {pages.filter((page) => page.path !== '/cube/runewords').map((page) => (
             <Route
               key={page.path}
               path={page.path}
