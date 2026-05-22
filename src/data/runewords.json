@@ -1,10 +1,10 @@
 [
   {
-    "id": "13-구렁텅이-nadir-구-천저-투구",
+    "id": "13-구렁텅이-nadir-구-천저-투구-helm",
     "이름": "구렁텅이[Nadir, 구: 천저]",
     "렙제": 13,
     "소켓 수": 2,
-    "방어구 부위": "투구",
+    "장비": "투구(Helm)",
     "룬조합": [
       "네프+티르",
       "(Nef+Tir)"
@@ -23,11 +23,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "13-강철-steel-구-스틸-도검-소드-도끼-철퇴-메이스",
+    "id": "13-강철-steel-구-스틸-도검-sword-도끼-axe-철퇴-mace",
     "이름": "강철[Steel, 구: 스틸]",
     "렙제": 13,
     "소켓 수": 2,
-    "방어구 부위": "도검(소드)/도끼/철퇴(메이스)",
+    "장비": "도검(Sword)/도끼(Axe)/철퇴(Mace)",
     "룬조합": [
       "티르+엘",
       "(Tir+El)"
@@ -46,11 +46,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "15-악의malice-구-원환-근접-무기",
+    "id": "15-악의malice-구-원환-근접-무기-melee-weapon",
     "이름": "악의Malice, 구: 원환]",
     "렙제": 15,
     "소켓 수": 3,
-    "방어구 부위": "근접 무기",
+    "장비": "근접 무기(Melee Weapon)",
     "룬조합": [
       "아이드+엘+에드",
       "(Ith+El+Eth)"
@@ -69,11 +69,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "17-잠행-stealth-구-스텔스-갑옷",
+    "id": "17-잠행-stealth-구-스텔스-갑옷-armor",
     "이름": "잠행[Stealth, 구: 스텔스]",
     "렙제": 17,
     "소켓 수": 2,
-    "방어구 부위": "갑옷",
+    "장비": "갑옷(Armor)",
     "룬조합": [
       "탈+에드",
       "(Tal+Eth)"
@@ -92,11 +92,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "19-잎새-leaf-구-꽃잎-지팡이",
+    "id": "19-잎새-leaf-구-꽃잎-지팡이-staff",
     "이름": "잎새[Leaf, 구: 꽃잎]",
     "렙제": 19,
     "소켓 수": 2,
-    "방어구 부위": "지팡이",
+    "장비": "지팡이(Staff)",
     "룬조합": [
       "티르+랄",
       "(Tir+Ral)"
@@ -115,11 +115,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "21-고대인의-서약-ancient-s-pledge-방패",
+    "id": "21-고대인의-서약-ancient-s-pledge-방패-shield",
     "이름": "고대인의 서약(Ancient's Pledge)",
     "렙제": 21,
     "소켓 수": 3,
-    "방어구 부위": "방패",
+    "장비": "방패(Shield)",
     "룬조합": [
       "랄+오르트+탈",
       "(Ral+Ort+Tal)"
@@ -136,11 +136,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "21-신성한-천둥-holy-thunder-구-신성한-번개-홀-셉터",
+    "id": "21-신성한-천둥-holy-thunder-구-신성한-번개-홀-scepter",
     "이름": "신성한 천둥[Holy Thunder, 구: 신성한 번개]",
     "렙제": 21,
     "소켓 수": 4,
-    "방어구 부위": "홀(셉터)",
+    "장비": "홀(Scepter)",
     "룬조합": [
       "에드+랄+오르트+탈",
       "(Eth+Ral+Ort+Tal)"
@@ -161,11 +161,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "21-서풍-zephyr-구-제퍼-원거리-무기",
+    "id": "21-서풍-zephyr-구-제퍼-원거리-무기-ranged-weapon",
     "이름": "서풍[Zephyr, 구: 제퍼]",
     "렙제": 21,
     "소켓 수": 2,
-    "방어구 부위": "원거리 무기",
+    "장비": "원거리 무기(Ranged Weapon)",
     "룬조합": [
       "오르트+에드",
       "(Ort+Eth)"
@@ -184,11 +184,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "23-귀감-pattern-손톱-클러",
+    "id": "23-귀감-pattern-손톱-claw",
     "이름": "귀감(Pattern)",
     "렙제": 23,
     "소켓 수": 3,
-    "방어구 부위": "손톱(클러)",
+    "장비": "손톱(Claw)",
     "룬조합": [
       "탈+오르트+주울",
       "(Tal+Ort+Thul)"
@@ -212,11 +212,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "25-왕의-은총-king-s-grace-구-왕의-자비-도검-소드-홀-셉터",
+    "id": "25-왕의-은총-king-s-grace-구-왕의-자비-도검-sword-홀-scepter",
     "이름": "왕의 은총[King's Grace, 구: 왕의 자비]",
     "렙제": 25,
     "소켓 수": 3,
-    "방어구 부위": "도검(소드)/홀(셉터)",
+    "장비": "도검(Sword)/홀(Scepter)",
     "룬조합": [
       "앰+랄+주울",
       "(Amn+Ral+Thul)"
@@ -236,11 +236,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "25-강함-strength-구-스트렝스-근접-무기",
+    "id": "25-강함-strength-구-스트렝스-근접-무기-melee-weapon",
     "이름": "강함[Strength, 구: 스트렝스]",
     "렙제": 25,
     "소켓 수": 2,
-    "방어구 부위": "근접 무기",
+    "장비": "근접 무기(Melee Weapon)",
     "룬조합": [
       "앰+티르",
       "(Amn+Tir)"
@@ -257,11 +257,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "25-신화-myth-갑옷",
+    "id": "25-신화-myth-갑옷-armor",
     "이름": "신화(Myth)",
     "렙제": 25,
     "소켓 수": 3,
-    "방어구 부위": "갑옷",
+    "장비": "갑옷(Armor)",
     "룬조합": [
       "헬+앰+네프",
       "(Hel+Amn+Nef)"
@@ -279,11 +279,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "25-영혼-spirit-구-스피리트-스피릿-도검-소드",
+    "id": "25-영혼-spirit-구-스피리트-스피릿-도검-sword",
     "이름": "영혼[Spirit, 구: 스피리트/스피릿]",
     "렙제": 25,
     "소켓 수": 4,
-    "방어구 부위": "도검(소드)",
+    "장비": "도검(Sword)",
     "룬조합": [
       "탈+주울+오르트+앰",
       "(Tal+Thul+Ort+Amn)"
@@ -305,11 +305,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "25-영혼-spirit-구-스피리트-스피릿-방패",
+    "id": "25-영혼-spirit-구-스피리트-스피릿-방패-shield",
     "이름": "영혼[Spirit, 구: 스피리트/스피릿]",
     "렙제": 25,
     "소켓 수": 4,
-    "방어구 부위": "방패",
+    "장비": "방패(Shield)",
     "룬조합": [
       "탈+주울+오르트+앰",
       "(Tal+Thul+Ort+Amn)"
@@ -331,11 +331,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "25-모서리-edge-원거리-무기",
+    "id": "25-모서리-edge-원거리-무기-ranged-weapon",
     "이름": "모서리(Edge)",
     "렙제": 25,
     "소켓 수": 3,
-    "방어구 부위": "원거리 무기",
+    "장비": "원거리 무기(Ranged Weapon)",
     "룬조합": [
       "티르+탈+앰",
       "(Tir+Tal+Amn)"
@@ -356,11 +356,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "27-전승-lore-구-학식-투구",
+    "id": "27-전승-lore-구-학식-투구-helm",
     "이름": "전승[Lore, 구: 학식]",
     "렙제": 27,
     "소켓 수": 2,
-    "방어구 부위": "투구",
+    "장비": "투구(Helm)",
     "룬조합": [
       "오르트+솔",
       "(Ort+Sol)"
@@ -377,11 +377,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "27-명예-honor-근접-무기",
+    "id": "27-명예-honor-근접-무기-melee-weapon",
     "이름": "명예(Honor)",
     "렙제": 27,
     "소켓 수": 5,
-    "방어구 부위": "근접 무기",
+    "장비": "근접 무기(Melee Weapon)",
     "룬조합": [
       "앰+엘+아이드+티르+솔",
       "(Amn+El+Ith+Tir+Sol)"
@@ -403,11 +403,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "27-광휘-radiance-구-찬란한-빛-투구",
+    "id": "27-광휘-radiance-구-찬란한-빛-투구-helm",
     "이름": "광휘[Radiance, 구: 찬란한 빛]",
     "렙제": 27,
     "소켓 수": 3,
-    "방어구 부위": "투구",
+    "장비": "투구(Helm)",
     "룬조합": [
       "네프+솔+아이드",
       "(Nef+Sol+Ith)"
@@ -427,11 +427,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "27-통찰-insight-구-통찰력-미늘창-폴암-지팡이-스테프-활-쇠뇌",
+    "id": "27-통찰-insight-구-통찰력-미늘창-polearm-지팡이-staff-활-bow-쇠뇌-crossbow",
     "이름": "통찰[Insight, 구: 통찰력]",
     "렙제": 27,
     "소켓 수": 4,
-    "방어구 부위": "미늘창(폴암)/지팡이(스테프)/활/쇠뇌",
+    "장비": "미늘창(Polearm)/지팡이(Staff)/활(Bow)/쇠뇌(Crossbow)",
     "룬조합": [
       "랄+티르+탈+솔",
       "(Ral+Tir+Tal+Sol)"
@@ -455,11 +455,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "29-각운-rhyme-구-제왕운시-방패",
+    "id": "29-각운-rhyme-구-제왕운시-방패-shield",
     "이름": "각운[Rhyme, 구: 제왕운시]",
     "렙제": 29,
     "소켓 수": 2,
-    "방어구 부위": "방패",
+    "장비": "방패(Shield)",
     "룬조합": [
       "샤엘+에드",
       "(Shael+Eth)"
@@ -477,11 +477,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "29-평화-peace-갑옷",
+    "id": "29-평화-peace-갑옷-armor",
     "이름": "평화(Peace)",
     "렙제": 29,
     "소켓 수": 3,
-    "방어구 부위": "갑옷",
+    "장비": "갑옷(Armor)",
     "룬조합": [
       "샤엘+주울+앰",
       "(Shael+Thul+Amn)"
@@ -499,11 +499,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "29-권위-authority-갑옷",
+    "id": "29-권위-authority-갑옷-armor",
     "이름": "권위(Authority)",
     "렙제": 29,
     "소켓 수": 3,
-    "방어구 부위": "갑옷",
+    "장비": "갑옷(Armor)",
     "룬조합": [
       "헬+샤엘+랄",
       "(Hel+Shael+Ral)"
@@ -523,11 +523,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "35-어둠-black-구-블랙-철퇴-메이스-망치",
+    "id": "35-어둠-black-구-블랙-철퇴-mace-망치-hammer",
     "이름": "어둠[Black, 구: 블랙]",
     "렙제": 35,
     "소켓 수": 3,
-    "방어구 부위": "철퇴(메이스)/망치",
+    "장비": "철퇴(Mace)/망치(Hammer)",
     "룬조합": [
       "주울+이오+네프",
       "(Thul+Io+Nef)"
@@ -547,11 +547,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "35-순백-white-구-화이트-완드",
+    "id": "35-순백-white-구-화이트-완드-wand",
     "이름": "순백[White, 구: 화이트]",
     "렙제": 35,
     "소켓 수": 2,
-    "방어구 부위": "완드",
+    "장비": "완드(Wand)",
     "룬조합": [
       "돌+이오",
       "(Dol+Io)"
@@ -571,11 +571,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "35-방책-투구",
+    "id": "35-방책-투구-helm",
     "이름": "방책",
     "렙제": 35,
     "소켓 수": 3,
-    "방어구 부위": "투구",
+    "장비": "투구(Helm)",
     "룬조합": [
       "샤엘+이오+솔",
       "(Sheal+Io+Sol)"
@@ -597,11 +597,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "35-치료-투구",
+    "id": "35-치료-투구-helm",
     "이름": "치료",
     "렙제": 35,
     "소켓 수": 3,
-    "방어구 부위": "투구",
+    "장비": "투구(Helm)",
     "룬조합": [
       "샤엘+이오+탈",
       "(Sheal+Io+Tal)"
@@ -622,11 +622,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "35-접지-투구",
+    "id": "35-접지-투구-helm",
     "이름": "접지",
     "렙제": 35,
     "소켓 수": 3,
-    "방어구 부위": "투구",
+    "장비": "투구(Helm)",
     "룬조합": [
       "샤엘+이오+오르트",
       "(Sheal+Io+Ort)"
@@ -646,11 +646,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "35-화로-투구",
+    "id": "35-화로-투구-helm",
     "이름": "화로",
     "렙제": 35,
     "소켓 수": 3,
-    "방어구 부위": "투구",
+    "장비": "투구(Helm)",
     "룬조합": [
       "샤엘+이오+주울",
       "(Sheal+Io+Thul)"
@@ -671,11 +671,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "35-담금질-투구",
+    "id": "35-담금질-투구-helm",
     "이름": "담금질",
     "렙제": 35,
     "소켓 수": 3,
-    "방어구 부위": "투구",
+    "장비": "투구(Helm)",
     "룬조합": [
       "샤엘+이오+랄",
       "(Sheal+Io+Ral)"
@@ -695,11 +695,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "37-기억-memory-지팡이",
+    "id": "37-기억-memory-지팡이-staff",
     "이름": "기억(Memory)",
     "렙제": 37,
     "소켓 수": 4,
-    "방어구 부위": "지팡이",
+    "장비": "지팡이(Staff)",
     "룬조합": [
       "룸+이오+솔+에드",
       "(Lum+Io+Sol+Eth)"
@@ -721,11 +721,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "37-연기-smoke-갑옷",
+    "id": "37-연기-smoke-갑옷-armor",
     "이름": "연기(Smoke)",
     "렙제": 37,
     "소켓 수": 2,
-    "방어구 부위": "갑옷",
+    "장비": "갑옷(Armor)",
     "룬조합": [
       "네프+룸",
       "(Nef+Lum)"
@@ -743,11 +743,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "37-광채-splendor-구-스플렌더-방패",
+    "id": "37-광채-splendor-구-스플렌더-방패-shield",
     "이름": "광채[Splendor, 구: 스플렌더]",
     "렙제": 37,
     "소켓 수": 2,
-    "방어구 부위": "방패",
+    "장비": "방패(Shield)",
     "룬조합": [
       "에드+룸",
       "(Eth+Lum)"
@@ -767,11 +767,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "39-선율-melody-구-멜로디-원거리-무기",
+    "id": "39-선율-melody-구-멜로디-원거리-무기-ranged-weapon",
     "이름": "선율[Melody, 구: 멜로디]",
     "렙제": 39,
     "소켓 수": 3,
-    "방어구 부위": "원거리 무기",
+    "장비": "원거리 무기(Ranged Weapon)",
     "룬조합": [
       "샤엘+코+네프",
       "(Shael+Ko+Nef)"
@@ -791,11 +791,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "39-조화-harmony-원거리-무기",
+    "id": "39-조화-harmony-원거리-무기-ranged-weapon",
     "이름": "조화(Harmony)",
     "렙제": 39,
     "소켓 수": 4,
-    "방어구 부위": "원거리 무기",
+    "장비": "원거리 무기(Ranged Weapon)",
     "룬조합": [
       "티르 + 아이드 + 솔 + 코",
       "(Tir + Ith + Sol + Ko)"
@@ -819,11 +819,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "39-투지-갑옷",
+    "id": "39-투지-갑옷-armor",
     "이름": "투지",
     "렙제": 39,
     "소켓 수": 3,
-    "방어구 부위": "갑옷",
+    "장비": "갑옷(Armor)",
     "룬조합": [
       "샤엘+코+엘드",
       "(Sheal+Ko+Eld)"
@@ -844,11 +844,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "39-투지-무기",
+    "id": "39-투지-무기-weapon",
     "이름": "투지",
     "렙제": 39,
     "소켓 수": 3,
-    "방어구 부위": "무기",
+    "장비": "무기(Weapon)",
     "룬조합": [
       "샤엘+코+엘드",
       "(Sheal+Ko+Eld)"
@@ -869,11 +869,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "41-불굴의-의지-unbending-will-도검-소드",
+    "id": "41-불굴의-의지-unbending-will-도검-sword",
     "이름": "불굴의 의지(Unbending Will)",
     "렙제": 41,
     "소켓 수": 6,
-    "방어구 부위": "도검(소드)",
+    "장비": "도검(Sword)",
     "룬조합": [
       "팔+이오+아이드+엘드+엘+헬",
       "(Fal+Io+Ith+Eld+El+Hel)"
@@ -902,11 +902,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "41-용맹한-자-lionheart-갑옷",
+    "id": "41-용맹한-자-lionheart-갑옷-armor",
     "이름": "용맹한 자(Lionheart)",
     "렙제": 41,
     "소켓 수": 3,
-    "방어구 부위": "갑옷",
+    "장비": "갑옷(Armor)",
     "룬조합": [
       "헬+룸+팔",
       "(Hel+Lum+Fal)"
@@ -925,11 +925,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "41-순종-obedience-미늘창-폴암-창-스피어",
+    "id": "41-순종-obedience-미늘창-polearm-창-spear",
     "이름": "순종(Obedience)",
     "렙제": 41,
     "소켓 수": 5,
-    "방어구 부위": "미늘창(폴암)/창(스피어)",
+    "장비": "미늘창(Polearm)/창(Spear)",
     "룬조합": [
       "헬+코+주울+에드+팔",
       "(Hel+Ko+Thul+Eth+Fal)"
@@ -953,11 +953,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "43-부-wealth-구-웰쓰-갑옷",
+    "id": "43-부-wealth-구-웰쓰-갑옷-armor",
     "이름": "부[Wealth, 구: 웰쓰]",
     "렙제": 43,
     "소켓 수": 3,
-    "방어구 부위": "갑옷",
+    "장비": "갑옷(Armor)",
     "룬조합": [
       "렘+코+티르",
       "(Lem+Ko+Tir)"
@@ -972,11 +972,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "43-열정-passion-무기",
+    "id": "43-열정-passion-무기-weapon",
     "이름": "열정(Passion)",
     "렙제": 43,
     "소켓 수": 4,
-    "방어구 부위": "무기",
+    "장비": "무기(Weapon)",
     "룬조합": [
       "돌+오르트+엘드+렘",
       "(Dol+Ort+Eld+Lem)"
@@ -999,11 +999,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "43-배신-treachery-갑옷",
+    "id": "43-배신-treachery-갑옷-armor",
     "이름": "배신(Treachery)",
     "렙제": 43,
     "소켓 수": 3,
-    "방어구 부위": "갑옷",
+    "장비": "갑옷(Armor)",
     "룬조합": [
       "샤엘+쥬울+렘",
       "(Shael+Thul+Lem)"
@@ -1021,11 +1021,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "43-집행자-lawbringer-구-법률위반-도검-소드-망치-홀-셉터",
+    "id": "43-집행자-lawbringer-구-법률위반-도검-sword-망치-hammer-홀-scepter",
     "이름": "집행자[Lawbringer, 구: 법률위반]",
     "렙제": 43,
     "소켓 수": 3,
-    "방어구 부위": "도검(소드)/망치/홀(셉터)",
+    "장비": "도검(Sword)/망치(Hammer)/홀(Scepter)",
     "룬조합": [
       "앰+렘+코",
       "(Amn+Lem+Ko)"
@@ -1046,11 +1046,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "43-이유있는-항변-voice-of-reason-도검-철퇴-메이스",
+    "id": "43-이유있는-항변-voice-of-reason-도검-sword-철퇴-mace",
     "이름": "이유있는 항변(Voice of Reason)",
     "렙제": 43,
     "소켓 수": 4,
-    "방어구 부위": "도검/철퇴(메이스)",
+    "장비": "도검(Sword)/철퇴(Mace)",
     "룬조합": [
       "렘+코+엘+엘드",
       "(Lem+Ko+El+Eld)"
@@ -1073,11 +1073,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "45-지혜-wisdom-투구",
+    "id": "45-지혜-wisdom-투구-helm",
     "이름": "지혜(Wisdom)",
     "렙제": 45,
     "소켓 수": 3,
-    "방어구 부위": "투구",
+    "장비": "투구(Helm)",
     "룬조합": [
       "풀+아이드+엘드",
       "(Pul+Ith+Eld)"
@@ -1100,11 +1100,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "45-돌-stone-구-스톤-갑옷",
+    "id": "45-돌-stone-구-스톤-갑옷-armor",
     "이름": "돌[Stone, 구: 스톤]",
     "렙제": 45,
     "소켓 수": 4,
-    "방어구 부위": "갑옷",
+    "장비": "갑옷(Armor)",
     "룬조합": [
       "샤엘+우움+풀+룸",
       "(Shael+Um+Pul+Lum)"
@@ -1124,11 +1124,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "45-깨우침-enlightenment-구-교화-갑옷",
+    "id": "45-깨우침-enlightenment-구-교화-갑옷-armor",
     "이름": "깨우침[Enlightenment, 구: 교화]",
     "렙제": 45,
     "소켓 수": 3,
-    "방어구 부위": "갑옷",
+    "장비": "갑옷(Armor)",
     "룬조합": [
       "풀+랄+솔",
       "(Pul+Ral+Sol)"
@@ -1146,11 +1146,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "47-협박-duress-갑옷",
+    "id": "47-협박-duress-갑옷-armor",
     "이름": "협박(Duress)",
     "렙제": 47,
     "소켓 수": 3,
-    "방어구 부위": "갑옷",
+    "장비": "갑옷(Armor)",
     "룬조합": [
       "샤엘+우움+주울",
       "(Shael+Um+Thul)"
@@ -1172,11 +1172,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "47-어스름-gloom-구-우울-갑옷",
+    "id": "47-어스름-gloom-구-우울-갑옷-armor",
     "이름": "어스름[Gloom, 구: 우울]",
     "렙제": 47,
     "소켓 수": 3,
-    "방어구 부위": "갑옷",
+    "장비": "갑옷(Armor)",
     "룬조합": [
       "팔+우움+풀",
       "(Fal+Um+Pul)"
@@ -1195,11 +1195,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "47-초승달-crescent-moon-도끼-도검-소드-미늘창-폴암",
+    "id": "47-초승달-crescent-moon-도끼-axe-도검-sword-미늘창-polearm",
     "이름": "초승달(Crescent Moon)",
     "렙제": 47,
     "소켓 수": 3,
-    "방어구 부위": "도끼/도검(소드)/미늘창(폴암)",
+    "장비": "도끼(Axe)/도검(Sword)/미늘창(Polearm)",
     "룬조합": [
       "샤엘+우움+티르",
       "(Shael+Um+Tir)"
@@ -1220,11 +1220,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "47-뼈-bone-갑옷",
+    "id": "47-뼈-bone-갑옷-armor",
     "이름": "뼈(Bone)",
     "렙제": 47,
     "소켓 수": 3,
-    "방어구 부위": "갑옷",
+    "장비": "갑옷(Armor)",
     "룬조합": [
       "솔+우움+우움",
       "(Sol+Um+Um)"
@@ -1241,11 +1241,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "49-베놈-venom-무기",
+    "id": "49-베놈-venom-무기-weapon",
     "이름": "베놈(Venom)",
     "렙제": 49,
     "소켓 수": 3,
-    "방어구 부위": "무기",
+    "장비": "무기(Weapon)",
     "룬조합": [
       "탈+돌+말",
       "(Tal+Dol+Mal)"
@@ -1263,11 +1263,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "49-신중-prudence-구-현명-갑옷",
+    "id": "49-신중-prudence-구-현명-갑옷-armor",
     "이름": "신중[Prudence, 구: 현명]",
     "렙제": 49,
     "소켓 수": 2,
-    "방어구 부위": "갑옷",
+    "장비": "갑옷(Armor)",
     "룬조합": [
       "말+티르",
       "(Mal+Tir)"
@@ -1286,11 +1286,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "49-성역-sanctuary-방패",
+    "id": "49-성역-sanctuary-방패-shield",
     "이름": "성역(Sanctuary)",
     "렙제": 49,
     "소켓 수": 3,
-    "방어구 부위": "방패",
+    "장비": "방패(Shield)",
     "룬조합": [
       "코+코+말",
       "(Ko+Ko+Mal)"
@@ -1310,11 +1310,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "49-비-rain-갑옷",
+    "id": "49-비-rain-갑옷-armor",
     "이름": "비(Rain)",
     "렙제": 49,
     "소켓 수": 3,
-    "방어구 부위": "갑옷",
+    "장비": "갑옷(Armor)",
     "룬조합": [
       "오르트+말+아이드",
       "(Ort+Mal+Ith)"
@@ -1332,11 +1332,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "49-서약-oath-도검-소드-도끼-철퇴-메이스",
+    "id": "49-서약-oath-도검-sword-도끼-axe-철퇴-mace",
     "이름": "서약(Oath)",
     "렙제": 49,
     "소켓 수": 4,
-    "방어구 부위": "도검(소드)/도끼/철퇴(메이스)",
+    "장비": "도검(Sword)/도끼(Axe)/철퇴(Mace)",
     "룬조합": [
       "샤엘+풀+말+룸",
       "(Shael+Pul+Mal+Lum)"
@@ -1358,11 +1358,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "51-착란-delirium-구-대표위원-투구",
+    "id": "51-착란-delirium-구-대표위원-투구-helm",
     "이름": "착란[Delirium, 구: 대표위원]",
     "렙제": 51,
     "소켓 수": 3,
-    "방어구 부위": "투구",
+    "장비": "투구(Helm)",
     "룬조합": [
       "렘+아이스트+이오",
       "(Lem+Ist+Io)"
@@ -1383,11 +1383,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "51-마녀단-coven-투구",
+    "id": "51-마녀단-coven-투구-helm",
     "이름": "마녀단(Coven)",
     "렙제": 51,
     "소켓 수": 3,
-    "방어구 부위": "투구",
+    "장비": "투구(Helm)",
     "룬조합": [
       "이스트+랄+이오",
       "(Ist+Ral+Io)"
@@ -1408,11 +1408,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "53-왕-시해자-kingslayer-구-왕시해범-킹슬-도검-소드-도끼",
+    "id": "53-왕-시해자-kingslayer-구-왕시해범-킹슬-도검-sword-도끼-axe",
     "이름": "왕 시해자 [Kingslayer, 구: 왕시해범/킹슬]",
     "렙제": 53,
     "소켓 수": 4,
-    "방어구 부위": "도검(소드),도끼",
+    "장비": "도검(Sword)/도끼(Axe)",
     "룬조합": [
       "말+우움+굴+팔",
       "(Mal+Um+Gul+Fal)"
@@ -1433,11 +1433,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "53-원칙-principle-갑옷",
+    "id": "53-원칙-principle-갑옷-armor",
     "이름": "원칙(Principle)",
     "렙제": 53,
     "소켓 수": 3,
-    "방어구 부위": "갑옷",
+    "장비": "갑옷(Armor)",
     "룬조합": [
       "랄+굴+엘드",
       "(Ral+Gul+Eld)"
@@ -1455,11 +1455,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "53-균열-rift-미늘창-폴암-홀-셉터",
+    "id": "53-균열-rift-미늘창-polearm-홀-scepter",
     "이름": "균열(Rift)",
     "렙제": 53,
     "소켓 수": 4,
-    "방어구 부위": "미늘창(폴암)/홀(셉터)",
+    "장비": "미늘창(Polearm)/홀(Scepter)",
     "룬조합": [
       "헬+코+렘+굴",
       "(Hel+Ko+Lem+Gul)"
@@ -1481,11 +1481,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "53-모자이크-손톱",
+    "id": "53-모자이크-손톱-claw",
     "이름": "모자이크",
     "렙제": 53,
     "소켓 수": 3,
-    "방어구 부위": "손톱",
+    "장비": "손톱(Claw)",
     "룬조합": [
       "말+굴+앰",
       "(Mal+Gul+Amn)"
@@ -1510,17 +1510,18 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "53-경계-vigilance-악마술사-팔라-네크-전용-방패",
+    "id": "53-경계-vigilance-악마술사-전용-장비-demonologist-item-팔라딘-전용-장비-paladin-item-네크-전용-방패-necromancer-shield",
     "이름": "경계(Vigilance)",
     "렙제": 53,
     "소켓 수": 2,
-    "방어구 부위": "악마술사/팔라/네크 전용 방패",
+    "장비": "악마술사 전용 장비(Demonologist Item)/팔라딘 전용 장비(Paladin Item)/네크 전용 방패(Necromancer Shield)",
     "룬조합": [
       "돌+굴",
       "(Dol+Gul)"
     ],
     "버전": [
-      "악마술사 확장팩 신규 룬워드"
+      "악마술사 확장팩 신규 룬워드",
+      "래더 전용"
     ],
     "options": [
       "피격 시 5% 확률로 10 레벨 화염 고리 시전",
@@ -1536,11 +1537,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "55-꺼져가는-불길-flickering-flame-투구",
+    "id": "55-꺼져가는-불길-flickering-flame-투구-helm",
     "이름": "꺼져가는 불길(Flickering Flame)",
     "렙제": 55,
     "소켓 수": 3,
-    "방어구 부위": "투구",
+    "장비": "투구(Helm)",
     "룬조합": [
       "네프+풀+벡스",
       "(Nef+Pul+Vex)"
@@ -1563,11 +1564,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "55-침묵-silence-무기",
+    "id": "55-침묵-silence-무기-weapon",
     "이름": "침묵(Silence)",
     "렙제": 55,
     "소켓 수": 6,
-    "방어구 부위": "무기",
+    "장비": "무기(Weapon)",
     "룬조합": [
       "돌+엘드+헬+아이스트+티르+벡스",
       "(Dol+Eld+Hel+Ist+Tir+Vex)"
@@ -1591,11 +1592,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "55-참나무의-심장-heartoftheoak-구-오심-오크의-심장-메이스-지팡이-스테프",
+    "id": "55-참나무의-심장-heartoftheoak-구-오심-오크의-심장-철퇴-mace-지팡이-staff",
     "이름": "참나무의 심장[HeartoftheOak, 구: 오심, 오크의 심장]",
     "렙제": 55,
     "소켓 수": 4,
-    "방어구 부위": "메이스*/지팡이(스테프)",
+    "장비": "철퇴(Mace)/지팡이(Staff)",
     "룬조합": [
       "코+벡스+풀+주울",
       "(Ko+Vex+Pul+Thul)"
@@ -1618,11 +1619,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "55-죽음-death-도검-소드-도끼",
+    "id": "55-죽음-death-도검-sword-도끼-axe",
     "이름": "죽음(Death)",
     "렙제": 55,
     "소켓 수": 5,
-    "방어구 부위": "도검(소드)/도끼",
+    "장비": "도검(Sword)/도끼(Axe)",
     "룬조합": [
       "헬+엘+벡스+오르트+굴",
       "(Hel+El+Vex+Ort+Gul)"
@@ -1646,11 +1647,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "57-추방-exile-구-망명-팔라딘-방패",
+    "id": "57-추방-exile-구-망명-팔라딘-방패-paladin-shield",
     "이름": "추방[Exile, 구: 망명]",
     "렙제": 57,
     "소켓 수": 4,
-    "방어구 부위": "팔라딘 방패",
+    "장비": "팔라딘 방패(Paladin Shield)",
     "룬조합": [
       "벡스+오움+아이스트+돌",
       "(Vex+Ohm+Ist+Dol)"
@@ -1672,11 +1673,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "57-혼돈-chaos-손톱-클러",
+    "id": "57-혼돈-chaos-손톱-claw",
     "이름": "혼돈(Chaos)",
     "렙제": 57,
     "소켓 수": 3,
-    "방어구 부위": "손톱(클러)",
+    "장비": "손톱(Claw)",
     "룬조합": [
       "팔+오움+우움",
       "(Fal+Ohm+Um)"
@@ -1696,11 +1697,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "57-소집-call-to-arms-구-콜투암스-콜투-무기",
+    "id": "57-소집-call-to-arms-구-콜투암스-콜투-무기-weapon",
     "이름": "소집[Call To Arms, 구: 콜투암스/콜투]",
     "렙제": 57,
     "소켓 수": 5,
-    "방어구 부위": "무기",
+    "장비": "무기(Weapon)",
     "룬조합": [
       "앰+랄+말+아이스트+오움",
       "(Amn+Ral+Mal+Ist+Ohm)"
@@ -1722,11 +1723,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "57-의식-ritual-대거-단검",
+    "id": "57-의식-ritual-단도-dagger",
     "이름": "의식(Ritual)",
     "렙제": 57,
     "소켓 수": 3,
-    "방어구 부위": "대거(단검)",
+    "장비": "단도(Dagger)",
     "룬조합": [
       "앰+샤엘+오움",
       "(Amn+Shael+Ohm)"
@@ -1747,11 +1748,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "59-슬픔-grief-구-깊은-고뇌-도검-소드-도끼",
+    "id": "59-슬픔-grief-구-깊은-고뇌-도검-sword-도끼-axe",
     "이름": "슬픔[Grief, 구: 깊은 고뇌]",
     "렙제": 59,
     "소켓 수": 5,
-    "방어구 부위": "도검(소드)/도끼",
+    "장비": "도검(Sword)/도끼(Axe)",
     "룬조합": [
       "에드+티르+로+말+랄",
       "(Eth+Tir+Lo+Mal+Ral)"
@@ -1774,11 +1775,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "59-인내-fortitude-갑옷",
+    "id": "59-인내-fortitude-갑옷-armor",
     "이름": "인내(Fortitude)",
     "렙제": 59,
     "소켓 수": 4,
-    "방어구 부위": "갑옷",
+    "장비": "갑옷(Armor)",
     "룬조합": [
       "엘+솔+돌+로",
       "(El+Sol+Dol+Lo)"
@@ -1801,11 +1802,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "59-인내-fortitude-무기",
+    "id": "59-인내-fortitude-무기-weapon",
     "이름": "인내(Fortitude)",
     "렙제": 59,
     "소켓 수": 4,
-    "방어구 부위": "무기",
+    "장비": "무기(Weapon)",
     "룬조합": [
       "엘+솔+돌+로",
       "(El+Sol+Dol+Lo)"
@@ -1828,11 +1829,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "61-찔레-bramble-구-검은딸기-검딸-갑옷",
+    "id": "61-찔레-bramble-구-검은딸기-검딸-갑옷-armor",
     "이름": "찔레[Bramble, 구: 검은딸기/검딸]",
     "렙제": 61,
     "소켓 수": 4,
-    "방어구 부위": "갑옷",
+    "장비": "갑옷(Armor)",
     "룬조합": [
       "랄+오움+수르+에드",
       "(Ral+Ohm+Sur+Eth)"
@@ -1854,11 +1855,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "61-윈드-wind-근접-무기",
+    "id": "61-윈드-wind-근접-무기-melee-weapon",
     "이름": "윈드(Wind)",
     "렙제": 61,
     "소켓 수": 2,
-    "방어구 부위": "근접 무기",
+    "장비": "근접 무기(Melee Weapon)",
     "룬조합": [
       "수르+엘",
       "(Sur+El)"
@@ -1879,11 +1880,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "61-용-dragon-갑옷",
+    "id": "61-용-dragon-갑옷-armor",
     "이름": "용(Dragon)",
     "렙제": 61,
     "소켓 수": 3,
-    "방어구 부위": "갑옷",
+    "장비": "갑옷(Armor)",
     "룬조합": [
       "수르+로+솔",
       "(Sur+Lo+Sol)"
@@ -1904,11 +1905,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "NaN-용-dragon-방패",
+    "id": "NaN-용-dragon-방패-shield",
     "이름": "용(Dragon)",
     "렙제": null,
     "소켓 수": 3,
-    "방어구 부위": "방패",
+    "장비": "방패(Shield)",
     "룬조합": [
       "수르+로+솔",
       "(Sur+Lo+Sol)"
@@ -1929,11 +1930,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "63-명예의굴레-명굴-chainsofhonor-갑옷",
+    "id": "63-명예의굴레-명굴-chainsofhonor-갑옷-armor",
     "이름": "명예의굴레/명굴(Chainsofhonor)",
     "렙제": 63,
     "소켓 수": 4,
-    "방어구 부위": "갑옷",
+    "장비": "갑옷(Armor)",
     "룬조합": [
       "돌+우움+베르+아이스트",
       "(Dol+Um+Ber+Ist)"
@@ -1954,11 +1955,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "63-야수-beast-도끼-홀-셉터-망치",
+    "id": "63-야수-beast-도끼-axe-홀-scepter-망치-hammer",
     "이름": "야수(Beast)",
     "렙제": 63,
     "소켓 수": 5,
-    "방어구 부위": "도끼/홀(셉터)/망치",
+    "장비": "도끼(Axe)/홀(Scepter)/망치(Hammer)",
     "룬조합": [
       "베르+티르+우움+말+룸",
       "(Ber+Tir+Um+Mal+Lum)"
@@ -1981,11 +1982,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "63-불멸-eternity-근접-무기",
+    "id": "63-불멸-eternity-근접-무기-melee-weapon",
     "이름": "불멸(Eternity)",
     "렙제": 63,
     "소켓 수": 5,
-    "방어구 부위": "근접 무기",
+    "장비": "근접 무기(Melee Weapon)",
     "룬조합": [
       "앰+베르+아이스트+솔+수르",
       "(Amn+Ber+Ist+Sol+Sur)"
@@ -2008,11 +2009,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "63-무한-infinity-구-무한의공간-무공-미늘창-폴암-창-스피어",
+    "id": "63-무한-infinity-구-무한의공간-무공-미늘창-polearm-창-spear",
     "이름": "무한[Infinity, 구: 무한의공간/무공]",
     "렙제": 63,
     "소켓 수": 4,
-    "방어구 부위": "미늘창(폴암)/창(스피어)",
+    "장비": "미늘창(Polearm)/창(Spear)",
     "룬조합": [
       "베르+말+베르+아이스트",
       "(Ber+Mal+Ber+Ist)"
@@ -2034,11 +2035,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "63-진노-wrath-구-격노-래쓰-원거리-무기",
+    "id": "63-진노-wrath-구-격노-래쓰-원거리-무기-ranged-weapon",
     "이름": "진노[Wrath, 구: 격노/래쓰]",
     "렙제": 63,
     "소켓 수": 4,
-    "방어구 부위": "원거리 무기",
+    "장비": "원거리 무기(Ranged Weapon)",
     "룬조합": [
       "풀+룸+베르+말",
       "(Pul+Lum+Ber+Mal)"
@@ -2060,11 +2061,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "65-원한-fury-근접-무기",
+    "id": "65-원한-fury-근접-무기-melee-weapon",
     "이름": "원한(Fury)",
     "렙제": 65,
     "소켓 수": 3,
-    "방어구 부위": "근접 무기",
+    "장비": "근접 무기(Melee Weapon)",
     "룬조합": [
       "자+굴+에드",
       "(Jah+Gul+Eth)"
@@ -2085,11 +2086,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "65-수수께끼-enigma-갑옷",
+    "id": "65-수수께끼-enigma-갑옷-armor",
     "이름": "수수께끼(Enigma)",
     "렙제": 65,
     "소켓 수": 3,
-    "방어구 부위": "갑옷",
+    "장비": "갑옷(Armor)",
     "룬조합": [
       "자+아이드+베르",
       "(Jah+Ith+Ber)"
@@ -2110,11 +2111,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "65-기근-famine-도끼-망치",
+    "id": "65-기근-famine-도끼-axe-망치-hammer",
     "이름": "기근(Famine)",
     "렙제": 65,
     "소켓 수": 4,
-    "방어구 부위": "도끼/망치",
+    "장비": "도끼(Axe)/망치(Hammer)",
     "룬조합": [
       "팔+오움+오르트+자(Fal+Ohm+Ort+Jah)"
     ],
@@ -2134,11 +2135,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "65-마지막-소원-last-wish-구-마지막-소망-마소-도검-소드-망치-도끼",
+    "id": "65-마지막-소원-last-wish-구-마지막-소망-마소-도검-sword-망치-hammer-도끼-axe",
     "이름": "마지막 소원 [Last Wish, 구: 마지막 소망/마소]",
     "렙제": 65,
     "소켓 수": 6,
-    "방어구 부위": "도검(소드)/망치/도끼",
+    "장비": "도검(Sword)/망치(Hammer)/도끼(Axe)",
     "룬조합": [
       "자+말+자+수르+자+베르",
       "(Jah+Mal+Jah+Sur+Jah+Ber)"
@@ -2159,11 +2160,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "65-신념-faith-구-신뢰-원거리-무기",
+    "id": "65-신념-faith-구-신뢰-원거리-무기-ranged-weapon",
     "이름": "신념[Faith, 구: 신뢰]",
     "렙제": 65,
     "소켓 수": 4,
-    "방어구 부위": "원거리 무기",
+    "장비": "원거리 무기(Ranged Weapon)",
     "룬조합": [
       "오움+자+렘+엘드",
       "(Ohm+Jah+Lem+Eld)"
@@ -2185,11 +2186,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "65-불사조-phoenix-무기",
+    "id": "65-불사조-phoenix-무기-weapon",
     "이름": "불사조(Phoenix)",
     "렙제": 65,
     "소켓 수": 4,
-    "방어구 부위": "무기",
+    "장비": "무기(Weapon)",
     "룬조합": [
       "벡스+벡스+로+자",
       "(Vex+Vex+Lo+Jah)"
@@ -2210,11 +2211,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "NaN-불사조-phoenix-방패",
+    "id": "NaN-불사조-phoenix-방패-shield",
     "이름": "불사조(Phoenix)",
     "렙제": null,
     "소켓 수": 4,
-    "방어구 부위": "방패",
+    "장비": "방패(Shield)",
     "룬조합": [
       "벡스+벡스+로+자",
       "(Vex+Vex+Lo+Jah)"
@@ -2235,11 +2236,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "65-꿈-dream-방패",
+    "id": "65-꿈-dream-방패-shield",
     "이름": "꿈(Dream)",
     "렙제": 65,
     "소켓 수": 3,
-    "방어구 부위": "방패",
+    "장비": "방패(Shield)",
     "룬조합": [
       "이오+자+풀",
       "(Io+Jah+Pul)"
@@ -2260,11 +2261,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "NaN-꿈-dream-투구",
+    "id": "NaN-꿈-dream-투구-helm",
     "이름": "꿈(Dream)",
     "렙제": null,
     "소켓 수": 3,
-    "방어구 부위": "투구",
+    "장비": "투구(Helm)",
     "룬조합": [
       "이오+자+풀",
       "(Io+Jah+Pul)"
@@ -2285,11 +2286,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "65-파괴-destruction-미늘창-폴암-도검-소드",
+    "id": "65-파괴-destruction-미늘창-polearm-도검-sword",
     "이름": "파괴(Destruction)",
     "렙제": 65,
     "소켓 수": 5,
-    "방어구 부위": "미늘창(폴암)/도검(소드)",
+    "장비": "미늘창(Polearm)/도검(Sword)",
     "룬조합": [
       "벡스+로+베르+자+코",
       "(Vex+Lo+Ber+Jah+Ko)"
@@ -2312,11 +2313,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "65-얼음-ice-원거리-무기",
+    "id": "65-얼음-ice-원거리-무기-ranged-weapon",
     "이름": "얼음(Ice)",
     "렙제": 65,
     "소켓 수": 4,
-    "방어구 부위": "원거리 무기",
+    "장비": "원거리 무기(Ranged Weapon)",
     "룬조합": [
       "앰+샤엘+자+로",
       "(Amn+Shael+Jah+Lo)"
@@ -2338,11 +2339,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "65-낙인-brand-구-인두-원거리-무기",
+    "id": "65-낙인-brand-구-인두-원거리-무기-ranged-weapon",
     "이름": "낙인[Brand, 구: 인두]",
     "렙제": 65,
     "소켓 수": 4,
-    "방어구 부위": "원거리 무기",
+    "장비": "원거리 무기(Ranged Weapon)",
     "룬조합": [
       "자+로+말+굴",
       "(Jah+Lo+Mal+Gul)"
@@ -2364,11 +2365,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "67-역병-plague-도검-소드-손톱-단도",
+    "id": "67-역병-plague-도검-sword-손톱-claw-단도-dagger",
     "이름": "역병(Plague)",
     "렙제": 67,
     "소켓 수": 3,
-    "방어구 부위": "도검(소드)/손톱/단도",
+    "장비": "도검(Sword)/손톱(Claw)/단도(Dagger)",
     "룬조합": [
       "참+샤엘+우움",
       "(Cham+Sheal+Um)"
@@ -2392,11 +2393,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "67-안개-mist-활-쇠뇌",
+    "id": "67-안개-mist-활-bow-쇠뇌-crossbow",
     "이름": "안개(Mist)",
     "렙제": 67,
     "소켓 수": 5,
-    "방어구 부위": "활/쇠뇌",
+    "장비": "활(Bow)/쇠뇌(Crossbow)",
     "룬조합": [
       "참+샤엘+굴+주울+아이드",
       "(Cham+Sheal+Gul+Thul+Ith)"
@@ -2421,11 +2422,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "67-파멸-doom-도끼-미늘창-폴암-망치",
+    "id": "67-파멸-doom-도끼-axe-미늘창-polearm-망치-hammer",
     "이름": "파멸(Doom)",
     "렙제": 67,
     "소켓 수": 5,
-    "방어구 부위": "도끼/미늘창(폴암)/망치",
+    "장비": "도끼(Axe)/미늘창(Polearm)/망치(Hammer)",
     "룬조합": [
       "헬+오움+우움+로+참",
       "(Hel+Ohm+Um+Lo+Cham)"
@@ -2447,11 +2448,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "67-정의의손길-handofjustice-무기",
+    "id": "67-정의의손길-handofjustice-무기-weapon",
     "이름": "정의의손길(HandofJustice)",
     "렙제": 67,
     "소켓 수": 4,
-    "방어구 부위": "무기",
+    "장비": "무기(Weapon)",
     "룬조합": [
       "수르+참+앰+로",
       "(Sur+Cham+Amn+Lo)"
@@ -2473,11 +2474,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "67-긍지-pride-구-자존심-미늘창-폴암-창-스피어",
+    "id": "67-긍지-pride-구-자존심-미늘창-polearm-창-spear",
     "이름": "긍지[Pride, 구: 자존심]",
     "렙제": 67,
     "소켓 수": 4,
-    "방어구 부위": "미늘창(폴암)/창(스피어)",
+    "장비": "미늘창(Polearm)/창(Spear)",
     "룬조합": [
       "참+수르+이오+로",
       "(Cham+Sur+Io+Lo)"
@@ -2500,11 +2501,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "67-탈태-투구",
+    "id": "67-탈태-투구-helm",
     "이름": "탈태",
     "렙제": 67,
     "소켓 수": 3,
-    "방어구 부위": "투구",
+    "장비": "투구(Helm)",
     "룬조합": [
       "이오+참+팔",
       "(Io+Cham+Fal)"
@@ -2531,11 +2532,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "69-집착-obsession-지팡이",
+    "id": "69-집착-obsession-지팡이-staff",
     "이름": "집착(Obsession)",
     "렙제": 69,
     "소켓 수": 6,
-    "방어구 부위": "지팡이",
+    "장비": "지팡이(Staff)",
     "룬조합": [
       "조드+이스트+렘+룸+이오+네프",
       "(Zod+Ist+Lem+Lum+Io+Nef)"
@@ -2562,11 +2563,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "69-죽어가는-자의-숨결-breathofthedying-구-죽음의-숨결-죽숨-무기",
+    "id": "69-죽어가는-자의-숨결-breathofthedying-구-죽음의-숨결-죽숨-무기-weapon",
     "이름": "죽어가는 자의 숨결 [BreathoftheDying, 구: 죽음의 숨결/죽숨]",
     "렙제": 69,
     "소켓 수": 6,
-    "방어구 부위": "무기",
+    "장비": "무기(Weapon)",
     "룬조합": [
       "벡스+헬+엘+엘드+조드+에드",
       "(Vex+Hel+El+Eld+Zod+Eth)"
@@ -2591,11 +2592,11 @@
     "sourceUrl": "https://malthael.tistory.com/8"
   },
   {
-    "id": "69-공허-void-대거-단검",
+    "id": "69-공허-void-단도-dagger",
     "이름": "공허(Void)",
     "렙제": 69,
     "소켓 수": 3,
-    "방어구 부위": "대거(단검)",
+    "장비": "단도(Dagger)",
     "룬조합": [
       "주울+조드+이스트",
       "(Thul+Zod+Ist)"

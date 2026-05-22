@@ -46,14 +46,15 @@ type Runeword = {
   이름: string
   렙제: number
   '소켓 수': number
-  '방어구 부위': string
+  장비?: string
+  '방어구 부위'?: string
   룬조합: string[]
   버전: string[]
   options: string[]
   sourceUrl: string
 }
 
-type FilterType = 'socket' | 'equipment' | 'rune' | 'option'
+type FilterType = 'socket' | 'equipment' | 'rune' | 'option' | 'ladder'
 type SortType = 'level-asc' | 'level-desc' | 'socket-asc' | 'socket-desc'
 
 type RunewordFilter = {
@@ -67,6 +68,17 @@ type RunewordFilter = {
 }
 
 const runewords = runewordsData as Runeword[]
+
+function getRunewordEquipment(item: Runeword) {
+  return item.장비 ?? item['방어구 부위'] ?? ''
+}
+
+function splitEquipmentTypes(equipment: string) {
+  return equipment
+    .split(/[/,]/)
+    .map((part) => part.replace(/\*/g, '').trim())
+    .filter(Boolean)
+}
 
 const pages: Page[] = [
   {
@@ -489,7 +501,12 @@ function RunewordsPage() {
   const [filters, setFilters] = useState<RunewordFilter[]>([])
   const [sortType, setSortType] = useState<SortType>('level-asc')
   const equipmentTypes = useMemo(
-    () => [...new Set(runewords.map((item) => item['방어구 부위']))].sort((a, b) => a.localeCompare(b)),
+    () =>
+      [
+        ...new Set(
+          runewords.flatMap((item) => splitEquipmentTypes(getRunewordEquipment(item))),
+        ),
+      ].sort((a, b) => a.localeCompare(b)),
     [],
   )
 
@@ -521,7 +538,9 @@ function RunewordsPage() {
           }
 
           if (filter.type === 'equipment') {
-            return filter.equipmentType ? item['방어구 부위'] === filter.equipmentType : true
+            return filter.equipmentType
+              ? splitEquipmentTypes(getRunewordEquipment(item)).includes(filter.equipmentType)
+              : true
           }
 
           if (filter.type === 'rune') {
@@ -530,6 +549,10 @@ function RunewordsPage() {
             return keyword
               ? item.룬조합.some((runeLine) => runeLine.toLowerCase().includes(keyword))
               : true
+          }
+
+          if (filter.type === 'ladder') {
+            return item.버전.some((version) => version.replace(/\s+/g, '').includes('래더전용'))
           }
 
           const keyword = filter.text.trim().toLowerCase()
@@ -613,7 +636,7 @@ function RunewordsPage() {
             <tr>
               <th>이름</th>
               <th>렙제</th>
-              <th>부위</th>
+              <th>장비</th>
               <th>소켓</th>
               <th>룬조합</th>
               <th>옵션</th>
@@ -624,7 +647,7 @@ function RunewordsPage() {
               <tr key={item.id}>
                 <td className="runeword-name-cell">
                   <span className={`runeword-name ${item.버전.length > 0 ? 'has-version' : ''}`}>
-                    {item.이름}
+                    <FormattedRunewordName name={item.이름} />
                     {item.버전.length > 0 ? '*' : ''}
                   </span>
                   {item.버전.length > 0 && (
@@ -636,7 +659,9 @@ function RunewordsPage() {
                   )}
                 </td>
                 <td>{item.렙제}</td>
-                <td>{item['방어구 부위']}</td>
+                <td>
+                  <EquipmentLines equipment={getRunewordEquipment(item)} />
+                </td>
                 <td>{item['소켓 수']}</td>
                 <td>
                   {item.룬조합.map((line) => (
@@ -656,6 +681,61 @@ function RunewordsPage() {
         </table>
       </div>
     </section>
+  )
+}
+
+function EquipmentLines({ equipment }: { equipment: string }) {
+  return (
+    <span className="equipment-lines">
+      {splitEquipmentTypes(equipment).map((part) => (
+        <span key={part}>{part}</span>
+      ))}
+    </span>
+  )
+}
+
+function parseRunewordName(name: string) {
+  const normalizedName = name.replace(/\s+/g, ' ').trim()
+  const bracketMatch = normalizedName.match(/^(.*?)\s*(?:\[|\()([^\])]+)(?:\]|\))\s*$/)
+  const malformedMatch = normalizedName.match(/^(.+?)([A-Za-z][A-Za-z\s']+(?:,\s*구:\s*.+)?)\]\s*$/)
+  const primarySource = (bracketMatch?.[1] ?? malformedMatch?.[1] ?? normalizedName).trim()
+  const content = (bracketMatch?.[2] ?? malformedMatch?.[2] ?? '').trim()
+  const [primary, ...inlineAliases] = primarySource
+    .split('/')
+    .map((part) => part.trim())
+    .filter(Boolean)
+  const contentParts = content
+    .split(',')
+    .map((part) => part.trim())
+    .filter(Boolean)
+  const english = contentParts.find((part) => !part.startsWith('구:')) ?? ''
+  const aliases = [
+    ...inlineAliases,
+    ...contentParts
+      .filter((part) => part.startsWith('구:'))
+      .flatMap((part) => part.replace(/^구:\s*/, '').split('/'))
+      .map((part) => part.trim())
+      .filter(Boolean),
+  ]
+
+  return {
+    primary: primary || normalizedName,
+    english,
+    aliases,
+  }
+}
+
+function FormattedRunewordName({ name }: { name: string }) {
+  const parsedName = parseRunewordName(name)
+
+  return (
+    <span className="formatted-runeword-name">
+      <span>{parsedName.primary}</span>
+      {parsedName.english && <span>{parsedName.english}</span>}
+      {parsedName.aliases.map((alias) => (
+        <span key={alias}>({alias})</span>
+      ))}
+    </span>
   )
 }
 
@@ -720,6 +800,7 @@ function RunewordFilterRow({
         <option value="equipment">장비 부위</option>
         <option value="rune">룬</option>
         <option value="option">옵션</option>
+        <option value="ladder">래더전용</option>
       </select>
 
       <div className="filter-config">
@@ -775,6 +856,10 @@ function RunewordFilterRow({
             value={filter.text}
             onChange={(event) => onUpdate({ text: event.target.value })}
           />
+        )}
+
+        {filter.type === 'ladder' && (
+          <span className="fixed-filter-label">래더 전용 룬워드만 표시</span>
         )}
       </div>
 

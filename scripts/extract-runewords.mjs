@@ -40,6 +40,56 @@ function unique(values) {
   return [...new Set(values)]
 }
 
+const EQUIPMENT_NORMALIZERS = [
+  { pattern: /^(?:도검|도검\(소드\))$/, value: '도검(Sword)' },
+  { pattern: /^(?:단도|단검|대거|대거\(단검\))$/, value: '단도(Dagger)' },
+  { pattern: /^(?:망치|해머)$/, value: '망치(Hammer)' },
+  { pattern: /^(?:메이스\*?|철퇴|철퇴\(메이스\))$/, value: '철퇴(Mace)' },
+  { pattern: /^도끼$/, value: '도끼(Axe)' },
+  { pattern: /^(?:미늘창|미늘창\(폴암\))$/, value: '미늘창(Polearm)' },
+  { pattern: /^(?:창|창\(스피어\))$/, value: '창(Spear)' },
+  { pattern: /^활$/, value: '활(Bow)' },
+  { pattern: /^쇠뇌$/, value: '쇠뇌(Crossbow)' },
+  { pattern: /^(?:지팡이|지팡이\(스테프\))$/, value: '지팡이(Staff)' },
+  { pattern: /^완드$/, value: '완드(Wand)' },
+  { pattern: /^(?:홀|홀\(셉터\))$/, value: '홀(Scepter)' },
+  { pattern: /^(?:손톱|손톱\(클러\))$/, value: '손톱(Claw)' },
+  { pattern: /^투구$/, value: '투구(Helm)' },
+  { pattern: /^갑옷$/, value: '갑옷(Armor)' },
+  { pattern: /^방패$/, value: '방패(Shield)' },
+  { pattern: /^무기$/, value: '무기(Weapon)' },
+  { pattern: /^근접 무기$/, value: '근접 무기(Melee Weapon)' },
+  { pattern: /^원거리 무기$/, value: '원거리 무기(Ranged Weapon)' },
+  { pattern: /^팔라딘 방패$/, value: '팔라딘 방패(Paladin Shield)' },
+  { pattern: /^네크 전용 방패$/, value: '네크 전용 방패(Necromancer Shield)' },
+  { pattern: /^팔라$/, value: '팔라딘 전용 장비(Paladin Item)' },
+  { pattern: /^악마술사$/, value: '악마술사 전용 장비(Demonologist Item)' },
+]
+
+function normalizeEquipmentPart(part) {
+  const normalizedPart = part.replace(/\*/g, '').trim()
+  const normalizer = EQUIPMENT_NORMALIZERS.find(({ pattern }) => pattern.test(normalizedPart))
+
+  return normalizer?.value ?? normalizedPart
+}
+
+function normalizeEquipment(equipment) {
+  return unique(
+    equipment
+      .split(/[/,]/)
+      .map(normalizeEquipmentPart)
+      .filter(Boolean),
+  ).join('/')
+}
+
+function normalizeVersion(name, version) {
+  if (name === '경계(Vigilance)' && !version.includes('래더 전용')) {
+    return [...version, '래더 전용']
+  }
+
+  return version
+}
+
 function tableRows(html) {
   const tableStart = html.indexOf(
     '<table style="border-collapse: collapse; width: 100%; height: 26140px;"',
@@ -115,13 +165,13 @@ async function main() {
     const combination = parseCombinationCell(cells[1])
 
     return {
-      id: `${levelRequired}-${slug(combination.name)}-${slug(combination.equipmentType)}`,
+      id: `${levelRequired}-${slug(combination.name)}-${slug(normalizeEquipment(combination.equipmentType))}`,
       이름: combination.name,
       렙제: levelRequired,
       '소켓 수': combination.socketCount,
-      '방어구 부위': combination.equipmentType,
+      장비: normalizeEquipment(combination.equipmentType),
       룬조합: combination.runeCombination,
-      버전: combination.version,
+      버전: normalizeVersion(combination.name, combination.version),
       options: cellLines(cells[2]),
       sourceUrl: SOURCE_URL,
     }
