@@ -18,6 +18,7 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import { NavLink, Route, Routes } from 'react-router-dom'
+import runeUpgradesData from './data/rune-upgrades.json'
 import runewordsData from './data/runewords.json'
 import './App.css'
 
@@ -67,7 +68,65 @@ type RunewordFilter = {
   text: string
 }
 
+type RuneUpgrade = {
+  번호: number
+  한글명: string
+  영문명: string
+  제한레벨: number | string
+  무기: string[]
+  방어구: string[]
+  조합방법: string
+  이미지: string
+  '드랍율(카운테스)': {
+    보통: string
+    악몽: string
+    지옥: string
+  }
+}
+
+const runeUpgrades = runeUpgradesData as RuneUpgrade[]
 const runewords = runewordsData as Runeword[]
+
+const EQUIPMENT_FILTER_GROUPS = [
+  {
+    label: '투구',
+    items: ['투구(Helm)'],
+  },
+  {
+    label: '갑옷',
+    items: ['갑옷(Armor)'],
+  },
+  {
+    label: '무기류',
+    items: [
+      '근접 무기(Melee Weapon)',
+      '원거리 무기(Ranged Weapon)',
+      '모든 무기(Weapon)',
+      '도검(Sword)',
+      '도끼(Axe)',
+      '철퇴(Mace)',
+      '망치(Hammer)',
+      '단도(Dagger)',
+      '미늘창(Polearm)',
+      '창(Spear)',
+      '활(Bow)',
+      '쇠뇌(Crossbow)',
+      '지팡이(Staff)',
+      '완드(Wand)',
+      '홀(Scepter)',
+      '손톱(Claw)',
+      '방패(Shield)',
+    ],
+  },
+  {
+    label: '클래스 전용 방패',
+    items: [
+      '팔라딘 전용 방패(Paladin Shield)',
+      '네크 전용 방패(Necromancer Shield)',
+      '악마술사 전용 방패(Demonologist Shield)',
+    ],
+  },
+]
 
 function getRunewordEquipment(item: Runeword) {
   return item.장비 ?? item['방어구 부위'] ?? ''
@@ -78,6 +137,20 @@ function splitEquipmentTypes(equipment: string) {
     .split(/[/,]/)
     .map((part) => part.replace(/\*/g, '').trim())
     .filter(Boolean)
+}
+
+function groupEquipmentTypes(equipmentTypes: string[]) {
+  const availableTypes = new Set(equipmentTypes)
+  const groupedTypes = new Set<string>()
+  const groups = EQUIPMENT_FILTER_GROUPS.map((group) => {
+    const items = group.items.filter((item) => availableTypes.has(item))
+    items.forEach((item) => groupedTypes.add(item))
+
+    return { ...group, items }
+  }).filter((group) => group.items.length > 0)
+  const etcItems = equipmentTypes.filter((item) => !groupedTypes.has(item))
+
+  return etcItems.length > 0 ? [...groups, { label: '기타', items: etcItems }] : groups
 }
 
 const pages: Page[] = [
@@ -119,11 +192,44 @@ const pages: Page[] = [
   },
 ]
 
+const itemCategoryPages: Page[] = [
+  {
+    path: '/items/normal',
+    title: '일반',
+    description: '일반 아이템과 베이스 장비 정보를 정리합니다.',
+    icon: PackageSearch,
+  },
+  {
+    path: '/items/sets',
+    title: '세트',
+    description: '세트 아이템의 구성과 착용 효과를 정리합니다.',
+    icon: Boxes,
+  },
+  {
+    path: '/items/uniques',
+    title: '유니크',
+    description: '유니크 아이템의 옵션과 활용 정보를 정리합니다.',
+    icon: PackageSearch,
+  },
+  {
+    path: '/items/runes',
+    title: '룬',
+    description: '룬 정보와 조합, 주요 사용처를 정리합니다.',
+    icon: Gem,
+  },
+]
+
+const routePages = [...pages, ...itemCategoryPages]
+
 const navigationItems: NavigationItem[] = [
   {
     title: '아이템 정보',
-    path: '/items',
     icon: PackageSearch,
+    children: itemCategoryPages.map((page) => ({
+      title: page.title,
+      path: page.path,
+      icon: page.icon,
+    })),
   },
   {
     title: '호라드릭 함',
@@ -134,6 +240,11 @@ const navigationItems: NavigationItem[] = [
       { title: '보석 업글', path: '/cube/gem-upgrades', icon: Gem },
       { title: '기타 조합', path: '/cube/recipes', icon: FlaskConical },
     ],
+  },
+  {
+    title: '룬 시세표',
+    href: 'https://tradia.me/diablo2/rune_price',
+    icon: Gem,
   },
   {
     title: '레벨업 효율표',
@@ -485,6 +596,143 @@ function CategoryPage({ title, description, icon: Icon }: Page) {
   )
 }
 
+function RunesPage() {
+  return (
+    <section className="runes-page">
+      <div className="category-heading">
+        <Gem aria-hidden="true" />
+        <span>아이템 정보</span>
+        <h1>룬</h1>
+        <p>룬 번호와 이름, 상위 룬 조합 방법을 확인합니다.</p>
+      </div>
+
+      <div className="table-meta">총 {runeUpgrades.length}개 룬 표시</div>
+
+      <div className="runes-table-wrap">
+        <table className="runewords-table runes-table">
+          <thead>
+            <tr>
+              <th>번호</th>
+              <th>룬</th>
+              <th>무기</th>
+              <th>방어구</th>
+              <th>제한 레벨</th>
+              <th>상위룬 업그레이드 조합</th>
+              <th>드랍율(카운테스)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {runeUpgrades.map((rune) => (
+              <tr key={rune.번호}>
+                <td>
+                  <span className="rune-number rune-card-trigger">
+                    <img src={rune.이미지} alt="" aria-hidden="true" />
+                    <span>{rune.번호}</span>
+                    <RuneMiniCard rune={rune} />
+                  </span>
+                </td>
+                <td>
+                  <span className="rune-name">
+                    <img src={rune.이미지} alt={`${rune.한글명} 아이콘`} />
+                    <strong>{rune.한글명}</strong>
+                    <span>({rune.영문명})</span>
+                  </span>
+                </td>
+                <td>
+                  <RuneEffectLines values={rune.무기} />
+                </td>
+                <td>
+                  <RuneEffectLines values={rune.방어구} />
+                </td>
+                <td className="rune-required-level">{rune.제한레벨}</td>
+                <td className="rune-recipe">{rune.조합방법}</td>
+                <td>
+                  <span className="countess-rates">
+                    {countessRateLines(rune).map((line) => (
+                      <span key={line}>{line}</span>
+                    ))}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  )
+}
+
+function RuneMiniCard({ rune }: { rune: RuneUpgrade }) {
+  const countessRates = countessRateLines(rune)
+
+  return (
+    <span className="rune-mini-card" role="tooltip">
+      <span className="rune-mini-card-header">
+        <img src={rune.이미지} alt="" aria-hidden="true" />
+        <span>
+          <strong>{rune.한글명}</strong>
+          <span>({rune.영문명})</span>
+        </span>
+      </span>
+
+      <span className="rune-mini-card-grid">
+        <span>번호</span>
+        <strong>{rune.번호}</strong>
+        <span>제한 레벨</span>
+        <strong>{rune.제한레벨}</strong>
+      </span>
+
+      <span className="rune-mini-card-section">
+        <b>무기</b>
+        <RuneEffectLines values={rune.무기} />
+      </span>
+
+      <span className="rune-mini-card-section">
+        <b>방어구</b>
+        <RuneEffectLines values={rune.방어구} />
+      </span>
+
+      {rune.조합방법 && (
+        <span className="rune-mini-card-section">
+          <b>상위룬 업그레이드 조합</b>
+          <span>{rune.조합방법}</span>
+        </span>
+      )}
+
+      {countessRates.length > 0 && (
+        <span className="rune-mini-card-section">
+          <b>드랍율(카운테스)</b>
+          <span className="countess-rates">
+            {countessRates.map((line) => (
+              <span key={line}>{line}</span>
+            ))}
+          </span>
+        </span>
+      )}
+    </span>
+  )
+}
+
+function countessRateLines(rune: RuneUpgrade) {
+  return [
+    ['보통', rune['드랍율(카운테스)'].보통],
+    ['악몽', rune['드랍율(카운테스)'].악몽],
+    ['지옥', rune['드랍율(카운테스)'].지옥],
+  ]
+    .filter(([, rate]) => rate)
+    .map(([difficulty, rate]) => `${difficulty} ${rate}`)
+}
+
+function RuneEffectLines({ values }: { values: string[] }) {
+  return (
+    <span className="rune-effect-lines">
+      {values.map((value) => (
+        <span key={value}>{value}</span>
+      ))}
+    </span>
+  )
+}
+
 function createFilter(): RunewordFilter {
   return {
     id: Date.now() + Math.floor(Math.random() * 1000),
@@ -499,6 +747,7 @@ function createFilter(): RunewordFilter {
 
 function RunewordsPage() {
   const [filters, setFilters] = useState<RunewordFilter[]>([])
+  const [nameQuery, setNameQuery] = useState('')
   const [sortType, setSortType] = useState<SortType>('level-asc')
   const equipmentTypes = useMemo(
     () =>
@@ -509,6 +758,7 @@ function RunewordsPage() {
       ].sort((a, b) => a.localeCompare(b)),
     [],
   )
+  const equipmentGroups = useMemo(() => groupEquipmentTypes(equipmentTypes), [equipmentTypes])
 
   const updateFilter = (id: number, next: Partial<RunewordFilter>) => {
     setFilters((current) =>
@@ -523,7 +773,14 @@ function RunewordsPage() {
   const filteredRunewords = useMemo(() => {
     const activeFilters = filters.filter((filter) => filter.enabled)
 
+    const normalizedNameQuery = nameQuery.trim().toLowerCase()
+
     return runewords
+      .filter((item) =>
+        normalizedNameQuery
+          ? item.이름.toLowerCase().includes(normalizedNameQuery)
+          : true,
+      )
       .filter((item) =>
         activeFilters.every((filter) => {
           if (filter.type === 'socket') {
@@ -577,7 +834,7 @@ function RunewordsPage() {
 
         return left.렙제 - right.렙제
       })
-  }, [filters, sortType])
+  }, [filters, nameQuery, sortType])
 
   return (
     <section className="runewords-page">
@@ -603,7 +860,7 @@ function RunewordsPage() {
               {filters.map((filter) => (
                 <RunewordFilterRow
                   key={filter.id}
-                  equipmentTypes={equipmentTypes}
+                  equipmentGroups={equipmentGroups}
                   filter={filter}
                   onRemove={() => removeFilter(filter.id)}
                   onUpdate={(next) => updateFilter(filter.id, next)}
@@ -623,6 +880,18 @@ function RunewordsPage() {
             <option value="socket-asc">소켓수 오름차순</option>
             <option value="socket-desc">소켓수 내림차순</option>
           </select>
+        </label>
+      </div>
+
+      <div className="name-search-row">
+        <label className="name-search-control">
+          <span>이름 검색</span>
+          <input
+            type="search"
+            placeholder="예: 수수께끼, Spirit, 스피릿"
+            value={nameQuery}
+            onChange={(event) => setNameQuery(event.target.value)}
+          />
         </label>
       </div>
 
@@ -687,11 +956,34 @@ function RunewordsPage() {
 function EquipmentLines({ equipment }: { equipment: string }) {
   return (
     <span className="equipment-lines">
-      {splitEquipmentTypes(equipment).map((part) => (
-        <span key={part}>{part}</span>
-      ))}
+      {splitEquipmentTypes(equipment).map((part) => {
+        const parsedPart = parseEquipmentLabel(part)
+
+        return (
+          <span className="equipment-entry" key={part}>
+            <span className="equipment-primary">{parsedPart.primary}</span>
+            {parsedPart.english && <span className="equipment-english">({parsedPart.english})</span>}
+          </span>
+        )
+      })}
     </span>
   )
+}
+
+function parseEquipmentLabel(label: string) {
+  const match = label.trim().match(/^(.*?)\s*\(([^)]+)\)$/)
+
+  if (!match) {
+    return {
+      primary: label.trim(),
+      english: '',
+    }
+  }
+
+  return {
+    primary: match[1].trim(),
+    english: match[2].trim(),
+  }
 }
 
 function parseRunewordName(name: string) {
@@ -765,12 +1057,12 @@ function RuneCombinationLine({ line }: { line: string }) {
 }
 
 function RunewordFilterRow({
-  equipmentTypes,
+  equipmentGroups,
   filter,
   onRemove,
   onUpdate,
 }: {
-  equipmentTypes: string[]
+  equipmentGroups: { label: string; items: string[] }[]
   filter: RunewordFilter
   onRemove: () => void
   onUpdate: (next: Partial<RunewordFilter>) => void
@@ -832,10 +1124,14 @@ function RunewordFilterRow({
         {filter.type === 'equipment' && (
           <select value={filter.equipmentType} onChange={(event) => onUpdate({ equipmentType: event.target.value })}>
             <option value="">장비 부위 선택</option>
-            {equipmentTypes.map((equipmentType) => (
-              <option value={equipmentType} key={equipmentType}>
-                {equipmentType}
-              </option>
+            {equipmentGroups.map((group) => (
+              <optgroup label={`--- ${group.label} ---`} key={group.label}>
+                {group.items.map((equipmentType) => (
+                  <option value={equipmentType} key={equipmentType}>
+                    {equipmentType}
+                  </option>
+                ))}
+              </optgroup>
             ))}
           </select>
         )}
@@ -890,7 +1186,8 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/cube/runewords" element={<RunewordsPage />} />
-          {pages.filter((page) => page.path !== '/cube/runewords').map((page) => (
+          <Route path="/items/runes" element={<RunesPage />} />
+          {routePages.filter((page) => !['/cube/runewords', '/items/runes'].includes(page.path)).map((page) => (
             <Route
               key={page.path}
               path={page.path}
