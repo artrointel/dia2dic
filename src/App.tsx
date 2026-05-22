@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react'
 import {
   BookOpen,
   Boxes,
@@ -18,6 +18,7 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import { NavLink, Route, Routes } from 'react-router-dom'
+import equipmentUpgradesData from './data/equipment-upgrades.json'
 import runeUpgradesData from './data/rune-upgrades.json'
 import runewordsData from './data/runewords.json'
 import './App.css'
@@ -84,6 +85,16 @@ type RuneUpgrade = {
   }
 }
 
+type EquipmentUpgrade = {
+  분류: string
+  대상: string
+  현재등급: string
+  결과등급: string
+  재료: string[]
+  결과: string
+}
+
+const equipmentUpgrades = equipmentUpgradesData as EquipmentUpgrade[]
 const runeUpgrades = runeUpgradesData as RuneUpgrade[]
 const runewords = runewordsData as Runeword[]
 
@@ -596,6 +607,101 @@ function CategoryPage({ title, description, icon: Icon }: Page) {
   )
 }
 
+function EquipmentUpgradesPage() {
+  const groups = useMemo(
+    () =>
+      [...new Set(equipmentUpgrades.map((recipe) => recipe.분류))].map((category) => ({
+        category,
+        recipes: equipmentUpgrades.filter((recipe) => recipe.분류 === category),
+      })),
+    [],
+  )
+
+  return (
+    <section className="equipment-upgrades-page">
+      <div className="category-heading">
+        <PackageSearch aria-hidden="true" />
+        <span>호라드릭 함</span>
+        <h1>장비 업글</h1>
+        <p>레어, 유니크, 세트 장비의 등급 업그레이드 조합식을 확인합니다.</p>
+      </div>
+
+      <div className="upgrade-recipe-groups">
+        {groups.map((group) => (
+          <section className="upgrade-recipe-group" key={group.category}>
+            <div className="upgrade-recipe-group-header">
+              <h2>{group.category}</h2>
+              <span>{group.recipes.length}개 조합</span>
+            </div>
+
+            <div className="upgrade-recipe-table-wrap">
+              <table className="upgrade-recipe-table">
+                <thead>
+                  <tr>
+                    <th>대상</th>
+                    <th>업그레이드</th>
+                    <th>조합</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {group.recipes.map((recipe, index) => {
+                    const isFirstTargetRow =
+                      index === 0 || group.recipes[index - 1].대상 !== recipe.대상
+                    const targetRowSpan = isFirstTargetRow
+                      ? group.recipes.filter((candidate) => candidate.대상 === recipe.대상).length
+                      : 0
+
+                    return (
+                      <tr key={`${recipe.분류}-${recipe.현재등급}-${recipe.결과등급}`}>
+                        {isFirstTargetRow && (
+                          <td className="upgrade-target-cell" rowSpan={targetRowSpan}>
+                            {recipe.대상}
+                          </td>
+                        )}
+                        <td>
+                          <div className="upgrade-recipe-flow">
+                            <b>{recipe.현재등급}</b>
+                            <span>→</span>
+                            <b>{recipe.결과등급}</b>
+                          </div>
+                        </td>
+                        <td>
+                          <div className="upgrade-ingredient-list">
+                            {recipe.재료.map((ingredient, ingredientIndex) => (
+                              <Fragment key={`${ingredient}-${ingredientIndex}`}>
+                                {ingredientIndex > 0 && <span className="upgrade-plus">+</span>}
+                                <UpgradeIngredient ingredient={ingredient} />
+                              </Fragment>
+                            ))}
+                          </div>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+function UpgradeIngredient({ ingredient }: { ingredient: string }) {
+  const runeName = ingredient.match(/^(.+)룬$/)?.[1]
+
+  if (!runeName) {
+    return <span className="upgrade-ingredient">{ingredient}</span>
+  }
+
+  return (
+    <span className="upgrade-ingredient is-rune">
+      <RuneCombinationToken name={runeName} />
+    </span>
+  )
+}
+
 function RunesPage() {
   return (
     <section className="runes-page">
@@ -610,6 +716,15 @@ function RunesPage() {
 
       <div className="runes-table-wrap">
         <table className="runewords-table runes-table">
+          <colgroup>
+            <col className="runes-col-number" />
+            <col className="runes-col-name" />
+            <col className="runes-col-weapon" />
+            <col className="runes-col-armor" />
+            <col className="runes-col-level" />
+            <col className="runes-col-recipe" />
+            <col className="runes-col-countess" />
+          </colgroup>
           <thead>
             <tr>
               <th>번호</th>
@@ -899,6 +1014,14 @@ function RunewordsPage() {
 
       <div className="runewords-table-wrap">
         <table className="runewords-table">
+          <colgroup>
+            <col className="runeword-col-name" />
+            <col className="runeword-col-level" />
+            <col className="runeword-col-equipment" />
+            <col className="runeword-col-socket" />
+            <col className="runeword-col-runes" />
+            <col className="runeword-col-options" />
+          </colgroup>
           <thead>
             <tr>
               <th>이름</th>
@@ -952,18 +1075,17 @@ function RunewordsPage() {
 }
 
 function EquipmentLines({ equipment }: { equipment: string }) {
+  const parsedParts = splitEquipmentTypes(equipment).map((part) => parseEquipmentLabel(part))
+  const primaryLine = parsedParts.map((part) => part.primary).join('/')
+  const englishLine = parsedParts
+    .map((part) => part.english)
+    .filter(Boolean)
+    .join('/')
+
   return (
     <span className="equipment-lines">
-      {splitEquipmentTypes(equipment).map((part) => {
-        const parsedPart = parseEquipmentLabel(part)
-
-        return (
-          <span className="equipment-entry" key={part}>
-            <span className="equipment-primary">{parsedPart.primary}</span>
-            {parsedPart.english && <span className="equipment-english">({parsedPart.english})</span>}
-          </span>
-        )
-      })}
+      <span className="equipment-primary">{primaryLine}</span>
+      {englishLine && <span className="equipment-english">({englishLine})</span>}
     </span>
   )
 }
@@ -1219,8 +1341,9 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/cube/runewords" element={<RunewordsPage />} />
+          <Route path="/cube/equipment-upgrades" element={<EquipmentUpgradesPage />} />
           <Route path="/items/runes" element={<RunesPage />} />
-          {routePages.filter((page) => !['/cube/runewords', '/items/runes'].includes(page.path)).map((page) => (
+          {routePages.filter((page) => !['/cube/runewords', '/cube/equipment-upgrades', '/items/runes'].includes(page.path)).map((page) => (
             <Route
               key={page.path}
               path={page.path}

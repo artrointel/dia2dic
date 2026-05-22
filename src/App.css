@@ -515,8 +515,124 @@ main {
 }
 
 .runewords-page,
-.runes-page {
+.runes-page,
+.equipment-upgrades-page {
   padding: 56px 0 72px;
+}
+
+.upgrade-recipe-groups {
+  display: grid;
+  gap: 22px;
+  margin-top: 34px;
+}
+
+.upgrade-recipe-group {
+  display: grid;
+  gap: 12px;
+}
+
+.upgrade-recipe-group-header {
+  align-items: end;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.upgrade-recipe-group-header h2 {
+  color: var(--text-strong);
+  font-size: 20px;
+  margin: 0;
+}
+
+.upgrade-recipe-group-header span {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.upgrade-recipe-table-wrap {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: visible;
+}
+
+.upgrade-recipe-table {
+  border-collapse: collapse;
+  min-width: 840px;
+  width: 100%;
+}
+
+.upgrade-recipe-table th,
+.upgrade-recipe-table td {
+  border-bottom: 1px solid var(--border);
+  padding: 12px 14px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.upgrade-recipe-table th {
+  background: var(--surface-strong);
+  color: var(--text-strong);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.upgrade-recipe-table tbody tr:nth-child(odd) td {
+  background: var(--surface);
+}
+
+.upgrade-recipe-table tbody tr:nth-child(even) td {
+  background: color-mix(in srgb, var(--surface) 72%, var(--surface-strong));
+}
+
+.upgrade-target-cell {
+  color: var(--table-equipment);
+  font-size: 13px;
+  font-weight: 800;
+  text-shadow: var(--table-text-shadow);
+  width: 84px;
+}
+
+.upgrade-recipe-flow {
+  align-items: center;
+  color: var(--text-muted);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.upgrade-recipe-flow b {
+  color: var(--table-name);
+  font-size: 15px;
+  text-shadow: var(--table-text-shadow);
+}
+
+.upgrade-ingredient-list {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.upgrade-ingredient {
+  background: var(--search-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-strong);
+  display: inline-flex;
+  font-size: 13px;
+  font-weight: 800;
+  min-height: 32px;
+  padding: 6px 9px;
+}
+
+.upgrade-ingredient.is-rune {
+  color: var(--table-name);
+}
+
+.upgrade-plus {
+  color: var(--table-option);
+  font-weight: 800;
 }
 
 .table-toolbar {
@@ -710,18 +826,44 @@ main {
 
 .runewords-table {
   border-collapse: collapse;
-  min-width: 1120px;
+  table-layout: auto;
   width: 100%;
+}
+
+.runeword-col-name {
+  width: max-content;
+}
+
+.runeword-col-level,
+.runeword-col-socket {
+  width: max-content;
+}
+
+.runeword-col-equipment {
+  width: max-content;
+}
+
+.runeword-col-runes {
+  width: max-content;
+}
+
+.runeword-col-options {
+  width: auto;
 }
 
 .runes-table {
   min-width: 1120px;
+  table-layout: auto;
+}
+
+.runes-col-number {
+  width: 58px;
 }
 
 .runewords-table th,
 .runewords-table td {
   border-bottom: 1px solid var(--border);
-  padding: 14px;
+  padding: 12px 10px;
   text-align: left;
   vertical-align: top;
 }
@@ -740,6 +882,11 @@ main {
   font-size: 14px;
 }
 
+.runewords-table th:nth-child(-n + 5),
+.runewords-table td:nth-child(-n + 5) {
+  white-space: nowrap;
+}
+
 .runewords-table tbody tr:nth-child(odd) td {
   background: var(--table-row-odd);
 }
@@ -753,7 +900,7 @@ main {
 }
 
 .runeword-name-cell {
-  min-width: 190px;
+  min-width: 0;
   position: relative;
 }
 
@@ -825,19 +972,15 @@ main {
 .equipment-lines {
   color: var(--table-equipment);
   display: grid;
-  gap: 8px;
-  min-width: 180px;
+  gap: 2px;
+  min-width: 0;
   text-shadow: var(--table-text-shadow);
 }
 
-.equipment-entry {
-  display: grid;
-  gap: 2px;
-}
-
-.equipment-entry span {
+.equipment-lines span {
   display: block;
   line-height: 1.35;
+  overflow-wrap: anywhere;
 }
 
 .equipment-primary {
@@ -860,14 +1003,14 @@ main {
 
 .rune-combination-row {
   align-items: baseline;
-  display: inline-flex !important;
+  display: inline !important;
   gap: 0;
 }
 
 .rune-token {
-  color: var(--text-strong);
+  color: var(--table-name);
   cursor: help;
-  display: inline-flex !important;
+  display: inline !important;
   font-weight: 800;
   text-decoration: underline;
   text-decoration-color: color-mix(in srgb, var(--accent) 40%, transparent);
@@ -882,7 +1025,7 @@ main {
 
 .rune-plus {
   color: var(--table-option);
-  display: inline-flex !important;
+  display: inline !important;
   font-weight: 800;
 }
 
@@ -895,7 +1038,7 @@ main {
   gap: 3px;
   list-style: none;
   margin: 0;
-  max-width: 520px;
+  max-width: 420px;
   padding: 0;
 }
 
@@ -910,7 +1053,6 @@ main {
   color: var(--text-muted);
   display: inline-flex;
   font-weight: 800;
-  width: 82px;
 }
 
 .rune-card-trigger {
@@ -1133,6 +1275,10 @@ main {
 
   .table-toolbar {
     grid-template-columns: 1fr;
+  }
+
+  .upgrade-recipe-table-wrap {
+    overflow-x: auto;
   }
 
   .filter-row {
