@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   BookOpen,
   Boxes,
@@ -7,14 +7,18 @@ import {
   FlaskConical,
   Gem,
   Menu,
+  Moon,
   PackageSearch,
   Search,
+  Sun,
   TrendingUp,
   X,
   type LucideIcon,
 } from 'lucide-react'
 import { NavLink, Route, Routes } from 'react-router-dom'
 import './App.css'
+
+type Theme = 'dark' | 'light'
 
 type Page = {
   path: string
@@ -119,7 +123,17 @@ const navigationItems: NavigationItem[] = [
   },
 ]
 
-function Header() {
+function getInitialTheme(): Theme {
+  const savedTheme = window.localStorage.getItem('dia2dic-theme')
+
+  if (savedTheme === 'dark' || savedTheme === 'light') {
+    return savedTheme
+  }
+
+  return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
+}
+
+function Header({ theme, onToggleTheme }: { theme: Theme; onToggleTheme: () => void }) {
   const [isNavOpen, setIsNavOpen] = useState(false)
 
   return (
@@ -145,17 +159,26 @@ function Header() {
         </NavLink>
       </header>
 
-      <SideNavigation isOpen={isNavOpen} onClose={() => setIsNavOpen(false)} />
+      <SideNavigation
+        isOpen={isNavOpen}
+        theme={theme}
+        onClose={() => setIsNavOpen(false)}
+        onToggleTheme={onToggleTheme}
+      />
     </>
   )
 }
 
 function SideNavigation({
   isOpen,
+  theme,
   onClose,
+  onToggleTheme,
 }: {
   isOpen: boolean
+  theme: Theme
   onClose: () => void
+  onToggleTheme: () => void
 }) {
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({
     '호라드릭 함': true,
@@ -191,8 +214,7 @@ function SideNavigation({
 
         <nav className="side-nav-list" aria-label="디아블로2 자료 메뉴">
           <NavLink to="/" end className="side-nav-link" onClick={onClose}>
-            <BookOpen aria-hidden="true" size={19} />
-            홈
+            <BookOpen aria-hidden="true" size={19} />홈
           </NavLink>
 
           {navigationItems.map((item) => (
@@ -205,6 +227,25 @@ function SideNavigation({
             />
           ))}
         </nav>
+
+        <button
+          className="theme-toggle"
+          type="button"
+          aria-label={theme === 'dark' ? '라이트 테마로 전환' : '다크 테마로 전환'}
+          onClick={onToggleTheme}
+        >
+          <span className="theme-toggle-icon">
+            {theme === 'dark' ? (
+              <Sun aria-hidden="true" size={19} />
+            ) : (
+              <Moon aria-hidden="true" size={19} />
+            )}
+          </span>
+          <span>
+            <strong>{theme === 'dark' ? 'Light mode' : 'Dark mode'}</strong>
+            <small>{theme === 'dark' ? '밝은 테마로 전환' : '어두운 테마로 전환'}</small>
+          </span>
+        </button>
       </aside>
     </>
   )
@@ -351,9 +392,21 @@ function CategoryPage({ title, description, icon: Icon }: Page) {
 }
 
 function App() {
+  const [theme, setTheme] = useState<Theme>(getInitialTheme)
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme
+    document.documentElement.style.colorScheme = theme
+    window.localStorage.setItem('dia2dic-theme', theme)
+  }, [theme])
+
+  const toggleTheme = () => {
+    setTheme((current) => (current === 'dark' ? 'light' : 'dark'))
+  }
+
   return (
     <div className="app-shell">
-      <Header />
+      <Header theme={theme} onToggleTheme={toggleTheme} />
       <main>
         <Routes>
           <Route path="/" element={<HomePage />} />
