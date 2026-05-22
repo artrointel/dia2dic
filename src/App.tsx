@@ -121,6 +121,8 @@ const equipmentUpgrades = equipmentUpgradesData as EquipmentUpgrade[]
 const levelingEfficiency = levelingEfficiencyData as LevelingEfficiency
 const runeUpgrades = runeUpgradesData as RuneUpgrade[]
 const runewords = runewordsData as Runeword[]
+const assetUrl = (path: string) =>
+  `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`
 const socketRecipes: SocketRecipe[] = [
   {
     대상: '갑옷',
@@ -807,7 +809,7 @@ function SocketRecipesPage() {
         alt="아이템 별 숨렙에 따른 최대 소켓 수"
         isOpen={isSocketImageOpen}
         onClose={() => setIsSocketImageOpen(false)}
-        src="/assets/images/socket/max-sockets-by-item.png"
+        src={assetUrl('/assets/images/socket/max-sockets-by-item.png')}
         title="아이템 별 숨렙에 따른 최대 소켓 수"
       />
     </section>
@@ -1140,7 +1142,7 @@ function RunesPage() {
                 </td>
                 <td>
                   <span className="rune-name">
-                    <img src={rune.이미지} alt={`${rune.한글명} 아이콘`} />
+                    <img src={assetUrl(rune.이미지)} alt={`${rune.한글명} 아이콘`} />
                     <strong>{rune.한글명}</strong>
                     <span>({rune.영문명})</span>
                   </span>
@@ -1175,7 +1177,7 @@ function RuneMiniCard({ rune }: { rune: RuneUpgrade }) {
   return (
     <span className="rune-mini-card" role="tooltip">
       <span className="rune-mini-card-header">
-        <img src={rune.이미지} alt="" aria-hidden="true" />
+        <img src={assetUrl(rune.이미지)} alt="" aria-hidden="true" />
         <span>
           <strong>{rune.한글명}</strong>
           <span>({rune.영문명})</span>
