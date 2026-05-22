@@ -517,6 +517,7 @@ main {
 .runewords-page,
 .runes-page,
 .equipment-upgrades-page,
+.socket-recipes-page,
 .leveling-page {
   padding: 56px 0 72px;
 }
@@ -718,6 +719,154 @@ main {
   width: 100%;
 }
 
+.socket-recipe-table-wrap {
+  margin-top: 34px;
+}
+
+.socket-recipe-table {
+  min-width: 680px;
+}
+
+.socket-probability-note {
+  background: color-mix(in srgb, var(--surface) 86%, var(--surface-strong));
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: grid;
+  gap: 8px;
+  margin-top: 34px;
+  padding: 16px 18px;
+}
+
+.socket-probability-note h2 {
+  color: var(--table-name);
+  font-size: 16px;
+  margin: 0;
+  text-shadow: var(--table-text-shadow);
+}
+
+.socket-probability-note p {
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin: 0;
+}
+
+.socket-reference-card {
+  background: color-mix(in srgb, var(--surface) 88%, var(--surface-strong));
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  display: block;
+  margin-top: 18px;
+  min-height: 96px;
+  padding: 16px 18px;
+  text-align: left;
+  transition:
+    border-color 0.16s ease,
+    transform 0.16s ease,
+    background 0.16s ease;
+  width: 100%;
+}
+
+.socket-reference-card:hover {
+  background: color-mix(in srgb, var(--surface) 76%, var(--surface-strong));
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+  transform: translateY(-1px);
+}
+
+.socket-reference-card h2 {
+  color: var(--text-strong);
+  font-size: 16px;
+  margin: 0;
+}
+
+.image-viewer-overlay {
+  align-items: center;
+  background: rgb(0 0 0 / 72%);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  padding: 24px;
+  position: fixed;
+  z-index: 100;
+}
+
+.image-viewer-panel {
+  background: var(--surface-strong);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-strong);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  height: min(92svh, 980px);
+  overflow: hidden;
+  width: min(96vw, 1180px);
+}
+
+.image-viewer-toolbar {
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  padding: 10px 12px;
+}
+
+.image-viewer-toolbar strong {
+  color: var(--text-strong);
+  font-size: 14px;
+}
+
+.image-viewer-actions {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+}
+
+.image-viewer-actions button {
+  align-items: center;
+  background: var(--search-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-strong);
+  cursor: pointer;
+  display: inline-flex;
+  height: 34px;
+  justify-content: center;
+  width: 34px;
+}
+
+.image-viewer-actions button:hover {
+  border-color: color-mix(in srgb, var(--accent) 54%, var(--border));
+}
+
+.image-viewer-actions svg {
+  height: 16px;
+  width: 16px;
+}
+
+.image-viewer-actions span {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 800;
+  min-width: 44px;
+  text-align: center;
+}
+
+.image-viewer-stage {
+  background: #060708;
+  display: grid;
+  justify-items: center;
+  overflow: auto;
+  padding: 18px;
+}
+
+.image-viewer-stage img {
+  display: block;
+  max-width: none;
+  transform-origin: top left;
+  user-select: none;
+}
+
 .upgrade-recipe-table th,
 .upgrade-recipe-table td {
   border-bottom: 1px solid var(--border);
@@ -761,6 +910,12 @@ main {
   color: var(--table-name);
   font-size: 15px;
   text-shadow: var(--table-text-shadow);
+}
+
+.socket-recipe-result {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 800;
 }
 
 .upgrade-ingredient-list {

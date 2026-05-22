@@ -15,6 +15,8 @@ import {
   Trash2,
   TrendingUp,
   X,
+  ZoomIn,
+  ZoomOut,
   type LucideIcon,
 } from 'lucide-react'
 import { NavLink, Route, Routes } from 'react-router-dom'
@@ -95,6 +97,12 @@ type EquipmentUpgrade = {
   결과: string
 }
 
+type SocketRecipe = {
+  대상: string
+  재료: string[]
+  결과: string
+}
+
 type LevelingEfficiency = {
   columns: Array<{
     id: string
@@ -113,6 +121,28 @@ const equipmentUpgrades = equipmentUpgradesData as EquipmentUpgrade[]
 const levelingEfficiency = levelingEfficiencyData as LevelingEfficiency
 const runeUpgrades = runeUpgradesData as RuneUpgrade[]
 const runewords = runewordsData as Runeword[]
+const socketRecipes: SocketRecipe[] = [
+  {
+    대상: '갑옷',
+    재료: ['탈룬', '주울룬', '최상급 토파즈'],
+    결과: '일반 갑옷에 소켓 생성',
+  },
+  {
+    대상: '무기',
+    재료: ['랄룬', '앰룬', '최상급 자수정'],
+    결과: '일반 무기에 소켓 생성',
+  },
+  {
+    대상: '헬멧',
+    재료: ['랄룬', '주울룬', '최상급 사파이어'],
+    결과: '일반 헬멧에 소켓 생성',
+  },
+  {
+    대상: '방패',
+    재료: ['탈룬', '앰룬', '최상급 루비'],
+    결과: '일반 방패에 소켓 생성',
+  },
+]
 
 const EQUIPMENT_FILTER_GROUPS = [
   {
@@ -200,6 +230,12 @@ const pages: Page[] = [
     icon: FlaskConical,
   },
   {
+    path: '/cube/socket-recipes',
+    title: '소켓 뚫기',
+    description: '일반 장비에 소켓을 생성하는 호라드릭 함 조합식을 정리합니다.',
+    icon: PackageSearch,
+  },
+  {
     path: '/cube/crafting',
     title: '크래프트 조합',
     description: '캐스터, 블러드, 힛파워, 세이프티 크래프트 조합식을 정리합니다.',
@@ -265,6 +301,7 @@ const navigationItems: NavigationItem[] = [
       { title: '룬워드 조합', path: '/cube/runewords', icon: Gem },
       { title: '크래프트 조합', path: '/cube/crafting', icon: FlaskConical },
       { title: '장비 업글', path: '/cube/equipment-upgrades', icon: PackageSearch },
+      { title: '소켓 뚫기', path: '/cube/socket-recipes', icon: PackageSearch },
       { title: '기타 조합', path: '/cube/recipes', icon: FlaskConical },
     ],
   },
@@ -701,6 +738,184 @@ function EquipmentUpgradesPage() {
         ))}
       </div>
     </section>
+  )
+}
+
+function SocketRecipesPage() {
+  const [isSocketImageOpen, setIsSocketImageOpen] = useState(false)
+
+  return (
+    <section className="socket-recipes-page">
+      <div className="category-heading">
+        <PackageSearch aria-hidden="true" />
+        <span>호라드릭 함</span>
+        <h1>소켓 뚫기</h1>
+        <p>일반 장비에 소켓을 생성하는 조합식을 대상별로 확인합니다.</p>
+      </div>
+
+      <aside className="socket-probability-note">
+        <h2>소켓 수 확률</h2>
+        <p>
+          큐브 소켓은 1~6 주사위 결과를 기준으로 정해지고, 아이템의 최대 소켓 수를
+          넘는 값은 최대 소켓으로 보정됩니다.
+        </p>
+        <p>
+          예를 들어 최대 4소켓 장비는 1~3소켓이 각각 1/6, 4소켓은 4·5·6이 합쳐져
+          1/2 확률입니다.
+        </p>
+      </aside>
+
+      <button
+        className="socket-reference-card"
+        onClick={() => setIsSocketImageOpen(true)}
+        type="button"
+      >
+        <h2>아이템 별 숨렙에 따른 최대 소켓 수 보기</h2>
+      </button>
+
+      <div className="upgrade-recipe-table-wrap socket-recipe-table-wrap">
+        <table className="upgrade-recipe-table socket-recipe-table">
+          <thead>
+            <tr>
+              <th>대상</th>
+              <th>조합</th>
+              <th>결과</th>
+            </tr>
+          </thead>
+          <tbody>
+            {socketRecipes.map((recipe) => (
+              <tr key={recipe.대상}>
+                <td className="upgrade-target-cell">{recipe.대상}</td>
+                <td>
+                  <div className="upgrade-ingredient-list">
+                    {recipe.재료.map((ingredient, ingredientIndex) => (
+                      <Fragment key={`${recipe.대상}-${ingredient}`}>
+                        {ingredientIndex > 0 && <span className="upgrade-plus">+</span>}
+                        <UpgradeIngredient ingredient={ingredient} />
+                      </Fragment>
+                    ))}
+                  </div>
+                </td>
+                <td className="socket-recipe-result">{recipe.결과}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <ImageViewer
+        alt="아이템 별 숨렙에 따른 최대 소켓 수"
+        isOpen={isSocketImageOpen}
+        onClose={() => setIsSocketImageOpen(false)}
+        src="/assets/images/socket/max-sockets-by-item.png"
+        title="아이템 별 숨렙에 따른 최대 소켓 수"
+      />
+    </section>
+  )
+}
+
+function ImageViewer({
+  alt,
+  isOpen,
+  onClose,
+  src,
+  title,
+}: {
+  alt: string
+  isOpen: boolean
+  onClose: () => void
+  src: string
+  title: string
+}) {
+  const [scale, setScale] = useState(1)
+  const [naturalSize, setNaturalSize] = useState<{ width: number; height: number } | null>(null)
+
+  useEffect(() => {
+    if (!isOpen) {
+      return
+    }
+
+    setScale(1)
+    setNaturalSize(null)
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen, onClose, src])
+
+  if (!isOpen) {
+    return null
+  }
+
+  const updateScale = (nextScale: number) => {
+    setScale(Math.min(4, Math.max(0.4, nextScale)))
+  }
+
+  return (
+    <div className="image-viewer-overlay" role="dialog" aria-modal="true" aria-label={title}>
+      <div className="image-viewer-panel">
+        <div className="image-viewer-toolbar">
+          <strong>{title}</strong>
+          <div className="image-viewer-actions">
+            <button
+              aria-label="이미지 축소"
+              onClick={() => updateScale(scale - 0.2)}
+              type="button"
+            >
+              <ZoomOut aria-hidden="true" />
+            </button>
+            <span>{Math.round(scale * 100)}%</span>
+            <button
+              aria-label="이미지 확대"
+              onClick={() => updateScale(scale + 0.2)}
+              type="button"
+            >
+              <ZoomIn aria-hidden="true" />
+            </button>
+            <button aria-label="이미지 뷰어 닫기" onClick={onClose} type="button">
+              <X aria-hidden="true" />
+            </button>
+          </div>
+        </div>
+        <div
+          className="image-viewer-stage"
+          onWheel={(event) => {
+            if (!event.ctrlKey) {
+              return
+            }
+
+            event.preventDefault()
+            updateScale(scale + (event.deltaY > 0 ? -0.12 : 0.12))
+          }}
+        >
+          <img
+            alt={alt}
+            draggable={false}
+            onLoad={(event) =>
+              setNaturalSize({
+                width: event.currentTarget.naturalWidth,
+                height: event.currentTarget.naturalHeight,
+              })
+            }
+            src={src}
+            style={
+              naturalSize
+                ? {
+                    height: naturalSize.height * scale,
+                    width: naturalSize.width * scale,
+                  }
+                : undefined
+            }
+          />
+        </div>
+      </div>
+    </div>
   )
 }
 
@@ -1521,9 +1736,10 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/cube/runewords" element={<RunewordsPage />} />
           <Route path="/cube/equipment-upgrades" element={<EquipmentUpgradesPage />} />
+          <Route path="/cube/socket-recipes" element={<SocketRecipesPage />} />
           <Route path="/items/runes" element={<RunesPage />} />
           <Route path="/leveling" element={<LevelingPage />} />
-          {routePages.filter((page) => !['/cube/runewords', '/cube/equipment-upgrades', '/items/runes', '/leveling'].includes(page.path)).map((page) => (
+          {routePages.filter((page) => !['/cube/runewords', '/cube/equipment-upgrades', '/cube/socket-recipes', '/items/runes', '/leveling'].includes(page.path)).map((page) => (
             <Route
               key={page.path}
               path={page.path}
