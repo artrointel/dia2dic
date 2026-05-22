@@ -625,10 +625,8 @@ function RunesPage() {
             {runeUpgrades.map((rune) => (
               <tr key={rune.번호}>
                 <td>
-                  <span className="rune-number rune-card-trigger">
-                    <img src={rune.이미지} alt="" aria-hidden="true" />
+                  <span className="rune-number">
                     <span>{rune.번호}</span>
-                    <RuneMiniCard rune={rune} />
                   </span>
                 </td>
                 <td>
@@ -702,7 +700,7 @@ function RuneMiniCard({ rune }: { rune: RuneUpgrade }) {
       {countessRates.length > 0 && (
         <span className="rune-mini-card-section">
           <b>드랍율(카운테스)</b>
-          <span className="countess-rates">
+          <span className="rune-mini-card-rates">
             {countessRates.map((line) => (
               <span key={line}>{line}</span>
             ))}
@@ -1040,20 +1038,55 @@ function RuneCombinationLine({ line }: { line: string }) {
 
   const parts = line.split('+')
 
-  if (parts.length < 4) {
-    return <span className="table-line">{line}</span>
-  }
-
-  const splitIndex = Math.ceil(parts.length / 2)
-  const firstLine = `${parts.slice(0, splitIndex).join('+')}+`
-  const secondLine = parts.slice(splitIndex).join('+')
-
   return (
-    <span className="table-line">
-      <span>{firstLine}</span>
-      <span>{secondLine}</span>
+    <span className="table-line rune-combination-line">
+      <span className="rune-combination-row">
+        <RuneCombinationParts parts={parts} />
+      </span>
     </span>
   )
+}
+
+function RuneCombinationParts({
+  parts,
+  trailingPlus = false,
+}: {
+  parts: string[]
+  trailingPlus?: boolean
+}) {
+  return parts.flatMap((part, index) => {
+    const shouldRenderPlus = index < parts.length - 1 || trailingPlus
+
+    return [
+      <RuneCombinationToken name={part} key={`${part}-${index}`} />,
+      shouldRenderPlus ? <span className="rune-plus" key={`${part}-${index}-plus`}>+</span> : null,
+    ]
+  })
+}
+
+function RuneCombinationToken({ name }: { name: string }) {
+  const rune = findRuneByKoreanName(name)
+
+  if (!rune) {
+    return <span>{name}</span>
+  }
+
+  return (
+    <span className="rune-card-trigger rune-token">
+      {name}
+      <RuneMiniCard rune={rune} />
+    </span>
+  )
+}
+
+function findRuneByKoreanName(name: string) {
+  const normalizedBaseName = name.replace(/\s+/g, '').trim()
+  const runeAliases: Record<string, string> = {
+    이스트: '아이스트',
+  }
+  const normalizedName = `${runeAliases[normalizedBaseName] ?? normalizedBaseName}룬`
+
+  return runeUpgrades.find((rune) => rune.한글명.replace(/\s+/g, '') === normalizedName)
 }
 
 function RunewordFilterRow({

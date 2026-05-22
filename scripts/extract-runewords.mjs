@@ -86,6 +86,7 @@ function normalizeRuneLine(line) {
   return line
     .replace(/쥬울/g, '주울')
     .replace(/아이스트/g, '이스트')
+    .replace(/(^|[+(])옴(?=[+)])/g, '$1오움')
     .replace(/Sheal/g, 'Shael')
 }
 

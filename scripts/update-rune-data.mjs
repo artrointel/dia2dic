@@ -229,6 +229,18 @@ function upgradeRecipe(rune) {
   return koreanOnlyRecipe(rune.조합방법)
 }
 
+function koreanRuneName(rune) {
+  if (rune.영문명 === 'Io') {
+    return '이오 룬'
+  }
+
+  if (rune.영문명 === 'Ohm') {
+    return '오움 룬'
+  }
+
+  return rune.한글명
+}
+
 function imageSourcesFrom(html) {
   const sources = [...html.matchAll(/<img[^>]+>/gi)]
     .map((match) => match[0].match(/(?:src|data-src)="([^"]+)"/)?.[1] ?? '')
@@ -266,7 +278,7 @@ async function main() {
 
       return {
         ...rune,
-        한글명: rune.영문명 === 'Io' ? '이오 룬' : rune.한글명,
+        한글명: koreanRuneName(rune),
         조합방법: upgradeRecipe(rune),
         제한레벨: runeEffects[rune.영문명]?.제한레벨 ?? '',
         무기: runeEffects[rune.영문명]?.무기 ?? [],

@@ -699,13 +699,13 @@ main {
 .runewords-table-wrap {
   border: 1px solid var(--border);
   border-radius: 8px;
-  overflow: auto;
+  overflow: visible;
 }
 
 .runes-table-wrap {
   border: 1px solid var(--border);
   border-radius: 8px;
-  overflow: auto;
+  overflow: visible;
 }
 
 .runewords-table {
@@ -854,8 +854,36 @@ main {
   display: block;
 }
 
-.table-line span + span {
-  padding-left: 2ch;
+.rune-combination-line > span {
+  display: block;
+}
+
+.rune-combination-row {
+  align-items: baseline;
+  display: inline-flex !important;
+  gap: 0;
+}
+
+.rune-token {
+  color: var(--text-strong);
+  cursor: help;
+  display: inline-flex !important;
+  font-weight: 800;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.rune-token .rune-mini-card {
+  left: 0;
+  top: calc(100% + 8px);
+}
+
+.rune-plus {
+  color: var(--table-option);
+  display: inline-flex !important;
+  font-weight: 800;
 }
 
 .muted-text {
@@ -881,7 +909,6 @@ main {
   align-items: center;
   color: var(--text-muted);
   display: inline-flex;
-  gap: 8px;
   font-weight: 800;
   width: 82px;
 }
@@ -894,12 +921,6 @@ main {
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0);
-}
-
-.rune-number img {
-  height: 22px;
-  image-rendering: auto;
-  width: 22px;
 }
 
 .rune-name {
@@ -991,6 +1012,13 @@ main {
   z-index: 6;
 }
 
+.rune-mini-card,
+.rune-mini-card-section,
+.rune-mini-card-section .rune-effect-lines,
+.rune-mini-card-rates {
+  display: grid;
+}
+
 .rune-mini-card-header {
   align-items: center;
   display: grid;
@@ -1045,13 +1073,23 @@ main {
 }
 
 .rune-mini-card-section .rune-effect-lines,
-.rune-mini-card-section .countess-rates,
-.rune-mini-card-section > span:not(.rune-effect-lines):not(.countess-rates) {
+.rune-mini-card-rates,
+.rune-mini-card-section > span:not(.rune-effect-lines):not(.rune-mini-card-rates) {
   color: var(--table-option);
   font-size: 13px;
   font-weight: 700;
   max-width: none;
   min-width: 0;
+}
+
+.rune-mini-card-rates {
+  gap: 2px;
+}
+
+.rune-mini-card-rates span {
+  display: block;
+  line-height: 1.25;
+  padding-left: 0;
 }
 
 @media (max-width: 860px) {
