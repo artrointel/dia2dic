@@ -690,10 +690,47 @@ main {
   background: var(--surface);
 }
 
+.runeword-name-cell {
+  min-width: 190px;
+  position: relative;
+}
+
 .runeword-name {
   color: var(--text-strong);
   font-weight: 800;
-  min-width: 190px;
+}
+
+.runeword-name.has-version {
+  color: color-mix(in srgb, #ff5b5b 50%, var(--text-strong));
+}
+
+.version-popup {
+  background: var(--surface-strong);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-strong);
+  color: var(--accent-strong);
+  display: grid;
+  font-size: 13px;
+  font-weight: 800;
+  gap: 4px;
+  left: 18px;
+  min-width: 180px;
+  opacity: 0;
+  padding: 10px 12px;
+  pointer-events: none;
+  position: absolute;
+  top: 34px;
+  transform: translateY(-4px);
+  transition:
+    opacity 0.14s ease,
+    transform 0.14s ease;
+  z-index: 4;
+}
+
+.runeword-name-cell:hover .version-popup {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .table-line,
@@ -701,11 +738,12 @@ main {
   display: block;
 }
 
-.version-badge {
-  color: var(--accent-strong);
-  font-size: 13px;
-  font-weight: 800;
-  white-space: nowrap;
+.table-line span {
+  display: block;
+}
+
+.table-line span + span {
+  padding-left: 2ch;
 }
 
 .muted-text {

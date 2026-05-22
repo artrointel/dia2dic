@@ -613,37 +613,35 @@ function RunewordsPage() {
             <tr>
               <th>이름</th>
               <th>렙제</th>
+              <th>부위</th>
               <th>소켓</th>
-              <th>장비 부위</th>
               <th>룬조합</th>
-              <th>버전</th>
               <th>옵션</th>
             </tr>
           </thead>
           <tbody>
             {filteredRunewords.map((item) => (
               <tr key={item.id}>
-                <td className="runeword-name">{item.이름}</td>
+                <td className="runeword-name-cell">
+                  <span className={`runeword-name ${item.버전.length > 0 ? 'has-version' : ''}`}>
+                    {item.이름}
+                    {item.버전.length > 0 ? '*' : ''}
+                  </span>
+                  {item.버전.length > 0 && (
+                    <span className="version-popup">
+                      {item.버전.map((line) => (
+                        <span key={line}>{line}</span>
+                      ))}
+                    </span>
+                  )}
+                </td>
                 <td>{item.렙제}</td>
-                <td>{item['소켓 수']}</td>
                 <td>{item['방어구 부위']}</td>
+                <td>{item['소켓 수']}</td>
                 <td>
                   {item.룬조합.map((line) => (
-                    <span className="table-line" key={line}>
-                      {line}
-                    </span>
+                    <RuneCombinationLine line={line} key={line} />
                   ))}
-                </td>
-                <td>
-                  {item.버전.length > 0 ? (
-                    item.버전.map((line) => (
-                      <span className="version-badge" key={line}>
-                        {line}
-                      </span>
-                    ))
-                  ) : (
-                    <span className="muted-text">-</span>
-                  )}
                 </td>
                 <td>
                   <ul className="option-list">
@@ -658,6 +656,31 @@ function RunewordsPage() {
         </table>
       </div>
     </section>
+  )
+}
+
+function RuneCombinationLine({ line }: { line: string }) {
+  const shouldSplit = line.includes('+') && !line.startsWith('(')
+
+  if (!shouldSplit) {
+    return <span className="table-line">{line}</span>
+  }
+
+  const parts = line.split('+')
+
+  if (parts.length < 4) {
+    return <span className="table-line">{line}</span>
+  }
+
+  const splitIndex = Math.ceil(parts.length / 2)
+  const firstLine = `${parts.slice(0, splitIndex).join('+')}+`
+  const secondLine = parts.slice(splitIndex).join('+')
+
+  return (
+    <span className="table-line">
+      <span>{firstLine}</span>
+      <span>{secondLine}</span>
+    </span>
   )
 }
 
