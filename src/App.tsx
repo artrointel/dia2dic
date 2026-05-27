@@ -20,6 +20,7 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import { NavLink, Route, Routes } from 'react-router-dom'
+import armorBasesData from './data/armor-bases.json'
 import equipmentUpgradesData from './data/equipment-upgrades.json'
 import levelingEfficiencyData from './data/leveling-efficiency.json'
 import runeUpgradesData from './data/rune-upgrades.json'
@@ -61,6 +62,14 @@ type Runeword = {
 
 type FilterType = 'socket' | 'equipment' | 'rune' | 'option' | 'ladder'
 type SortType = 'level-asc' | 'level-desc' | 'socket-asc' | 'socket-desc'
+type NormalItemCategory = '투구' | '갑옷' | '장갑' | '벨트' | '신발' | '무기' | '방패' | '목걸이' | '반지'
+type NormalItemGradeFilter = '전체' | '노멀' | '익셉셔널' | '엘리트'
+type NormalItemSortType =
+  | 'level-asc'
+  | 'strength-asc'
+  | 'socket-asc'
+  | 'weight-asc'
+  | 'defense-max-asc'
 
 type RunewordFilter = {
   id: number
@@ -103,6 +112,43 @@ type SocketRecipe = {
   결과: string
 }
 
+type ArmorBaseItem = {
+  이름: string
+  방어력: {
+    최소: number | null
+    최대: number | null
+    원문: string | null
+  }
+  추천: boolean
+  요구레벨?: number | null
+  필요힘?: number | null
+  무게?: string
+  최대홈?: number | null
+}
+
+type ArmorBaseSection = {
+  id: string
+  title: string
+  kind: string
+  grade: string
+  items: ArmorBaseItem[]
+}
+
+type ArmorBases = {
+  source: {
+    title: string
+    url: string
+  }
+  category: string
+  notes: string[]
+  sections: ArmorBaseSection[]
+}
+
+type NormalItemRow = ArmorBaseItem & {
+  id: string
+  등급: string
+}
+
 type LevelingEfficiency = {
   columns: Array<{
     id: string
@@ -118,6 +164,7 @@ type LevelingEfficiency = {
 }
 
 const equipmentUpgrades = equipmentUpgradesData as EquipmentUpgrade[]
+const armorBases = armorBasesData as ArmorBases
 const levelingEfficiency = levelingEfficiencyData as LevelingEfficiency
 const runeUpgrades = runeUpgradesData as RuneUpgrade[]
 const runewords = runewordsData as Runeword[]
@@ -659,6 +706,295 @@ function CategoryPage({ title, description, icon: Icon }: Page) {
         </p>
       </div>
     </section>
+  )
+}
+
+const normalItemCategories: NormalItemCategory[] = [
+  '투구',
+  '갑옷',
+  '장갑',
+  '벨트',
+  '신발',
+  '무기',
+  '방패',
+  '목걸이',
+  '반지',
+]
+const normalItemGradeFilters: NormalItemGradeFilter[] = ['전체', '노멀', '익셉셔널', '엘리트']
+
+function NormalItemsPage() {
+  const [selectedCategory, setSelectedCategory] = useState<NormalItemCategory>('갑옷')
+  const [selectedGrade, setSelectedGrade] = useState<NormalItemGradeFilter>('전체')
+  const [nameQuery, setNameQuery] = useState('')
+  const [sortType, setSortType] = useState<NormalItemSortType>('weight-asc')
+  const armorItems = useMemo(() => getArmorBaseRows(), [])
+
+  const filteredItems = useMemo(() => {
+    const normalizedNameQuery = nameQuery.trim().toLowerCase()
+    const sourceItems = selectedCategory === '갑옷' ? armorItems : []
+
+    return sourceItems
+      .filter((item) => (selectedGrade === '전체' ? true : item.등급 === selectedGrade))
+      .filter((item) =>
+        normalizedNameQuery ? item.이름.toLowerCase().includes(normalizedNameQuery) : true,
+      )
+      .toSorted((left, right) => sortNormalItems(left, right, sortType))
+  }, [armorItems, nameQuery, selectedCategory, selectedGrade, sortType])
+
+  return (
+    <section className="normal-items-page">
+      <div className="category-heading">
+        <PackageSearch aria-hidden="true" />
+        <span>아이템 정보</span>
+        <h1>일반</h1>
+        <p>일반 등급 장비의 요구치와 최대 홈 정보를 필터링하고 정렬합니다.</p>
+      </div>
+
+      <div className="table-toolbar">
+        <div className="filter-panel">
+          <div className="filter-panel-header">
+            <strong>필터</strong>
+          </div>
+
+          <div className="normal-category-filter">
+            {normalItemCategories.map((category) => (
+              <button
+                className={category === selectedCategory ? 'is-active' : ''}
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                type="button"
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+
+          <div className="normal-grade-filter">
+            <span>등급</span>
+            <div>
+              {normalItemGradeFilters.map((grade) => (
+                <button
+                  className={grade === selectedGrade ? 'is-active' : ''}
+                  key={grade}
+                  onClick={() => setSelectedGrade(grade)}
+                  type="button"
+                >
+                  {grade}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <label className="sort-control">
+          <span>정렬</span>
+          <select
+            value={sortType}
+            onChange={(event) => setSortType(event.target.value as NormalItemSortType)}
+          >
+            <option value="level-asc">레벨제한</option>
+            <option value="strength-asc">요구힘</option>
+            <option value="socket-asc">홈갯수</option>
+            <option value="weight-asc">무게</option>
+            <option value="defense-max-asc">최대방어력</option>
+          </select>
+        </label>
+      </div>
+
+      <div className="name-search-row">
+        <label className="name-search-control">
+          <span>이름 검색</span>
+          <input
+            type="search"
+            placeholder="예: 메이지 플레이트, 아콘"
+            value={nameQuery}
+            onChange={(event) => setNameQuery(event.target.value)}
+          />
+        </label>
+      </div>
+
+      <div className="table-meta">
+        총 {selectedCategory === '갑옷' ? armorItems.length : 0}개 중 {filteredItems.length}개 표시
+      </div>
+
+      <div className="runewords-table-wrap">
+        <table className="runewords-table normal-items-table">
+          <colgroup>
+            <col className="normal-item-col-grade" />
+            <col className="normal-item-col-name" />
+            <col className="normal-item-col-defense-min" />
+            <col className="normal-item-col-defense-max" />
+            <col className="normal-item-col-socket" />
+            <col className="normal-item-col-weight" />
+            <col className="normal-item-col-strength" />
+            <col className="normal-item-col-level" />
+          </colgroup>
+          <thead>
+            <tr>
+              <th>등급</th>
+              <th>이름</th>
+              <th>최소 방어력</th>
+              <th>
+                <MaxDefenseHeaderTip />
+              </th>
+              <th>최대홈</th>
+              <th>
+                <WeightHeaderTip />
+              </th>
+              <th>필요힘</th>
+              <th>요구레벨</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredItems.length > 0 ? (
+              filteredItems.map((item) => (
+                <tr key={item.id}>
+                  <td>
+                    <span className="normal-item-grade">{item.등급}</span>
+                  </td>
+                  <td className="normal-item-name-cell">
+                    <span className={`runeword-name ${weightNameClass(item.무게)}`}>{item.이름}</span>
+                    {item.추천 ? <span className="normal-item-recommend">추천</span> : null}
+                  </td>
+                  <td>{formatNullableNumber(item.방어력.최소)}</td>
+                  <td>
+                    <MaxDefenseCell value={item.방어력.최대} />
+                  </td>
+                  <td>{formatNullableNumber(item.최대홈)}</td>
+                  <td>
+                    <span className="normal-item-weight">{item.무게 || '-'}</span>
+                  </td>
+                  <td>{formatNullableNumber(item.필요힘)}</td>
+                  <td>{formatNullableNumber(item.요구레벨)}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td className="normal-item-empty" colSpan={8}>
+                  {selectedCategory} 데이터는 아직 준비 중입니다.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  )
+}
+
+function getArmorBaseRows(): NormalItemRow[] {
+  return armorBases.sections
+    .filter((section) => section.kind === 'base')
+    .flatMap((section) =>
+      section.items.map((item) => ({
+        ...item,
+        id: `${section.id}-${item.이름}`,
+        등급: section.grade,
+      })),
+    )
+}
+
+function sortNormalItems(left: NormalItemRow, right: NormalItemRow, sortType: NormalItemSortType) {
+  if (sortType === 'strength-asc') {
+    return nullableNumber(left.필요힘) - nullableNumber(right.필요힘) || left.이름.localeCompare(right.이름)
+  }
+
+  if (sortType === 'socket-asc') {
+    return nullableNumber(left.최대홈) - nullableNumber(right.최대홈) || nullableNumber(left.필요힘) - nullableNumber(right.필요힘)
+  }
+
+  if (sortType === 'weight-asc') {
+    return weightRank(left.무게) - weightRank(right.무게) || nullableNumber(left.필요힘) - nullableNumber(right.필요힘)
+  }
+
+  if (sortType === 'defense-max-asc') {
+    return nullableNumber(left.방어력.최대) - nullableNumber(right.방어력.최대) || nullableNumber(left.필요힘) - nullableNumber(right.필요힘)
+  }
+
+  return nullableNumber(left.요구레벨) - nullableNumber(right.요구레벨) || nullableNumber(left.필요힘) - nullableNumber(right.필요힘)
+}
+
+function nullableNumber(value: number | null | undefined) {
+  return value ?? 0
+}
+
+function weightRank(weight: string | undefined) {
+  return {
+    Light: 1,
+    Medium: 2,
+    Heavy: 3,
+  }[weight ?? ''] ?? 0
+}
+
+function weightNameClass(weight: string | undefined) {
+  if (weight === 'Light') {
+    return 'is-light-weight-name'
+  }
+
+  if (weight === 'Medium') {
+    return 'is-medium-weight-name'
+  }
+
+  if (weight === 'Heavy') {
+    return 'is-heavy-weight-name'
+  }
+
+  return ''
+}
+
+function formatNullableNumber(value: number | null | undefined) {
+  return value ?? '-'
+}
+
+function MaxDefenseHeaderTip() {
+  return (
+    <span className="info-tip-trigger">
+      <span>최대 방어력*</span>
+      <span className="info-tip-card" role="tooltip">
+        <strong>최대 방어력</strong>
+        <span>에테리얼의 경우 기본 방어력이 50% 증가한다.</span>
+        <span>고급 접두사의 경우 최대 15% 방어력이 증가한다.</span>
+      </span>
+    </span>
+  )
+}
+
+function MaxDefenseCell({ value }: { value: number | null | undefined }) {
+  if (value === null || value === undefined) {
+    return <span className="muted-text">-</span>
+  }
+
+  return (
+    <span className="max-defense-trigger">
+      <strong>{value}</strong>
+      <span className="max-defense-card" role="tooltip">
+        <span>
+          <b>고급</b>
+          <strong>{Math.round(value * 1.15)}</strong>
+        </span>
+        <span>
+          <b>에테리얼</b>
+          <strong>{Math.round(value * 1.5)}</strong>
+        </span>
+        <span>
+          <b>고급 에테리얼</b>
+          <strong>{Math.round(value * 1.5 * 1.15)}</strong>
+        </span>
+      </span>
+    </span>
+  )
+}
+
+function WeightHeaderTip() {
+  return (
+    <span className="info-tip-trigger">
+      <span>무게*</span>
+      <span className="info-tip-card" role="tooltip">
+        <strong>무게</strong>
+        <span>무게가 가벼울수록 이동속도가 빠르다.</span>
+        <span>Light &gt; Medium &gt; Heavy 순</span>
+      </span>
+    </span>
   )
 }
 
@@ -1739,9 +2075,10 @@ function App() {
           <Route path="/cube/runewords" element={<RunewordsPage />} />
           <Route path="/cube/equipment-upgrades" element={<EquipmentUpgradesPage />} />
           <Route path="/cube/socket-recipes" element={<SocketRecipesPage />} />
+          <Route path="/items/normal" element={<NormalItemsPage />} />
           <Route path="/items/runes" element={<RunesPage />} />
           <Route path="/leveling" element={<LevelingPage />} />
-          {routePages.filter((page) => !['/cube/runewords', '/cube/equipment-upgrades', '/cube/socket-recipes', '/items/runes', '/leveling'].includes(page.path)).map((page) => (
+          {routePages.filter((page) => !['/cube/runewords', '/cube/equipment-upgrades', '/cube/socket-recipes', '/items/normal', '/items/runes', '/leveling'].includes(page.path)).map((page) => (
             <Route
               key={page.path}
               path={page.path}
