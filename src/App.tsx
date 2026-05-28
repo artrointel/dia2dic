@@ -23,6 +23,7 @@ import { NavLink, Route, Routes } from 'react-router-dom'
 import { ItemDataTable, type ItemDataTableColumn } from './components/ItemDataTable'
 import armorBasesData from './data/armor-bases.json'
 import equipmentUpgradesData from './data/equipment-upgrades.json'
+import helmBasesData from './data/helm-bases.json'
 import levelingEfficiencyData from './data/leveling-efficiency.json'
 import runeUpgradesData from './data/rune-upgrades.json'
 import runewordsData from './data/runewords.json'
@@ -213,6 +214,7 @@ type LevelingEfficiency = {
 
 const equipmentUpgrades = equipmentUpgradesData as EquipmentUpgrade[]
 const armorBases = armorBasesData as ArmorBases
+const helmBases = helmBasesData as ArmorBases
 const levelingEfficiency = levelingEfficiencyData as LevelingEfficiency
 const runeUpgrades = runeUpgradesData as RuneUpgrade[]
 const runewords = runewordsData as Runeword[]
@@ -778,6 +780,12 @@ const armorSortOptions: Array<{ value: NormalItemSortType; label: string }> = [
   { value: 'weight-asc', label: '무게' },
   { value: 'defense-max-asc', label: '최대방어력' },
 ]
+const defensiveSortOptions: Array<{ value: NormalItemSortType; label: string }> = [
+  { value: 'level-asc', label: '레벨제한' },
+  { value: 'strength-asc', label: '요구힘' },
+  { value: 'socket-asc', label: '홈갯수' },
+  { value: 'defense-max-asc', label: '최대방어력' },
+]
 const weaponSortOptions: Array<{ value: NormalItemSortType; label: string }> = [
   { value: 'level-asc', label: '레벨제한' },
   { value: 'strength-asc', label: '요구힘' },
@@ -794,8 +802,14 @@ function NormalItemsPage() {
   const [nameQuery, setNameQuery] = useState('')
   const [sortType, setSortType] = useState<NormalItemSortType>('weight-asc')
   const armorItems = useMemo(() => getArmorBaseRows(), [])
+  const helmItems = useMemo(() => getHelmBaseRows(), [])
   const polearmItems = useMemo(() => getPolearmBaseRows(), [])
-  const sortOptions = selectedCategory === '무기' ? weaponSortOptions : armorSortOptions
+  const sortOptions =
+    selectedCategory === '무기'
+      ? weaponSortOptions
+      : selectedCategory === '갑옷'
+        ? armorSortOptions
+        : defensiveSortOptions
 
   useEffect(() => {
     const availableSortValues = new Set(sortOptions.map((option) => option.value))
@@ -810,6 +824,8 @@ function NormalItemsPage() {
     const sourceItems =
       selectedCategory === '갑옷'
         ? armorItems
+        : selectedCategory === '투구'
+          ? helmItems
         : selectedCategory === '무기' && selectedWeaponType === '폴암'
           ? polearmItems
           : []
@@ -820,10 +836,12 @@ function NormalItemsPage() {
         normalizedNameQuery ? item.이름.toLowerCase().includes(normalizedNameQuery) : true,
       )
       .toSorted((left, right) => sortNormalItems(left, right, sortType))
-  }, [armorItems, nameQuery, polearmItems, selectedCategory, selectedGrade, selectedWeaponType, sortType])
+  }, [armorItems, helmItems, nameQuery, polearmItems, selectedCategory, selectedGrade, selectedWeaponType, sortType])
   const totalItemCount =
     selectedCategory === '갑옷'
       ? armorItems.length
+      : selectedCategory === '투구'
+        ? helmItems.length
       : selectedCategory === '무기'
         ? polearmItems.length
         : 0
@@ -925,6 +943,8 @@ function NormalItemsPage() {
       <div className="runewords-table-wrap">
         {selectedCategory === '갑옷' ? (
           <ArmorItemsTable items={filteredItems.filter(isArmorItemRow)} />
+        ) : selectedCategory === '투구' ? (
+          <DefensiveItemsTable emptyMessage="투구 데이터는 아직 준비 중입니다." items={filteredItems.filter(isArmorItemRow)} />
         ) : selectedCategory === '무기' ? (
           <WeaponItemsTable items={filteredItems.filter(isWeaponItemRow)} />
         ) : (
@@ -993,6 +1013,67 @@ function ArmorItemsTable({ items }: { items: NormalItemRow[] }) {
       getRowKey={(item) => item.id}
       items={items}
       wrapperClassName="armor-items-table"
+    />
+  )
+}
+
+function DefensiveItemsTable({
+  emptyMessage,
+  items,
+}: {
+  emptyMessage: string
+  items: NormalItemRow[]
+}) {
+  const columns: ItemDataTableColumn<NormalItemRow>[] = [
+    {
+      key: 'grade',
+      header: '등급',
+      className: 'normal-item-col-grade',
+      render: (item) => <span className="normal-item-grade">{item.등급}</span>,
+    },
+    {
+      key: 'name',
+      header: '이름',
+      className: 'normal-item-col-name',
+      render: (item) => (
+        <span className="normal-item-name-cell">
+          <span className="runeword-name">{item.이름}</span>
+          {item.추천 ? <span className="normal-item-recommend">추천</span> : null}
+        </span>
+      ),
+    },
+    {
+      key: 'defense',
+      header: <MaxDefenseHeaderTip />,
+      className: 'normal-item-col-defense',
+      render: (item) => <MaxDefenseCell defense={item.방어력} />,
+    },
+    {
+      key: 'sockets',
+      header: '최대홈',
+      className: 'normal-item-col-socket',
+      render: (item) => formatNullableNumber(item.최대홈),
+    },
+    {
+      key: 'strength',
+      header: '필요힘',
+      className: 'normal-item-col-strength',
+      render: (item) => formatNullableNumber(item.필요힘),
+    },
+    {
+      key: 'level',
+      header: '요구레벨',
+      className: 'normal-item-col-level',
+      render: (item) => formatNullableNumber(item.요구레벨),
+    },
+  ]
+
+  return (
+    <ItemDataTable
+      columns={columns}
+      emptyMessage={emptyMessage}
+      getRowKey={(item) => item.id}
+      items={items}
     />
   )
 }
@@ -1084,12 +1165,20 @@ function EmptyNormalItemsTable({ category }: { category: NormalItemCategory }) {
 }
 
 function getArmorBaseRows(): NormalItemRow[] {
-  return armorBases.sections
+  return getDefensiveBaseRows(armorBases)
+}
+
+function getHelmBaseRows(): NormalItemRow[] {
+  return getDefensiveBaseRows(helmBases)
+}
+
+function getDefensiveBaseRows(data: ArmorBases): NormalItemRow[] {
+  return data.sections
     .filter((section) => section.kind === 'base')
     .flatMap((section) =>
       section.items.map((item) => ({
         ...item,
-        id: `${section.id}-${item.이름}`,
+        id: `${data.category}-${section.id}-${item.이름}`,
         등급: section.grade,
       })),
     )
