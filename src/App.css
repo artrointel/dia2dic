@@ -1263,6 +1263,57 @@ main {
   table-layout: fixed;
 }
 
+.shield-items-table {
+  table-layout: fixed;
+}
+
+.weapon-items-table .normal-item-col-grade {
+  width: 72px;
+}
+
+.weapon-items-table .normal-item-col-name {
+  width: 270px;
+}
+
+.weapon-items-table .normal-item-col-damage {
+  width: 116px;
+}
+
+.weapon-items-table .normal-item-col-damage-average {
+  width: 88px;
+}
+
+.weapon-items-table .normal-item-col-range,
+.weapon-items-table .normal-item-col-socket {
+  width: 72px;
+}
+
+.weapon-items-table .normal-item-col-level,
+.weapon-items-table .normal-item-col-strength,
+.weapon-items-table .normal-item-col-dexterity {
+  width: 84px;
+}
+
+.shield-items-table .normal-item-col-grade {
+  width: 72px;
+}
+
+.shield-items-table .normal-item-col-name {
+  width: 260px;
+}
+
+.shield-items-table .normal-item-col-defense {
+  width: 120px;
+}
+
+.shield-items-table .normal-item-col-block,
+.shield-items-table .normal-item-col-smite,
+.shield-items-table .normal-item-col-socket,
+.shield-items-table .normal-item-col-level,
+.shield-items-table .normal-item-col-strength {
+  width: 84px;
+}
+
 .normal-item-col-grade {
   width: 9%;
 }
@@ -1397,9 +1448,22 @@ main {
 }
 
 .normal-item-name-cell {
-  align-items: center;
+  align-items: baseline;
   display: flex;
+  flex-wrap: nowrap;
   gap: 8px;
+  line-height: 1.35;
+  max-width: 100%;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.normal-item-name-cell .runeword-name {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .normal-item-grade {
@@ -1412,9 +1476,125 @@ main {
   border: 1px solid color-mix(in srgb, var(--accent) 52%, var(--border));
   border-radius: 999px;
   color: var(--accent-strong);
+  flex: 0 0 auto;
   font-size: 11px;
   font-weight: 800;
   padding: 2px 7px;
+  white-space: nowrap;
+}
+
+.weapon-ias-trigger {
+  cursor: help;
+  display: inline-flex;
+  flex: 0 1 auto;
+  min-width: 0;
+  position: relative;
+}
+
+.weapon-ias-trigger:hover .bow-ias-mini-card {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.bow-ias-mini-card {
+  background: var(--surface-strong);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-strong);
+  color: var(--text);
+  display: grid;
+  gap: 11px;
+  left: 0;
+  min-width: 360px;
+  opacity: 0;
+  padding: 13px 14px;
+  pointer-events: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  transform: translateY(-4px);
+  transition:
+    opacity 0.14s ease,
+    transform 0.14s ease;
+  white-space: normal;
+  z-index: 12;
+}
+
+.bow-ias-mini-card > strong {
+  color: var(--table-name);
+  font-size: 14px;
+  text-shadow: var(--table-text-shadow);
+}
+
+.bow-ias-mini-card-title {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.bow-ias-frame-section,
+.bow-ias-table {
+  display: grid;
+  gap: 7px;
+}
+
+.bow-ias-frame-section > b {
+  color: var(--table-equipment);
+  font-size: 12px;
+  text-shadow: var(--table-text-shadow);
+}
+
+.bow-ias-table {
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  gap: 0;
+  overflow: hidden;
+}
+
+.bow-ias-table-row {
+  align-items: stretch;
+  border-top: 1px solid var(--border);
+  display: grid;
+}
+
+.bow-ias-table-row:first-child {
+  border-top: 0;
+}
+
+.bow-ias-table.is-basic .bow-ias-table-row {
+  grid-template-columns: 1fr 1fr;
+}
+
+.bow-ias-table.is-fanaticism .bow-ias-table-row {
+  grid-template-columns: 76px repeat(4, 1fr);
+}
+
+.bow-ias-table-row > span,
+.bow-ias-table-row > strong {
+  align-items: center;
+  border-left: 1px solid var(--border);
+  display: inline-flex;
+  font-size: 12px;
+  justify-content: center;
+  min-height: 28px;
+  padding: 5px 7px;
+  text-align: center;
+}
+
+.bow-ias-table-row > span:first-child,
+.bow-ias-table-row > strong:first-child {
+  border-left: 0;
+}
+
+.bow-ias-table-row.is-head > span {
+  background: color-mix(in srgb, var(--surface-strong) 78%, var(--accent));
+  color: var(--text-strong);
+  font-weight: 800;
+}
+
+.bow-ias-table-row > strong {
+  color: var(--table-option);
+  font-weight: 800;
+  text-shadow: var(--table-text-shadow);
 }
 
 .normal-item-weight {

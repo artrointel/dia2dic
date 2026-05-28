@@ -22,11 +22,14 @@ import {
 import { NavLink, Route, Routes } from 'react-router-dom'
 import { ItemDataTable, type ItemDataTableColumn } from './components/ItemDataTable'
 import armorBasesData from './data/armor-bases.json'
+import bowIasFramesData from './data/bow-ias-frames.json'
 import equipmentUpgradesData from './data/equipment-upgrades.json'
 import helmBasesData from './data/helm-bases.json'
 import levelingEfficiencyData from './data/leveling-efficiency.json'
 import runeUpgradesData from './data/rune-upgrades.json'
 import runewordsData from './data/runewords.json'
+import shieldPaladinBasesData from './data/shield-paladin-bases.json'
+import weaponBowBasesData from './data/weapon-bow-bases.json'
 import weaponPolearmBasesData from './data/weapon-polearm-bases.json'
 import './App.css'
 
@@ -67,7 +70,8 @@ type FilterType = 'socket' | 'equipment' | 'rune' | 'option' | 'ladder'
 type SortType = 'level-asc' | 'level-desc' | 'socket-asc' | 'socket-desc'
 type NormalItemCategory = '투구' | '갑옷' | '장갑' | '벨트' | '신발' | '무기' | '방패' | '목걸이' | '반지'
 type NormalItemGradeFilter = '전체' | '노멀' | '익셉셔널' | '엘리트'
-type NormalWeaponTypeFilter = '폴암'
+type NormalShieldTypeFilter = '팔라딘 방패'
+type NormalWeaponTypeFilter = '폴암' | '활'
 type NormalItemSortType =
   | 'level-asc'
   | 'strength-asc'
@@ -119,6 +123,32 @@ type SocketRecipe = {
   결과: string
 }
 
+type BowIasFrameValue = {
+  프레임: string
+  공속: string
+}
+
+type BowIasFanaticismFrame = {
+  광신: string
+  프레임: BowIasFrameValue[]
+}
+
+type BowIasFrameItem = {
+  이름: string
+  광신미적용: BowIasFrameValue[]
+  광신적용: BowIasFanaticismFrame[]
+}
+
+type BowIasFrames = {
+  source: {
+    title: string
+    url: string
+  }
+  category: string
+  type: string
+  items: BowIasFrameItem[]
+}
+
 type ArmorBaseItem = {
   이름: string
   방어력: {
@@ -131,6 +161,13 @@ type ArmorBaseItem = {
   필요힘?: number | null
   무게?: string
   최대홈?: number | null
+  블럭율?: string | null
+  강타피해?: {
+    최소: number | null
+    최대: number | null
+    원문: string | null
+  }
+  전용?: string | null
 }
 
 type ArmorBaseSection = {
@@ -156,7 +193,7 @@ type NormalItemRow = ArmorBaseItem & {
   등급: string
 }
 
-type WeaponPolearmItem = {
+type WeaponBaseItem = {
   이름: string
   양손데미지: {
     최소: number | null
@@ -165,6 +202,7 @@ type WeaponPolearmItem = {
     원문: string | null
   }
   사거리: number | null
+  전용?: string | null
   추천: boolean
   요구레벨: number | null
   필요힘: number | null
@@ -176,10 +214,10 @@ type WeaponBaseSection = {
   id: string
   title: string
   grade: string
-  items: WeaponPolearmItem[]
+  items: WeaponBaseItem[]
 }
 
-type WeaponPolearmBases = {
+type WeaponBases = {
   source: {
     title: string
     url: string
@@ -190,7 +228,7 @@ type WeaponPolearmBases = {
   sections: WeaponBaseSection[]
 }
 
-type WeaponItemRow = WeaponPolearmItem & {
+type WeaponItemRow = WeaponBaseItem & {
   id: string
   등급: string
   계열: NormalWeaponTypeFilter
@@ -214,11 +252,15 @@ type LevelingEfficiency = {
 
 const equipmentUpgrades = equipmentUpgradesData as EquipmentUpgrade[]
 const armorBases = armorBasesData as ArmorBases
+const bowIasFrames = bowIasFramesData as BowIasFrames
 const helmBases = helmBasesData as ArmorBases
 const levelingEfficiency = levelingEfficiencyData as LevelingEfficiency
 const runeUpgrades = runeUpgradesData as RuneUpgrade[]
 const runewords = runewordsData as Runeword[]
-const weaponPolearmBases = weaponPolearmBasesData as WeaponPolearmBases
+const shieldPaladinBases = shieldPaladinBasesData as ArmorBases
+const weaponBowBases = weaponBowBasesData as WeaponBases
+const weaponPolearmBases = weaponPolearmBasesData as WeaponBases
+const bowIasFrameByName = new Map(bowIasFrames.items.map((item) => [item.이름, item]))
 const assetUrl = (path: string) =>
   `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`
 const socketRecipes: SocketRecipe[] = [
@@ -772,7 +814,8 @@ const normalItemCategories: NormalItemCategory[] = [
   '반지',
 ]
 const normalItemGradeFilters: NormalItemGradeFilter[] = ['전체', '노멀', '익셉셔널', '엘리트']
-const normalWeaponTypeFilters: NormalWeaponTypeFilter[] = ['폴암']
+const normalShieldTypeFilters: NormalShieldTypeFilter[] = ['팔라딘 방패']
+const normalWeaponTypeFilters: NormalWeaponTypeFilter[] = ['폴암', '활']
 const armorSortOptions: Array<{ value: NormalItemSortType; label: string }> = [
   { value: 'level-asc', label: '레벨제한' },
   { value: 'strength-asc', label: '요구힘' },
@@ -798,15 +841,20 @@ const weaponSortOptions: Array<{ value: NormalItemSortType; label: string }> = [
 function NormalItemsPage() {
   const [selectedCategory, setSelectedCategory] = useState<NormalItemCategory>('갑옷')
   const [selectedGrade, setSelectedGrade] = useState<NormalItemGradeFilter>('전체')
+  const [selectedShieldType, setSelectedShieldType] = useState<NormalShieldTypeFilter>('팔라딘 방패')
   const [selectedWeaponType, setSelectedWeaponType] = useState<NormalWeaponTypeFilter>('폴암')
   const [nameQuery, setNameQuery] = useState('')
   const [sortType, setSortType] = useState<NormalItemSortType>('weight-asc')
   const armorItems = useMemo(() => getArmorBaseRows(), [])
   const helmItems = useMemo(() => getHelmBaseRows(), [])
-  const polearmItems = useMemo(() => getPolearmBaseRows(), [])
+  const shieldItems = useMemo(() => getShieldBaseRows(), [])
+  const bowItems = useMemo(() => getWeaponBaseRows(weaponBowBases), [])
+  const polearmItems = useMemo(() => getWeaponBaseRows(weaponPolearmBases), [])
   const sortOptions =
     selectedCategory === '무기'
-      ? weaponSortOptions
+      ? selectedWeaponType === '활'
+        ? weaponSortOptions.filter((option) => option.value !== 'range-asc')
+        : weaponSortOptions
       : selectedCategory === '갑옷'
         ? armorSortOptions
         : defensiveSortOptions
@@ -826,8 +874,12 @@ function NormalItemsPage() {
         ? armorItems
         : selectedCategory === '투구'
           ? helmItems
-        : selectedCategory === '무기' && selectedWeaponType === '폴암'
-          ? polearmItems
+        : selectedCategory === '방패' && selectedShieldType === '팔라딘 방패'
+          ? shieldItems
+        : selectedCategory === '무기'
+          ? selectedWeaponType === '활'
+            ? bowItems
+            : polearmItems
           : []
 
     return sourceItems
@@ -836,14 +888,18 @@ function NormalItemsPage() {
         normalizedNameQuery ? item.이름.toLowerCase().includes(normalizedNameQuery) : true,
       )
       .toSorted((left, right) => sortNormalItems(left, right, sortType))
-  }, [armorItems, helmItems, nameQuery, polearmItems, selectedCategory, selectedGrade, selectedWeaponType, sortType])
+  }, [armorItems, bowItems, helmItems, nameQuery, polearmItems, selectedCategory, selectedGrade, selectedShieldType, selectedWeaponType, shieldItems, sortType])
   const totalItemCount =
     selectedCategory === '갑옷'
       ? armorItems.length
       : selectedCategory === '투구'
         ? helmItems.length
+      : selectedCategory === '방패'
+        ? shieldItems.length
       : selectedCategory === '무기'
-        ? polearmItems.length
+        ? selectedWeaponType === '활'
+          ? bowItems.length
+          : polearmItems.length
         : 0
 
   return (
@@ -886,6 +942,24 @@ function NormalItemsPage() {
                     type="button"
                   >
                     {weaponType}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {selectedCategory === '방패' && (
+            <div className="normal-grade-filter">
+              <span>방패 계열</span>
+              <div>
+                {normalShieldTypeFilters.map((shieldType) => (
+                  <button
+                    className={shieldType === selectedShieldType ? 'is-active' : ''}
+                    key={shieldType}
+                    onClick={() => setSelectedShieldType(shieldType)}
+                    type="button"
+                  >
+                    {shieldType}
                   </button>
                 ))}
               </div>
@@ -945,6 +1019,8 @@ function NormalItemsPage() {
           <ArmorItemsTable items={filteredItems.filter(isArmorItemRow)} />
         ) : selectedCategory === '투구' ? (
           <DefensiveItemsTable emptyMessage="투구 데이터는 아직 준비 중입니다." items={filteredItems.filter(isArmorItemRow)} />
+        ) : selectedCategory === '방패' ? (
+          <ShieldItemsTable items={filteredItems.filter(isArmorItemRow)} />
         ) : selectedCategory === '무기' ? (
           <WeaponItemsTable items={filteredItems.filter(isWeaponItemRow)} />
         ) : (
@@ -1078,8 +1154,8 @@ function DefensiveItemsTable({
   )
 }
 
-function WeaponItemsTable({ items }: { items: WeaponItemRow[] }) {
-  const columns: ItemDataTableColumn<WeaponItemRow>[] = [
+function ShieldItemsTable({ items }: { items: NormalItemRow[] }) {
+  const columns: ItemDataTableColumn<NormalItemRow>[] = [
     {
       key: 'grade',
       header: '등급',
@@ -1094,6 +1170,77 @@ function WeaponItemsTable({ items }: { items: WeaponItemRow[] }) {
         <span className="normal-item-name-cell">
           <span className="runeword-name">{item.이름}</span>
           {item.추천 ? <span className="normal-item-recommend">추천</span> : null}
+          {item.전용 ? <span className="normal-item-recommend">{item.전용}</span> : null}
+        </span>
+      ),
+    },
+    {
+      key: 'defense',
+      header: <MaxDefenseHeaderTip />,
+      className: 'normal-item-col-defense',
+      render: (item) => <MaxDefenseCell defense={item.방어력} />,
+    },
+    {
+      key: 'sockets',
+      header: '최대홈',
+      className: 'normal-item-col-socket',
+      render: (item) => formatNullableNumber(item.최대홈),
+    },
+    {
+      key: 'block',
+      header: '블럭율',
+      className: 'normal-item-col-block',
+      render: (item) => item.블럭율 ?? '-',
+    },
+    {
+      key: 'smite-damage',
+      header: '강타 피해',
+      className: 'normal-item-col-smite',
+      render: (item) => formatItemRange(item.강타피해),
+    },
+    {
+      key: 'strength',
+      header: '필요힘',
+      className: 'normal-item-col-strength',
+      render: (item) => formatNullableNumber(item.필요힘),
+    },
+    {
+      key: 'level',
+      header: '요구레벨',
+      className: 'normal-item-col-level',
+      render: (item) => formatNullableNumber(item.요구레벨),
+    },
+  ]
+
+  return (
+    <ItemDataTable
+      columns={columns}
+      emptyMessage="방패 데이터는 아직 준비 중입니다."
+      getRowKey={(item) => item.id}
+      items={items}
+      tableClassName="shield-items-table"
+    />
+  )
+}
+
+function WeaponItemsTable({ items }: { items: WeaponItemRow[] }) {
+  const hasRange = items.some((item) => item.사거리 !== null)
+  const columns: ItemDataTableColumn<WeaponItemRow>[] = [
+    {
+      key: 'grade',
+      header: '등급',
+      className: 'normal-item-col-grade',
+      render: (item) => <span className="normal-item-grade">{item.등급}</span>,
+    },
+    {
+      key: 'name',
+      header: '이름',
+      className: 'normal-item-col-name',
+      render: (item) => (
+        <span className="normal-item-name-cell">
+          <WeaponName item={item} />
+          {item.추천 ? <span className="normal-item-recommend">추천</span> : null}
+          {item.전용 ? <span className="normal-item-recommend">{item.전용}</span> : null}
         </span>
       ),
     },
@@ -1109,12 +1256,16 @@ function WeaponItemsTable({ items }: { items: WeaponItemRow[] }) {
       className: 'normal-item-col-damage-average',
       render: (item) => formatNullableNumber(item.양손데미지.평균),
     },
-    {
-      key: 'range',
-      header: '사거리',
-      className: 'normal-item-col-range',
-      render: (item) => formatNullableNumber(item.사거리),
-    },
+    ...(hasRange
+      ? [
+          {
+            key: 'range',
+            header: '사거리',
+            className: 'normal-item-col-range',
+            render: (item: WeaponItemRow) => formatNullableNumber(item.사거리),
+          },
+        ]
+      : []),
     {
       key: 'sockets',
       header: '최대홈',
@@ -1152,6 +1303,100 @@ function WeaponItemsTable({ items }: { items: WeaponItemRow[] }) {
   )
 }
 
+function WeaponName({ item }: { item: WeaponItemRow }) {
+  const iasFrame = item.계열 === '활' ? bowIasFrameByName.get(item.이름) : undefined
+
+  if (!iasFrame) {
+    return <span className="runeword-name">{item.이름}</span>
+  }
+
+  return (
+    <span className="weapon-ias-trigger">
+      <span className="runeword-name">{item.이름}</span>
+      <BowIasMiniCard data={iasFrame} />
+    </span>
+  )
+}
+
+function BowIasMiniCard({ data }: { data: BowIasFrameItem }) {
+  return (
+    <span className="bow-ias-mini-card" role="tooltip">
+      <strong>{data.이름}</strong>
+      <span className="bow-ias-mini-card-title">공속 프레임 별 공속 요구치</span>
+
+      <BowIasFrameTable title="광신 미적용 시" frames={data.광신미적용} />
+
+      {data.광신적용.length > 0 && (
+        <BowIasFanaticismTable title="광신 적용 시" groups={data.광신적용} />
+      )}
+    </span>
+  )
+}
+
+function BowIasFrameTable({ frames, title }: { frames: BowIasFrameValue[]; title: string }) {
+  if (frames.length === 0) {
+    return null
+  }
+
+  return (
+    <span className="bow-ias-frame-section">
+      <b>{title}</b>
+      <span className="bow-ias-table is-basic" role="table">
+        <span className="bow-ias-table-row is-head" role="row">
+          <span role="columnheader">프레임</span>
+          <span role="columnheader">요구 공속</span>
+        </span>
+        {frames.map((frame) => (
+          <span className="bow-ias-table-row" key={frame.프레임} role="row">
+            <span role="cell">{frame.프레임}</span>
+            <strong role="cell">{frame.공속}</strong>
+          </span>
+        ))}
+      </span>
+    </span>
+  )
+}
+
+function BowIasFanaticismTable({
+  groups,
+  title,
+}: {
+  groups: BowIasFanaticismFrame[]
+  title: string
+}) {
+  const frameRows = groups[0]?.프레임.map((frame) => frame.프레임) ?? []
+
+  return (
+    <span className="bow-ias-frame-section">
+      <b>{title}</b>
+      <span className="bow-ias-table is-fanaticism" role="table">
+        <span className="bow-ias-table-row is-head" role="row">
+          <span role="columnheader">프레임</span>
+          {groups.map((group) => (
+            <span key={group.광신} role="columnheader">
+              {group.광신}
+            </span>
+          ))}
+        </span>
+        {frameRows.map((frameName) => (
+          <span className="bow-ias-table-row" key={frameName} role="row">
+            <span role="cell">{frameName}</span>
+            {groups.map((group) => {
+              const frame = group.프레임.find((item) => item.프레임 === frameName)
+
+              return (
+                <strong key={`${frameName}-${group.광신}`} role="cell">
+                  {frame?.공속 ?? '-'}
+                </strong>
+              )
+            })}
+          </span>
+        ))}
+      </span>
+    </span>
+  )
+}
+
 function EmptyNormalItemsTable({ category }: { category: NormalItemCategory }) {
   return (
     <table className="runewords-table normal-items-table">
@@ -1172,6 +1417,10 @@ function getHelmBaseRows(): NormalItemRow[] {
   return getDefensiveBaseRows(helmBases)
 }
 
+function getShieldBaseRows(): NormalItemRow[] {
+  return getDefensiveBaseRows(shieldPaladinBases)
+}
+
 function getDefensiveBaseRows(data: ArmorBases): NormalItemRow[] {
   return data.sections
     .filter((section) => section.kind === 'base')
@@ -1184,13 +1433,13 @@ function getDefensiveBaseRows(data: ArmorBases): NormalItemRow[] {
     )
 }
 
-function getPolearmBaseRows(): WeaponItemRow[] {
-  return weaponPolearmBases.sections.flatMap((section) =>
+function getWeaponBaseRows(data: WeaponBases): WeaponItemRow[] {
+  return data.sections.flatMap((section) =>
     section.items.map((item) => ({
       ...item,
-      id: `polearm-${section.id}-${item.이름}`,
+      id: `${data.type}-${section.id}-${item.이름}`,
       등급: section.grade,
-      계열: '폴암',
+      계열: data.type,
     })),
   )
 }
@@ -1336,7 +1585,19 @@ function formatDefenseRange(defense: ArmorBaseItem['방어력']) {
   return `${defense.최소} - ${defense.최대}`
 }
 
-function formatDamageRange(damage: WeaponPolearmItem['양손데미지']) {
+function formatItemRange(range: ArmorBaseItem['강타피해']) {
+  if (!range) {
+    return '-'
+  }
+
+  if (range.최소 === null || range.최대 === null) {
+    return range.원문 ?? '-'
+  }
+
+  return `${range.최소} - ${range.최대}`
+}
+
+function formatDamageRange(damage: WeaponBaseItem['양손데미지']) {
   if (damage.최소 === null || damage.최대 === null) {
     return damage.원문 ?? '-'
   }
