@@ -20,11 +20,13 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import { NavLink, Route, Routes } from 'react-router-dom'
+import { ItemDataTable, type ItemDataTableColumn } from './components/ItemDataTable'
 import armorBasesData from './data/armor-bases.json'
 import equipmentUpgradesData from './data/equipment-upgrades.json'
 import levelingEfficiencyData from './data/leveling-efficiency.json'
 import runeUpgradesData from './data/rune-upgrades.json'
 import runewordsData from './data/runewords.json'
+import weaponPolearmBasesData from './data/weapon-polearm-bases.json'
 import './App.css'
 
 type Theme = 'dark' | 'light'
@@ -64,12 +66,16 @@ type FilterType = 'socket' | 'equipment' | 'rune' | 'option' | 'ladder'
 type SortType = 'level-asc' | 'level-desc' | 'socket-asc' | 'socket-desc'
 type NormalItemCategory = '투구' | '갑옷' | '장갑' | '벨트' | '신발' | '무기' | '방패' | '목걸이' | '반지'
 type NormalItemGradeFilter = '전체' | '노멀' | '익셉셔널' | '엘리트'
+type NormalWeaponTypeFilter = '폴암'
 type NormalItemSortType =
   | 'level-asc'
   | 'strength-asc'
   | 'socket-asc'
   | 'weight-asc'
   | 'defense-max-asc'
+  | 'damage-max-asc'
+  | 'range-asc'
+  | 'dexterity-asc'
 
 type RunewordFilter = {
   id: number
@@ -149,6 +155,48 @@ type NormalItemRow = ArmorBaseItem & {
   등급: string
 }
 
+type WeaponPolearmItem = {
+  이름: string
+  양손데미지: {
+    최소: number | null
+    최대: number | null
+    평균: number | null
+    원문: string | null
+  }
+  사거리: number | null
+  추천: boolean
+  요구레벨: number | null
+  필요힘: number | null
+  필요민첩: number | null
+  최대홈: number | null
+}
+
+type WeaponBaseSection = {
+  id: string
+  title: string
+  grade: string
+  items: WeaponPolearmItem[]
+}
+
+type WeaponPolearmBases = {
+  source: {
+    title: string
+    url: string
+  }
+  category: string
+  type: NormalWeaponTypeFilter
+  notes: string[]
+  sections: WeaponBaseSection[]
+}
+
+type WeaponItemRow = WeaponPolearmItem & {
+  id: string
+  등급: string
+  계열: NormalWeaponTypeFilter
+}
+
+type NormalListItem = NormalItemRow | WeaponItemRow
+
 type LevelingEfficiency = {
   columns: Array<{
     id: string
@@ -168,6 +216,7 @@ const armorBases = armorBasesData as ArmorBases
 const levelingEfficiency = levelingEfficiencyData as LevelingEfficiency
 const runeUpgrades = runeUpgradesData as RuneUpgrade[]
 const runewords = runewordsData as Runeword[]
+const weaponPolearmBases = weaponPolearmBasesData as WeaponPolearmBases
 const assetUrl = (path: string) =>
   `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`
 const socketRecipes: SocketRecipe[] = [
@@ -721,17 +770,49 @@ const normalItemCategories: NormalItemCategory[] = [
   '반지',
 ]
 const normalItemGradeFilters: NormalItemGradeFilter[] = ['전체', '노멀', '익셉셔널', '엘리트']
+const normalWeaponTypeFilters: NormalWeaponTypeFilter[] = ['폴암']
+const armorSortOptions: Array<{ value: NormalItemSortType; label: string }> = [
+  { value: 'level-asc', label: '레벨제한' },
+  { value: 'strength-asc', label: '요구힘' },
+  { value: 'socket-asc', label: '홈갯수' },
+  { value: 'weight-asc', label: '무게' },
+  { value: 'defense-max-asc', label: '최대방어력' },
+]
+const weaponSortOptions: Array<{ value: NormalItemSortType; label: string }> = [
+  { value: 'level-asc', label: '레벨제한' },
+  { value: 'strength-asc', label: '요구힘' },
+  { value: 'dexterity-asc', label: '요구민첩' },
+  { value: 'socket-asc', label: '홈갯수' },
+  { value: 'damage-max-asc', label: '최대데미지' },
+  { value: 'range-asc', label: '사거리' },
+]
 
 function NormalItemsPage() {
   const [selectedCategory, setSelectedCategory] = useState<NormalItemCategory>('갑옷')
   const [selectedGrade, setSelectedGrade] = useState<NormalItemGradeFilter>('전체')
+  const [selectedWeaponType, setSelectedWeaponType] = useState<NormalWeaponTypeFilter>('폴암')
   const [nameQuery, setNameQuery] = useState('')
   const [sortType, setSortType] = useState<NormalItemSortType>('weight-asc')
   const armorItems = useMemo(() => getArmorBaseRows(), [])
+  const polearmItems = useMemo(() => getPolearmBaseRows(), [])
+  const sortOptions = selectedCategory === '무기' ? weaponSortOptions : armorSortOptions
+
+  useEffect(() => {
+    const availableSortValues = new Set(sortOptions.map((option) => option.value))
+
+    if (!availableSortValues.has(sortType)) {
+      setSortType(sortOptions[0].value)
+    }
+  }, [sortOptions, sortType])
 
   const filteredItems = useMemo(() => {
     const normalizedNameQuery = nameQuery.trim().toLowerCase()
-    const sourceItems = selectedCategory === '갑옷' ? armorItems : []
+    const sourceItems =
+      selectedCategory === '갑옷'
+        ? armorItems
+        : selectedCategory === '무기' && selectedWeaponType === '폴암'
+          ? polearmItems
+          : []
 
     return sourceItems
       .filter((item) => (selectedGrade === '전체' ? true : item.등급 === selectedGrade))
@@ -739,7 +820,13 @@ function NormalItemsPage() {
         normalizedNameQuery ? item.이름.toLowerCase().includes(normalizedNameQuery) : true,
       )
       .toSorted((left, right) => sortNormalItems(left, right, sortType))
-  }, [armorItems, nameQuery, selectedCategory, selectedGrade, sortType])
+  }, [armorItems, nameQuery, polearmItems, selectedCategory, selectedGrade, selectedWeaponType, sortType])
+  const totalItemCount =
+    selectedCategory === '갑옷'
+      ? armorItems.length
+      : selectedCategory === '무기'
+        ? polearmItems.length
+        : 0
 
   return (
     <section className="normal-items-page">
@@ -769,6 +856,24 @@ function NormalItemsPage() {
             ))}
           </div>
 
+          {selectedCategory === '무기' && (
+            <div className="normal-grade-filter">
+              <span>무기 계열</span>
+              <div>
+                {normalWeaponTypeFilters.map((weaponType) => (
+                  <button
+                    className={weaponType === selectedWeaponType ? 'is-active' : ''}
+                    key={weaponType}
+                    onClick={() => setSelectedWeaponType(weaponType)}
+                    type="button"
+                  >
+                    {weaponType}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="normal-grade-filter">
             <span>등급</span>
             <div>
@@ -792,11 +897,11 @@ function NormalItemsPage() {
             value={sortType}
             onChange={(event) => setSortType(event.target.value as NormalItemSortType)}
           >
-            <option value="level-asc">레벨제한</option>
-            <option value="strength-asc">요구힘</option>
-            <option value="socket-asc">홈갯수</option>
-            <option value="weight-asc">무게</option>
-            <option value="defense-max-asc">최대방어력</option>
+            {sortOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
           </select>
         </label>
       </div>
@@ -814,71 +919,167 @@ function NormalItemsPage() {
       </div>
 
       <div className="table-meta">
-        총 {selectedCategory === '갑옷' ? armorItems.length : 0}개 중 {filteredItems.length}개 표시
+        총 {totalItemCount}개 중 {filteredItems.length}개 표시
       </div>
 
       <div className="runewords-table-wrap">
-        <table className="runewords-table normal-items-table">
-          <colgroup>
-            <col className="normal-item-col-grade" />
-            <col className="normal-item-col-name" />
-            <col className="normal-item-col-defense-min" />
-            <col className="normal-item-col-defense-max" />
-            <col className="normal-item-col-socket" />
-            <col className="normal-item-col-weight" />
-            <col className="normal-item-col-strength" />
-            <col className="normal-item-col-level" />
-          </colgroup>
-          <thead>
-            <tr>
-              <th>등급</th>
-              <th>이름</th>
-              <th>최소 방어력</th>
-              <th>
-                <MaxDefenseHeaderTip />
-              </th>
-              <th>최대홈</th>
-              <th>
-                <WeightHeaderTip />
-              </th>
-              <th>필요힘</th>
-              <th>요구레벨</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredItems.length > 0 ? (
-              filteredItems.map((item) => (
-                <tr key={item.id}>
-                  <td>
-                    <span className="normal-item-grade">{item.등급}</span>
-                  </td>
-                  <td className="normal-item-name-cell">
-                    <span className={`runeword-name ${weightNameClass(item.무게)}`}>{item.이름}</span>
-                    {item.추천 ? <span className="normal-item-recommend">추천</span> : null}
-                  </td>
-                  <td>{formatNullableNumber(item.방어력.최소)}</td>
-                  <td>
-                    <MaxDefenseCell value={item.방어력.최대} />
-                  </td>
-                  <td>{formatNullableNumber(item.최대홈)}</td>
-                  <td>
-                    <span className="normal-item-weight">{item.무게 || '-'}</span>
-                  </td>
-                  <td>{formatNullableNumber(item.필요힘)}</td>
-                  <td>{formatNullableNumber(item.요구레벨)}</td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td className="normal-item-empty" colSpan={8}>
-                  {selectedCategory} 데이터는 아직 준비 중입니다.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+        {selectedCategory === '갑옷' ? (
+          <ArmorItemsTable items={filteredItems.filter(isArmorItemRow)} />
+        ) : selectedCategory === '무기' ? (
+          <WeaponItemsTable items={filteredItems.filter(isWeaponItemRow)} />
+        ) : (
+          <EmptyNormalItemsTable category={selectedCategory} />
+        )}
       </div>
     </section>
+  )
+}
+
+function ArmorItemsTable({ items }: { items: NormalItemRow[] }) {
+  const columns: ItemDataTableColumn<NormalItemRow>[] = [
+    {
+      key: 'grade',
+      header: '등급',
+      className: 'normal-item-col-grade',
+      render: (item) => <span className="normal-item-grade">{item.등급}</span>,
+    },
+    {
+      key: 'name',
+      header: '이름',
+      className: 'normal-item-col-name',
+      render: (item) => (
+        <span className="normal-item-name-cell">
+          <span className={`runeword-name ${weightNameClass(item.무게)}`}>{item.이름}</span>
+          {item.추천 ? <span className="normal-item-recommend">추천</span> : null}
+        </span>
+      ),
+    },
+    {
+      key: 'defense',
+      header: <MaxDefenseHeaderTip />,
+      className: 'normal-item-col-defense',
+      render: (item) => <MaxDefenseCell defense={item.방어력} />,
+    },
+    {
+      key: 'sockets',
+      header: '최대홈',
+      className: 'normal-item-col-socket',
+      render: (item) => formatNullableNumber(item.최대홈),
+    },
+    {
+      key: 'weight',
+      header: <WeightHeaderTip />,
+      className: 'normal-item-col-weight',
+      render: (item) => <span className="normal-item-weight">{item.무게 || '-'}</span>,
+    },
+    {
+      key: 'strength',
+      header: '필요힘',
+      className: 'normal-item-col-strength',
+      render: (item) => formatNullableNumber(item.필요힘),
+    },
+    {
+      key: 'level',
+      header: '요구레벨',
+      className: 'normal-item-col-level',
+      render: (item) => formatNullableNumber(item.요구레벨),
+    },
+  ]
+
+  return (
+    <ItemDataTable
+      columns={columns}
+      emptyMessage="갑옷 데이터는 아직 준비 중입니다."
+      getRowKey={(item) => item.id}
+      items={items}
+      wrapperClassName="armor-items-table"
+    />
+  )
+}
+
+function WeaponItemsTable({ items }: { items: WeaponItemRow[] }) {
+  const columns: ItemDataTableColumn<WeaponItemRow>[] = [
+    {
+      key: 'grade',
+      header: '등급',
+      className: 'normal-item-col-grade',
+      render: (item) => <span className="normal-item-grade">{item.등급}</span>,
+    },
+    {
+      key: 'name',
+      header: '이름',
+      className: 'normal-item-col-name',
+      render: (item) => (
+        <span className="normal-item-name-cell">
+          <span className="runeword-name">{item.이름}</span>
+          {item.추천 ? <span className="normal-item-recommend">추천</span> : null}
+        </span>
+      ),
+    },
+    {
+      key: 'damage',
+      header: '양손 데미지',
+      className: 'normal-item-col-damage',
+      render: (item) => <strong>{formatDamageRange(item.양손데미지)}</strong>,
+    },
+    {
+      key: 'average-damage',
+      header: '평균 데미지',
+      className: 'normal-item-col-damage-average',
+      render: (item) => formatNullableNumber(item.양손데미지.평균),
+    },
+    {
+      key: 'range',
+      header: '사거리',
+      className: 'normal-item-col-range',
+      render: (item) => formatNullableNumber(item.사거리),
+    },
+    {
+      key: 'sockets',
+      header: '최대홈',
+      className: 'normal-item-col-socket',
+      render: (item) => formatNullableNumber(item.최대홈),
+    },
+    {
+      key: 'strength',
+      header: '필요힘',
+      className: 'normal-item-col-strength',
+      render: (item) => formatNullableNumber(item.필요힘),
+    },
+    {
+      key: 'dexterity',
+      header: '필요민첩',
+      className: 'normal-item-col-dexterity',
+      render: (item) => formatNullableNumber(item.필요민첩),
+    },
+    {
+      key: 'level',
+      header: '요구레벨',
+      className: 'normal-item-col-level',
+      render: (item) => formatNullableNumber(item.요구레벨),
+    },
+  ]
+
+  return (
+    <ItemDataTable
+      columns={columns}
+      emptyMessage="무기 데이터는 아직 준비 중입니다."
+      getRowKey={(item) => item.id}
+      items={items}
+      tableClassName="weapon-items-table"
+    />
+  )
+}
+
+function EmptyNormalItemsTable({ category }: { category: NormalItemCategory }) {
+  return (
+    <table className="runewords-table normal-items-table">
+      <tbody>
+        <tr>
+          <td className="normal-item-empty">{category} 데이터는 아직 준비 중입니다.</td>
+        </tr>
+      </tbody>
+    </table>
   )
 }
 
@@ -894,7 +1095,18 @@ function getArmorBaseRows(): NormalItemRow[] {
     )
 }
 
-function sortNormalItems(left: NormalItemRow, right: NormalItemRow, sortType: NormalItemSortType) {
+function getPolearmBaseRows(): WeaponItemRow[] {
+  return weaponPolearmBases.sections.flatMap((section) =>
+    section.items.map((item) => ({
+      ...item,
+      id: `polearm-${section.id}-${item.이름}`,
+      등급: section.grade,
+      계열: '폴암',
+    })),
+  )
+}
+
+function sortNormalItems(left: NormalListItem, right: NormalListItem, sortType: NormalItemSortType) {
   if (sortType === 'strength-asc') {
     return nullableNumber(left.필요힘) - nullableNumber(right.필요힘) || left.이름.localeCompare(right.이름)
   }
@@ -904,14 +1116,54 @@ function sortNormalItems(left: NormalItemRow, right: NormalItemRow, sortType: No
   }
 
   if (sortType === 'weight-asc') {
-    return weightRank(left.무게) - weightRank(right.무게) || nullableNumber(left.필요힘) - nullableNumber(right.필요힘)
+    return weightValue(left) - weightValue(right) || nullableNumber(left.필요힘) - nullableNumber(right.필요힘)
   }
 
   if (sortType === 'defense-max-asc') {
-    return nullableNumber(left.방어력.최대) - nullableNumber(right.방어력.최대) || nullableNumber(left.필요힘) - nullableNumber(right.필요힘)
+    return maxDefenseValue(left) - maxDefenseValue(right) || nullableNumber(left.필요힘) - nullableNumber(right.필요힘)
+  }
+
+  if (sortType === 'damage-max-asc') {
+    return maxDamageValue(left) - maxDamageValue(right) || nullableNumber(left.필요힘) - nullableNumber(right.필요힘)
+  }
+
+  if (sortType === 'range-asc') {
+    return rangeValue(left) - rangeValue(right) || nullableNumber(left.필요힘) - nullableNumber(right.필요힘)
+  }
+
+  if (sortType === 'dexterity-asc') {
+    return dexterityValue(left) - dexterityValue(right) || nullableNumber(left.필요힘) - nullableNumber(right.필요힘)
   }
 
   return nullableNumber(left.요구레벨) - nullableNumber(right.요구레벨) || nullableNumber(left.필요힘) - nullableNumber(right.필요힘)
+}
+
+function isArmorItemRow(item: NormalListItem): item is NormalItemRow {
+  return '방어력' in item
+}
+
+function isWeaponItemRow(item: NormalListItem): item is WeaponItemRow {
+  return '양손데미지' in item
+}
+
+function maxDefenseValue(item: NormalListItem) {
+  return isArmorItemRow(item) ? nullableNumber(item.방어력.최대) : 0
+}
+
+function weightValue(item: NormalListItem) {
+  return isArmorItemRow(item) ? weightRank(item.무게) : 0
+}
+
+function maxDamageValue(item: NormalListItem) {
+  return isWeaponItemRow(item) ? nullableNumber(item.양손데미지.최대) : 0
+}
+
+function rangeValue(item: NormalListItem) {
+  return isWeaponItemRow(item) ? nullableNumber(item.사거리) : 0
+}
+
+function dexterityValue(item: NormalListItem) {
+  return isWeaponItemRow(item) ? nullableNumber(item.필요민첩) : 0
 }
 
 function nullableNumber(value: number | null | undefined) {
@@ -959,30 +1211,48 @@ function MaxDefenseHeaderTip() {
   )
 }
 
-function MaxDefenseCell({ value }: { value: number | null | undefined }) {
-  if (value === null || value === undefined) {
+function MaxDefenseCell({ defense }: { defense: ArmorBaseItem['방어력'] }) {
+  if (defense.최대 === null || defense.최대 === undefined) {
     return <span className="muted-text">-</span>
   }
 
+  const maxDefense = defense.최대
+
   return (
     <span className="max-defense-trigger">
-      <strong>{value}</strong>
+      <strong>{formatDefenseRange(defense)}</strong>
       <span className="max-defense-card" role="tooltip">
         <span>
           <b>고급</b>
-          <strong>{Math.round(value * 1.15)}</strong>
+          <strong>{Math.round(maxDefense * 1.15)}</strong>
         </span>
         <span>
           <b>에테리얼</b>
-          <strong>{Math.round(value * 1.5)}</strong>
+          <strong>{Math.round(maxDefense * 1.5)}</strong>
         </span>
         <span>
           <b>고급 에테리얼</b>
-          <strong>{Math.round(value * 1.5 * 1.15)}</strong>
+          <strong>{Math.round(maxDefense * 1.5 * 1.15)}</strong>
         </span>
       </span>
     </span>
   )
+}
+
+function formatDefenseRange(defense: ArmorBaseItem['방어력']) {
+  if (defense.최소 === null || defense.최대 === null) {
+    return defense.원문 ?? '-'
+  }
+
+  return `${defense.최소} - ${defense.최대}`
+}
+
+function formatDamageRange(damage: WeaponPolearmItem['양손데미지']) {
+  if (damage.최소 === null || damage.최대 === null) {
+    return damage.원문 ?? '-'
+  }
+
+  return `${damage.최소} ~ ${damage.최대}`
 }
 
 function WeightHeaderTip() {

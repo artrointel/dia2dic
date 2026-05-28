@@ -1194,6 +1194,34 @@ main {
   overflow: visible;
 }
 
+.normal-items-page .runewords-table-wrap {
+  overflow-x: visible;
+  overflow-y: visible;
+}
+
+.normal-items-page .runewords-table th {
+  position: static;
+}
+
+.normal-split-table {
+  display: grid;
+}
+
+.normal-items-table-scroll {
+  overflow: visible;
+}
+
+.armor-items-table .normal-items-table tbody tr {
+  height: 45px;
+}
+
+.armor-items-table .normal-items-table td {
+  height: 45px;
+  padding-bottom: 0;
+  padding-top: 0;
+  vertical-align: middle;
+}
+
 .runes-table-wrap {
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -1231,25 +1259,45 @@ main {
   table-layout: fixed;
 }
 
+.weapon-items-table {
+  table-layout: fixed;
+}
+
 .normal-item-col-grade {
-  width: 104px;
+  width: 9%;
 }
 
 .normal-item-col-name {
-  width: 240px;
+  width: 20%;
 }
 
 .normal-item-col-weight,
-.normal-item-col-defense-min,
-.normal-item-col-defense-max,
+.normal-item-col-defense,
+.normal-item-col-damage,
+.normal-item-col-damage-average,
+.normal-item-col-range,
+.normal-item-col-dexterity,
 .normal-item-col-level,
 .normal-item-col-strength,
 .normal-item-col-socket {
   width: 118px;
 }
 
+.normal-item-col-defense,
+.normal-item-col-damage {
+  width: 14%;
+}
+
+.normal-item-col-damage-average {
+  width: 10%;
+}
+
+.normal-item-col-range {
+  width: 8%;
+}
+
 .normal-item-col-weight {
-  width: 140px;
+  width: 10%;
 }
 
 .runes-table {
