@@ -28,9 +28,11 @@ import helmBasesData from './data/helm-bases.json'
 import levelingEfficiencyData from './data/leveling-efficiency.json'
 import runeUpgradesData from './data/rune-upgrades.json'
 import runewordsData from './data/runewords.json'
+import shieldBasesData from './data/shield-bases.json'
 import shieldPaladinBasesData from './data/shield-paladin-bases.json'
 import weaponBowBasesData from './data/weapon-bow-bases.json'
 import weaponPolearmBasesData from './data/weapon-polearm-bases.json'
+import weaponSpearBasesData from './data/weapon-spear-bases.json'
 import './App.css'
 
 type Theme = 'dark' | 'light'
@@ -70,8 +72,8 @@ type FilterType = 'socket' | 'equipment' | 'rune' | 'option' | 'ladder'
 type SortType = 'level-asc' | 'level-desc' | 'socket-asc' | 'socket-desc'
 type NormalItemCategory = '투구' | '갑옷' | '장갑' | '벨트' | '신발' | '무기' | '방패' | '목걸이' | '반지'
 type NormalItemGradeFilter = '전체' | '노멀' | '익셉셔널' | '엘리트'
-type NormalShieldTypeFilter = '팔라딘 방패'
-type NormalWeaponTypeFilter = '폴암' | '활'
+type NormalShieldTypeFilter = '일반 방패' | '팔라딘 방패'
+type NormalWeaponTypeFilter = '폴암' | '활' | '창'
 type NormalItemSortType =
   | 'level-asc'
   | 'strength-asc'
@@ -257,9 +259,11 @@ const helmBases = helmBasesData as ArmorBases
 const levelingEfficiency = levelingEfficiencyData as LevelingEfficiency
 const runeUpgrades = runeUpgradesData as RuneUpgrade[]
 const runewords = runewordsData as Runeword[]
+const shieldBases = shieldBasesData as ArmorBases
 const shieldPaladinBases = shieldPaladinBasesData as ArmorBases
 const weaponBowBases = weaponBowBasesData as WeaponBases
 const weaponPolearmBases = weaponPolearmBasesData as WeaponBases
+const weaponSpearBases = weaponSpearBasesData as WeaponBases
 const bowIasFrameByName = new Map(bowIasFrames.items.map((item) => [item.이름, item]))
 const assetUrl = (path: string) =>
   `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`
@@ -814,8 +818,8 @@ const normalItemCategories: NormalItemCategory[] = [
   '반지',
 ]
 const normalItemGradeFilters: NormalItemGradeFilter[] = ['전체', '노멀', '익셉셔널', '엘리트']
-const normalShieldTypeFilters: NormalShieldTypeFilter[] = ['팔라딘 방패']
-const normalWeaponTypeFilters: NormalWeaponTypeFilter[] = ['폴암', '활']
+const normalShieldTypeFilters: NormalShieldTypeFilter[] = ['일반 방패', '팔라딘 방패']
+const normalWeaponTypeFilters: NormalWeaponTypeFilter[] = ['폴암', '활', '창']
 const armorSortOptions: Array<{ value: NormalItemSortType; label: string }> = [
   { value: 'level-asc', label: '레벨제한' },
   { value: 'strength-asc', label: '요구힘' },
@@ -841,15 +845,17 @@ const weaponSortOptions: Array<{ value: NormalItemSortType; label: string }> = [
 function NormalItemsPage() {
   const [selectedCategory, setSelectedCategory] = useState<NormalItemCategory>('갑옷')
   const [selectedGrade, setSelectedGrade] = useState<NormalItemGradeFilter>('전체')
-  const [selectedShieldType, setSelectedShieldType] = useState<NormalShieldTypeFilter>('팔라딘 방패')
+  const [selectedShieldType, setSelectedShieldType] = useState<NormalShieldTypeFilter>('일반 방패')
   const [selectedWeaponType, setSelectedWeaponType] = useState<NormalWeaponTypeFilter>('폴암')
   const [nameQuery, setNameQuery] = useState('')
   const [sortType, setSortType] = useState<NormalItemSortType>('weight-asc')
   const armorItems = useMemo(() => getArmorBaseRows(), [])
   const helmItems = useMemo(() => getHelmBaseRows(), [])
-  const shieldItems = useMemo(() => getShieldBaseRows(), [])
+  const shieldItems = useMemo(() => getShieldBaseRows(shieldBases), [])
+  const paladinShieldItems = useMemo(() => getShieldBaseRows(shieldPaladinBases), [])
   const bowItems = useMemo(() => getWeaponBaseRows(weaponBowBases), [])
   const polearmItems = useMemo(() => getWeaponBaseRows(weaponPolearmBases), [])
+  const spearItems = useMemo(() => getWeaponBaseRows(weaponSpearBases), [])
   const sortOptions =
     selectedCategory === '무기'
       ? selectedWeaponType === '활'
@@ -874,11 +880,15 @@ function NormalItemsPage() {
         ? armorItems
         : selectedCategory === '투구'
           ? helmItems
-        : selectedCategory === '방패' && selectedShieldType === '팔라딘 방패'
-          ? shieldItems
+        : selectedCategory === '방패'
+          ? selectedShieldType === '팔라딘 방패'
+            ? paladinShieldItems
+            : shieldItems
         : selectedCategory === '무기'
           ? selectedWeaponType === '활'
             ? bowItems
+            : selectedWeaponType === '창'
+              ? spearItems
             : polearmItems
           : []
 
@@ -888,17 +898,21 @@ function NormalItemsPage() {
         normalizedNameQuery ? item.이름.toLowerCase().includes(normalizedNameQuery) : true,
       )
       .toSorted((left, right) => sortNormalItems(left, right, sortType))
-  }, [armorItems, bowItems, helmItems, nameQuery, polearmItems, selectedCategory, selectedGrade, selectedShieldType, selectedWeaponType, shieldItems, sortType])
+  }, [armorItems, bowItems, helmItems, nameQuery, paladinShieldItems, polearmItems, selectedCategory, selectedGrade, selectedShieldType, selectedWeaponType, shieldItems, sortType, spearItems])
   const totalItemCount =
     selectedCategory === '갑옷'
       ? armorItems.length
       : selectedCategory === '투구'
         ? helmItems.length
       : selectedCategory === '방패'
-        ? shieldItems.length
+        ? selectedShieldType === '팔라딘 방패'
+          ? paladinShieldItems.length
+          : shieldItems.length
       : selectedCategory === '무기'
         ? selectedWeaponType === '활'
           ? bowItems.length
+          : selectedWeaponType === '창'
+            ? spearItems.length
           : polearmItems.length
         : 0
 
@@ -1155,6 +1169,8 @@ function DefensiveItemsTable({
 }
 
 function ShieldItemsTable({ items }: { items: NormalItemRow[] }) {
+  const hasBlockRate = items.some((item) => item.블럭율)
+  const hasSmiteDamage = items.some((item) => item.강타피해)
   const columns: ItemDataTableColumn<NormalItemRow>[] = [
     {
       key: 'grade',
@@ -1186,18 +1202,26 @@ function ShieldItemsTable({ items }: { items: NormalItemRow[] }) {
       className: 'normal-item-col-socket',
       render: (item) => formatNullableNumber(item.최대홈),
     },
-    {
-      key: 'block',
-      header: '블럭율',
-      className: 'normal-item-col-block',
-      render: (item) => item.블럭율 ?? '-',
-    },
-    {
-      key: 'smite-damage',
-      header: '강타 피해',
-      className: 'normal-item-col-smite',
-      render: (item) => formatItemRange(item.강타피해),
-    },
+    ...(hasBlockRate
+      ? [
+          {
+            key: 'block',
+            header: '블럭율',
+            className: 'normal-item-col-block',
+            render: (item: NormalItemRow) => item.블럭율 ?? '-',
+          },
+        ]
+      : []),
+    ...(hasSmiteDamage
+      ? [
+          {
+            key: 'smite-damage',
+            header: '강타 피해',
+            className: 'normal-item-col-smite',
+            render: (item: NormalItemRow) => formatItemRange(item.강타피해),
+          },
+        ]
+      : []),
     {
       key: 'strength',
       header: '필요힘',
@@ -1248,7 +1272,7 @@ function WeaponItemsTable({ items }: { items: WeaponItemRow[] }) {
       key: 'damage',
       header: '양손 데미지',
       className: 'normal-item-col-damage',
-      render: (item) => <strong>{formatDamageRange(item.양손데미지)}</strong>,
+      render: (item) => <WeaponDamageCell damage={item.양손데미지} />,
     },
     {
       key: 'average-damage',
@@ -1417,8 +1441,8 @@ function getHelmBaseRows(): NormalItemRow[] {
   return getDefensiveBaseRows(helmBases)
 }
 
-function getShieldBaseRows(): NormalItemRow[] {
-  return getDefensiveBaseRows(shieldPaladinBases)
+function getShieldBaseRows(data: ArmorBases): NormalItemRow[] {
+  return getDefensiveBaseRows(data)
 }
 
 function getDefensiveBaseRows(data: ArmorBases): NormalItemRow[] {
@@ -1562,15 +1586,15 @@ function MaxDefenseCell({ defense }: { defense: ArmorBaseItem['방어력'] }) {
       <span className="max-defense-card" role="tooltip">
         <span>
           <b>고급</b>
-          <strong>{Math.round(maxDefense * 1.15)}</strong>
+          <strong>{Math.ceil(maxDefense * 1.15)}</strong>
         </span>
         <span>
           <b>에테리얼</b>
-          <strong>{Math.round(maxDefense * 1.5)}</strong>
+          <strong>{Math.ceil(maxDefense * 1.5)}</strong>
         </span>
         <span>
           <b>고급 에테리얼</b>
-          <strong>{Math.round(maxDefense * 1.5 * 1.15)}</strong>
+          <strong>{Math.ceil(maxDefense * 1.5 * 1.15)}</strong>
         </span>
       </span>
     </span>
@@ -1595,6 +1619,40 @@ function formatItemRange(range: ArmorBaseItem['강타피해']) {
   }
 
   return `${range.최소} - ${range.최대}`
+}
+
+function WeaponDamageCell({ damage }: { damage: WeaponBaseItem['양손데미지'] }) {
+  if (damage.최소 === null || damage.최대 === null) {
+    return <span className="muted-text">{damage.원문 ?? '-'}</span>
+  }
+
+  return (
+    <span className="weapon-damage-trigger">
+      <strong>{formatDamageRange(damage)}</strong>
+      <span className="weapon-damage-card" role="tooltip">
+        <span>
+          <b>고급</b>
+          <strong>{formatDamageBonusRange(damage, 1.15)}</strong>
+        </span>
+        <span>
+          <b>에테리얼</b>
+          <strong>{formatDamageBonusRange(damage, 1.5)}</strong>
+        </span>
+        <span>
+          <b>고급 에테리얼</b>
+          <strong>{formatDamageBonusRange(damage, 1.5 * 1.15)}</strong>
+        </span>
+      </span>
+    </span>
+  )
+}
+
+function formatDamageBonusRange(damage: WeaponBaseItem['양손데미지'], multiplier: number) {
+  if (damage.최소 === null || damage.최대 === null) {
+    return '-'
+  }
+
+  return `${Math.floor(damage.최소 * multiplier)} ~ ${Math.floor(damage.최대 * multiplier)}`
 }
 
 function formatDamageRange(damage: WeaponBaseItem['양손데미지']) {

@@ -1649,22 +1649,26 @@ main {
   line-height: 1.45;
 }
 
-.max-defense-trigger {
+.max-defense-trigger,
+.weapon-damage-trigger {
   cursor: help;
   display: inline-flex;
   position: relative;
 }
 
-.max-defense-trigger > strong {
+.max-defense-trigger > strong,
+.weapon-damage-trigger > strong {
   font-weight: 800;
 }
 
-.max-defense-trigger:hover .max-defense-card {
+.max-defense-trigger:hover .max-defense-card,
+.weapon-damage-trigger:hover .weapon-damage-card {
   opacity: 1;
   transform: translateY(0);
 }
 
-.max-defense-card {
+.max-defense-card,
+.weapon-damage-card {
   background: var(--surface-strong);
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -1685,19 +1689,26 @@ main {
   z-index: 8;
 }
 
-.max-defense-card span {
+.weapon-damage-card {
+  min-width: 210px;
+}
+
+.max-defense-card span,
+.weapon-damage-card span {
   align-items: center;
   display: flex;
   gap: 14px;
   justify-content: space-between;
 }
 
-.max-defense-card b {
+.max-defense-card b,
+.weapon-damage-card b {
   color: var(--text-muted);
   font-size: 12px;
 }
 
-.max-defense-card strong {
+.max-defense-card strong,
+.weapon-damage-card strong {
   color: var(--table-name);
   font-size: 13px;
   text-shadow: var(--table-text-shadow);
