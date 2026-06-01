@@ -1,0 +1,15 @@
+﻿.option-list {
+  display: grid;
+  gap: 3px;
+  list-style: none;
+  margin: 0;
+  max-width: 420px;
+  padding: 0;
+}
+
+.option-list li {
+  color: var(--table-option);
+  line-height: 1.35;
+  text-shadow: var(--table-text-shadow);
+}
+

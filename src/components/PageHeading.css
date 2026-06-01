@@ -1,0 +1,18 @@
+﻿.category-heading {
+  max-width: 720px;
+}
+
+.category-heading svg {
+  color: var(--accent);
+  height: 36px;
+  width: 36px;
+}
+
+.category-heading span {
+  color: var(--accent);
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  margin-top: 18px;
+}
+
