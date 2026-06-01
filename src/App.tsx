@@ -24,6 +24,7 @@ import { ItemDataTable, type ItemDataTableColumn } from './components/ItemDataTa
 import armorBasesData from './data/armor-bases.json'
 import bowIasFramesData from './data/bow-ias-frames.json'
 import equipmentUpgradesData from './data/equipment-upgrades.json'
+import gloveBasesData from './data/glove-bases.json'
 import helmBasesData from './data/helm-bases.json'
 import levelingEfficiencyData from './data/leveling-efficiency.json'
 import runeUpgradesData from './data/rune-upgrades.json'
@@ -153,6 +154,7 @@ type BowIasFrames = {
 
 type ArmorBaseItem = {
   이름: string
+  영문명?: string
   방어력: {
     최소: number | null
     최대: number | null
@@ -255,6 +257,7 @@ type LevelingEfficiency = {
 const equipmentUpgrades = equipmentUpgradesData as EquipmentUpgrade[]
 const armorBases = armorBasesData as ArmorBases
 const bowIasFrames = bowIasFramesData as BowIasFrames
+const gloveBases = gloveBasesData as ArmorBases
 const helmBases = helmBasesData as ArmorBases
 const levelingEfficiency = levelingEfficiencyData as LevelingEfficiency
 const runeUpgrades = runeUpgradesData as RuneUpgrade[]
@@ -850,6 +853,7 @@ function NormalItemsPage() {
   const [nameQuery, setNameQuery] = useState('')
   const [sortType, setSortType] = useState<NormalItemSortType>('weight-asc')
   const armorItems = useMemo(() => getArmorBaseRows(), [])
+  const gloveItems = useMemo(() => getGloveBaseRows(), [])
   const helmItems = useMemo(() => getHelmBaseRows(), [])
   const shieldItems = useMemo(() => getShieldBaseRows(shieldBases), [])
   const paladinShieldItems = useMemo(() => getShieldBaseRows(shieldPaladinBases), [])
@@ -878,6 +882,8 @@ function NormalItemsPage() {
     const sourceItems =
       selectedCategory === '갑옷'
         ? armorItems
+        : selectedCategory === '장갑'
+          ? gloveItems
         : selectedCategory === '투구'
           ? helmItems
         : selectedCategory === '방패'
@@ -895,13 +901,17 @@ function NormalItemsPage() {
     return sourceItems
       .filter((item) => (selectedGrade === '전체' ? true : item.등급 === selectedGrade))
       .filter((item) =>
-        normalizedNameQuery ? item.이름.toLowerCase().includes(normalizedNameQuery) : true,
+        normalizedNameQuery
+          ? `${item.이름} ${isArmorItemRow(item) ? item.영문명 ?? '' : ''}`.toLowerCase().includes(normalizedNameQuery)
+          : true,
       )
       .toSorted((left, right) => sortNormalItems(left, right, sortType))
-  }, [armorItems, bowItems, helmItems, nameQuery, paladinShieldItems, polearmItems, selectedCategory, selectedGrade, selectedShieldType, selectedWeaponType, shieldItems, sortType, spearItems])
+  }, [armorItems, bowItems, gloveItems, helmItems, nameQuery, paladinShieldItems, polearmItems, selectedCategory, selectedGrade, selectedShieldType, selectedWeaponType, shieldItems, sortType, spearItems])
   const totalItemCount =
     selectedCategory === '갑옷'
       ? armorItems.length
+      : selectedCategory === '장갑'
+        ? gloveItems.length
       : selectedCategory === '투구'
         ? helmItems.length
       : selectedCategory === '방패'
@@ -1031,6 +1041,8 @@ function NormalItemsPage() {
       <div className="runewords-table-wrap">
         {selectedCategory === '갑옷' ? (
           <ArmorItemsTable items={filteredItems.filter(isArmorItemRow)} />
+        ) : selectedCategory === '장갑' ? (
+          <DefensiveItemsTable emptyMessage="장갑 데이터는 아직 준비 중입니다." items={filteredItems.filter(isArmorItemRow)} />
         ) : selectedCategory === '투구' ? (
           <DefensiveItemsTable emptyMessage="투구 데이터는 아직 준비 중입니다." items={filteredItems.filter(isArmorItemRow)} />
         ) : selectedCategory === '방패' ? (
@@ -1114,6 +1126,7 @@ function DefensiveItemsTable({
   emptyMessage: string
   items: NormalItemRow[]
 }) {
+  const hasSockets = items.some((item) => item.최대홈 !== null && item.최대홈 !== undefined)
   const columns: ItemDataTableColumn<NormalItemRow>[] = [
     {
       key: 'grade',
@@ -1138,12 +1151,16 @@ function DefensiveItemsTable({
       className: 'normal-item-col-defense',
       render: (item) => <MaxDefenseCell defense={item.방어력} />,
     },
-    {
-      key: 'sockets',
-      header: '최대홈',
-      className: 'normal-item-col-socket',
-      render: (item) => formatNullableNumber(item.최대홈),
-    },
+    ...(hasSockets
+      ? [
+          {
+            key: 'sockets',
+            header: '최대홈',
+            className: 'normal-item-col-socket',
+            render: (item: NormalItemRow) => formatNullableNumber(item.최대홈),
+          },
+        ]
+      : []),
     {
       key: 'strength',
       header: '필요힘',
@@ -1435,6 +1452,10 @@ function EmptyNormalItemsTable({ category }: { category: NormalItemCategory }) {
 
 function getArmorBaseRows(): NormalItemRow[] {
   return getDefensiveBaseRows(armorBases)
+}
+
+function getGloveBaseRows(): NormalItemRow[] {
+  return getDefensiveBaseRows(gloveBases)
 }
 
 function getHelmBaseRows(): NormalItemRow[] {
