@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent } from 'react'
+import { Fragment, useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent, type ReactNode } from 'react'
 import {
   BookOpen,
   Boxes,
@@ -20,6 +20,7 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import { NavLink, Route, Routes } from 'react-router-dom'
+import { createPortal } from 'react-dom'
 import { ItemDataTable, type ItemDataTableColumn } from './components/ItemDataTable'
 import armorBasesData from './data/armor-bases.json'
 import beltBasesData from './data/belt-bases.json'
@@ -1134,29 +1135,25 @@ function NormalItemsPage() {
         </label>
       </div>
 
-      <div className="table-meta">
-        총 {totalItemCount}개 중 {filteredItems.length}개 표시
-      </div>
-
-      <div className="runewords-table-wrap">
+      <>
         {selectedCategory === '갑옷' ? (
-          <ArmorItemsTable items={filteredItems.filter(isArmorItemRow)} />
+          <ArmorItemsTable items={filteredItems.filter(isArmorItemRow)} metaLabel={`총 ${totalItemCount}개 중 ${filteredItems.length}개 표시`} />
         ) : selectedCategory === '신발' ? (
-          <DefensiveItemsTable emptyMessage="신발 데이터는 아직 준비 중입니다." items={filteredItems.filter(isArmorItemRow)} />
+          <DefensiveItemsTable emptyMessage="신발 데이터는 아직 준비 중입니다." items={filteredItems.filter(isArmorItemRow)} metaLabel={`총 ${totalItemCount}개 중 ${filteredItems.length}개 표시`} />
         ) : selectedCategory === '벨트' ? (
-          <DefensiveItemsTable emptyMessage="벨트 데이터는 아직 준비 중입니다." items={filteredItems.filter(isArmorItemRow)} />
+          <DefensiveItemsTable emptyMessage="벨트 데이터는 아직 준비 중입니다." items={filteredItems.filter(isArmorItemRow)} metaLabel={`총 ${totalItemCount}개 중 ${filteredItems.length}개 표시`} />
         ) : selectedCategory === '장갑' ? (
-          <DefensiveItemsTable emptyMessage="장갑 데이터는 아직 준비 중입니다." items={filteredItems.filter(isArmorItemRow)} />
+          <DefensiveItemsTable emptyMessage="장갑 데이터는 아직 준비 중입니다." items={filteredItems.filter(isArmorItemRow)} metaLabel={`총 ${totalItemCount}개 중 ${filteredItems.length}개 표시`} />
         ) : selectedCategory === '투구' ? (
-          <DefensiveItemsTable emptyMessage="투구 데이터는 아직 준비 중입니다." items={filteredItems.filter(isArmorItemRow)} />
+          <DefensiveItemsTable emptyMessage="투구 데이터는 아직 준비 중입니다." items={filteredItems.filter(isArmorItemRow)} metaLabel={`총 ${totalItemCount}개 중 ${filteredItems.length}개 표시`} />
         ) : selectedCategory === '방패' ? (
-          <ShieldItemsTable items={filteredItems.filter(isArmorItemRow)} />
+          <ShieldItemsTable items={filteredItems.filter(isArmorItemRow)} metaLabel={`총 ${totalItemCount}개 중 ${filteredItems.length}개 표시`} />
         ) : selectedCategory === '무기' ? (
-          <WeaponItemsTable items={filteredItems.filter(isWeaponItemRow)} />
+          <WeaponItemsTable items={filteredItems.filter(isWeaponItemRow)} metaLabel={`총 ${totalItemCount}개 중 ${filteredItems.length}개 표시`} />
         ) : (
           <EmptyNormalItemsTable category={selectedCategory} />
         )}
-      </div>
+      </>
     </section>
   )
 }
@@ -1252,13 +1249,7 @@ function SetItemsPage() {
 
       {selectedSet && <SetBonusPanel set={selectedSet} />}
 
-      <div className="table-meta">
-        총 {setRows.length}개 중 {filteredRows.length}개 표시
-      </div>
-
-      <div className="runewords-table-wrap">
-        <SetItemsTable items={filteredRows} />
-      </div>
+      <SetItemsTable items={filteredRows} metaLabel={`총 ${setRows.length}개 중 ${filteredRows.length}개 표시`} />
     </section>
   )
 }
@@ -1295,7 +1286,7 @@ function SetBonusList({ title, values, variant }: { title: string; values: strin
   )
 }
 
-function SetItemsTable({ items }: { items: SetItemRow[] }) {
+function SetItemsTable({ items, metaLabel }: { items: SetItemRow[]; metaLabel: string }) {
   const columns: ItemDataTableColumn<SetItemRow>[] = [
     {
       key: 'name',
@@ -1365,9 +1356,10 @@ function SetItemsTable({ items }: { items: SetItemRow[] }) {
     <ItemDataTable
       columns={columns}
       emptyMessage="세트 아이템 데이터가 없습니다."
+      fillColumnKey="options"
       getRowKey={(item) => item.id}
       items={items}
-      tableClassName="set-items-table"
+      metaLabel={metaLabel}
     />
   )
 }
@@ -1384,7 +1376,7 @@ function setItemOptionClassName(option: string) {
   return undefined
 }
 
-function ArmorItemsTable({ items }: { items: NormalItemRow[] }) {
+function ArmorItemsTable({ items, metaLabel }: { items: NormalItemRow[]; metaLabel: string }) {
   const columns: ItemDataTableColumn<NormalItemRow>[] = [
     {
       key: 'grade',
@@ -1439,8 +1431,11 @@ function ArmorItemsTable({ items }: { items: NormalItemRow[] }) {
     <ItemDataTable
       columns={columns}
       emptyMessage="갑옷 데이터는 아직 준비 중입니다."
+      fillColumnKey="name"
       getRowKey={(item) => item.id}
       items={items}
+      metaLabel={metaLabel}
+      widthMode="content"
       wrapperClassName="armor-items-table"
     />
   )
@@ -1449,9 +1444,11 @@ function ArmorItemsTable({ items }: { items: NormalItemRow[] }) {
 function DefensiveItemsTable({
   emptyMessage,
   items,
+  metaLabel,
 }: {
   emptyMessage: string
   items: NormalItemRow[]
+  metaLabel: string
 }) {
   const hasSockets = items.some((item) => item.최대홈 !== null && item.최대홈 !== undefined)
   const columns: ItemDataTableColumn<NormalItemRow>[] = [
@@ -1506,13 +1503,16 @@ function DefensiveItemsTable({
     <ItemDataTable
       columns={columns}
       emptyMessage={emptyMessage}
+      fillColumnKey="name"
       getRowKey={(item) => item.id}
       items={items}
+      metaLabel={metaLabel}
+      widthMode="content"
     />
   )
 }
 
-function ShieldItemsTable({ items }: { items: NormalItemRow[] }) {
+function ShieldItemsTable({ items, metaLabel }: { items: NormalItemRow[]; metaLabel: string }) {
   const hasBlockRate = items.some((item) => item.블럭율)
   const hasSmiteDamage = items.some((item) => item.강타피해)
   const columns: ItemDataTableColumn<NormalItemRow>[] = [
@@ -1584,14 +1584,16 @@ function ShieldItemsTable({ items }: { items: NormalItemRow[] }) {
     <ItemDataTable
       columns={columns}
       emptyMessage="방패 데이터는 아직 준비 중입니다."
+      fillColumnKey="name"
       getRowKey={(item) => item.id}
       items={items}
-      tableClassName="shield-items-table"
+      metaLabel={metaLabel}
+      widthMode="content"
     />
   )
 }
 
-function WeaponItemsTable({ items }: { items: WeaponItemRow[] }) {
+function WeaponItemsTable({ items, metaLabel }: { items: WeaponItemRow[]; metaLabel: string }) {
   const hasRange = items.some((item) => item.사거리 !== null)
   const columns: ItemDataTableColumn<WeaponItemRow>[] = [
     {
@@ -1664,9 +1666,11 @@ function WeaponItemsTable({ items }: { items: WeaponItemRow[] }) {
     <ItemDataTable
       columns={columns}
       emptyMessage="무기 데이터는 아직 준비 중입니다."
+      fillColumnKey="name"
       getRowKey={(item) => item.id}
       items={items}
-      tableClassName="weapon-items-table"
+      metaLabel={metaLabel}
+      widthMode="content"
     />
   )
 }
@@ -1833,13 +1837,7 @@ function CraftingPage() {
         </label>
       </div>
 
-      <div className="table-meta">
-        총 {rows.length}개 중 {filteredRows.length}개 표시
-      </div>
-
-      <div className="runewords-table-wrap">
-        <CraftRecipesTable items={filteredRows} />
-      </div>
+      <CraftRecipesTable items={filteredRows} metaLabel={`총 ${rows.length}개 중 ${filteredRows.length}개 표시`} />
     </section>
   )
 }
@@ -1854,7 +1852,7 @@ function CraftTips({ tips }: { tips: string[] }) {
   )
 }
 
-function CraftRecipesTable({ items }: { items: CraftRecipeRow[] }) {
+function CraftRecipesTable({ items, metaLabel }: { items: CraftRecipeRow[]; metaLabel: string }) {
   const columns: ItemDataTableColumn<CraftRecipeRow>[] = [
     {
       key: 'name',
@@ -1906,9 +1904,10 @@ function CraftRecipesTable({ items }: { items: CraftRecipeRow[] }) {
     <ItemDataTable
       columns={columns}
       emptyMessage="크래프트 조합 데이터가 없습니다."
+      fillColumnKey="options"
       getRowKey={(item) => item.id}
       items={items}
-      tableClassName="craft-recipes-table"
+      metaLabel={metaLabel}
     />
   )
 }
@@ -2111,23 +2110,28 @@ function MaxDefenseCell({ defense }: { defense: ArmorBaseItem['방어력'] }) {
   const maxDefense = defense.최대
 
   return (
-    <span className="max-defense-trigger">
+    <FloatingStatTooltip
+      cardClassName="max-defense-card"
+      content={
+        <>
+          <span>
+            <b>고급</b>
+            <strong>{Math.ceil(maxDefense * 1.15)}</strong>
+          </span>
+          <span>
+            <b>에테리얼</b>
+            <strong>{Math.ceil(maxDefense * 1.5)}</strong>
+          </span>
+          <span>
+            <b>고급 에테리얼</b>
+            <strong>{Math.ceil(maxDefense * 1.5 * 1.15)}</strong>
+          </span>
+        </>
+      }
+      triggerClassName="max-defense-trigger"
+    >
       <strong>{formatDefenseRange(defense)}</strong>
-      <span className="max-defense-card" role="tooltip">
-        <span>
-          <b>고급</b>
-          <strong>{Math.ceil(maxDefense * 1.15)}</strong>
-        </span>
-        <span>
-          <b>에테리얼</b>
-          <strong>{Math.ceil(maxDefense * 1.5)}</strong>
-        </span>
-        <span>
-          <b>고급 에테리얼</b>
-          <strong>{Math.ceil(maxDefense * 1.5 * 1.15)}</strong>
-        </span>
-      </span>
-    </span>
+    </FloatingStatTooltip>
   )
 }
 
@@ -2173,22 +2177,70 @@ function WeaponDamageCell({ damage }: { damage: WeaponBaseItem['양손데미지'
   }
 
   return (
-    <span className="weapon-damage-trigger">
+    <FloatingStatTooltip
+      cardClassName="weapon-damage-card"
+      content={
+        <>
+          <span>
+            <b>고급</b>
+            <strong>{formatDamageBonusRange(damage, 1.15)}</strong>
+          </span>
+          <span>
+            <b>에테리얼</b>
+            <strong>{formatDamageBonusRange(damage, 1.5)}</strong>
+          </span>
+          <span>
+            <b>고급 에테리얼</b>
+            <strong>{formatDamageBonusRange(damage, 1.5 * 1.15)}</strong>
+          </span>
+        </>
+      }
+      triggerClassName="weapon-damage-trigger"
+    >
       <strong>{formatDamageRange(damage)}</strong>
-      <span className="weapon-damage-card" role="tooltip">
-        <span>
-          <b>고급</b>
-          <strong>{formatDamageBonusRange(damage, 1.15)}</strong>
-        </span>
-        <span>
-          <b>에테리얼</b>
-          <strong>{formatDamageBonusRange(damage, 1.5)}</strong>
-        </span>
-        <span>
-          <b>고급 에테리얼</b>
-          <strong>{formatDamageBonusRange(damage, 1.5 * 1.15)}</strong>
-        </span>
-      </span>
+    </FloatingStatTooltip>
+  )
+}
+
+function FloatingStatTooltip({
+  cardClassName,
+  children,
+  content,
+  triggerClassName,
+}: {
+  cardClassName: string
+  children: ReactNode
+  content: ReactNode
+  triggerClassName: string
+}) {
+  const [position, setPosition] = useState<{ left: number; placement: 'above' | 'below'; top: number } | null>(null)
+
+  const showTooltip = (event: MouseEvent<HTMLElement>) => {
+    const rect = event.currentTarget.getBoundingClientRect()
+    const shouldPlaceAbove = rect.bottom + 132 > window.innerHeight
+
+    setPosition({
+      left: Math.max(8, rect.left),
+      placement: shouldPlaceAbove ? 'above' : 'below',
+      top: shouldPlaceAbove ? rect.top - 8 : rect.bottom + 8,
+    })
+  }
+
+  return (
+    <span className={triggerClassName} onMouseEnter={showTooltip} onMouseLeave={() => setPosition(null)}>
+      {children}
+      {position
+        ? createPortal(
+            <span
+              className={`${cardClassName} floating-stat-card ${position.placement === 'above' ? 'is-above' : ''}`}
+              role="tooltip"
+              style={{ left: position.left, top: position.top }}
+            >
+              {content}
+            </span>,
+            document.body,
+          )
+        : null}
     </span>
   )
 }
@@ -2672,15 +2724,6 @@ function RunesPage() {
 
       <div className="runes-table-wrap">
         <table className="runewords-table runes-table">
-          <colgroup>
-            <col className="runes-col-number" />
-            <col className="runes-col-name" />
-            <col className="runes-col-weapon" />
-            <col className="runes-col-armor" />
-            <col className="runes-col-level" />
-            <col className="runes-col-recipe" />
-            <col className="runes-col-countess" />
-          </colgroup>
           <thead>
             <tr>
               <th>번호</th>
@@ -2970,14 +3013,6 @@ function RunewordsPage() {
 
       <div className="runewords-table-wrap">
         <table className="runewords-table">
-          <colgroup>
-            <col className="runeword-col-name" />
-            <col className="runeword-col-level" />
-            <col className="runeword-col-equipment" />
-            <col className="runeword-col-socket" />
-            <col className="runeword-col-runes" />
-            <col className="runeword-col-options" />
-          </colgroup>
           <thead>
             <tr>
               <th>이름</th>

@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import type { CSSProperties, ReactNode } from 'react'
+import './ItemDataTable.css'
 
 export type ItemDataTableColumn<TItem> = {
   key: string
@@ -13,7 +14,10 @@ type ItemDataTableProps<TItem> = {
   emptyMessage: string
   getRowKey: (item: TItem) => string
   items: TItem[]
+  fillColumnKey?: string
+  metaLabel?: ReactNode
   tableClassName?: string
+  widthMode?: 'fill' | 'content'
   wrapperClassName?: string
 }
 
@@ -23,9 +27,12 @@ const TABLE_COLUMN_BORDER_WIDTH = 1
 export function ItemDataTable<TItem>({
   columns,
   emptyMessage,
+  fillColumnKey,
   getRowKey,
   items,
+  metaLabel,
   tableClassName = '',
+  widthMode = 'fill',
   wrapperClassName = '',
 }: ItemDataTableProps<TItem>) {
   const wrapperRef = useRef<HTMLDivElement>(null)
@@ -38,7 +45,8 @@ export function ItemDataTable<TItem>({
     .filter(Boolean)
     .join(' ')
   const tableWidth = Math.ceil(Object.values(columnWidths).reduce((sum, width) => sum + width, 0))
-  const tableStyle: CSSProperties | undefined = tableWidth > 0 ? { minWidth: '100%', width: `${tableWidth}px` } : undefined
+  const tableStyle: CSSProperties | undefined =
+    tableWidth > 0 ? { minWidth: widthMode === 'fill' ? '100%' : undefined, width: `${tableWidth}px` } : undefined
 
   useLayoutEffect(() => {
     const wrapper = wrapperRef.current
@@ -64,7 +72,10 @@ export function ItemDataTable<TItem>({
     }
 
     const measuredWidths = measureColumnContentWidths(columns, measureRef.current)
-    const nextWidths = fitColumnWidths(columns, measuredWidths, availableWidth)
+    const nextWidths =
+      widthMode === 'content'
+        ? contentColumnWidths(columns, measuredWidths)
+        : fitColumnWidths(columns, measuredWidths, availableWidth, fillColumnKey)
 
     setColumnWidths((currentWidths) => {
       const currentEntries = Object.entries(currentWidths)
@@ -75,58 +86,69 @@ export function ItemDataTable<TItem>({
 
       return isSame ? currentWidths : nextWidths
     })
-  }, [availableWidth, columns, items])
+  }, [availableWidth, columns, fillColumnKey, items, widthMode])
 
   return (
-    <div className={['normal-split-table', wrapperClassName].filter(Boolean).join(' ')} ref={wrapperRef}>
-      <div aria-hidden="true" className="item-table-measure-layer" ref={measureRef}>
-        {columns.map((column) => (
-          <div className={column.className} data-column-key={column.key} key={column.key}>
-            <span>{column.header}</span>
-            {items.map((item) => (
-              <span key={getRowKey(item)}>{column.render(item)}</span>
+    <div className={['item-data-table-block', widthMode === 'content' ? 'is-content-width' : ''].filter(Boolean).join(' ')}>
+      {metaLabel ? <div className="item-data-table-meta">{metaLabel}</div> : null}
+
+      <div className="runewords-table-wrap">
+        <div
+          className={['normal-split-table', widthMode === 'content' ? 'is-content-width' : '', wrapperClassName]
+            .filter(Boolean)
+            .join(' ')}
+          ref={wrapperRef}
+        >
+          <div aria-hidden="true" className="item-table-measure-layer" ref={measureRef}>
+            {columns.map((column) => (
+              <div className={column.className} data-column-key={column.key} key={column.key}>
+                <span>{column.header}</span>
+                {items.map((item) => (
+                  <span key={getRowKey(item)}>{column.render(item)}</span>
+                ))}
+              </div>
             ))}
           </div>
-        ))}
-      </div>
 
-      <div className="normal-table-horizontal-scroll">
-        <table className={tableClasses} ref={headerTableRef} style={tableStyle}>
-          <ItemDataTableColgroup columnWidths={columnWidths} columns={columns} />
-          <thead>
-            <tr>
-              {columns.map((column) => (
-                <th className={column.className} data-column-key={column.key} key={column.key}>
-                  {column.header}
-                </th>
-              ))}
-            </tr>
-          </thead>
-        </table>
-
-        <div className="normal-items-table-scroll">
-          <table className={tableClasses} ref={bodyTableRef} style={tableStyle}>
-            <ItemDataTableColgroup columnWidths={columnWidths} columns={columns} />
-            <tbody>
-              {items.length > 0 ? (
-                items.map((item) => (
-                  <tr key={getRowKey(item)}>
-                    {columns.map((column) => (
-                      <td className={column.className} data-column-key={column.key} key={column.key}>
-                        {column.render(item)}
-                      </td>
-                    ))}
-                  </tr>
-                ))
-              ) : (
+          <div className="normal-table-horizontal-scroll">
+            <table className={tableClasses} ref={headerTableRef} style={tableStyle}>
+              <ItemDataTableColgroup columnWidths={columnWidths} columns={columns} />
+              <thead>
                 <tr>
-                  <td className="normal-item-empty" colSpan={columns.length}>
-                    {emptyMessage}
-                  </td>
+                  {columns.map((column) => (
+                    <th className={column.className} data-column-key={column.key} key={column.key}>
+                      {column.header}
+                    </th>
+                  ))}
                 </tr>
-              )}
-            </tbody>
-          </table>
+              </thead>
+            </table>
+
+            <div className="normal-items-table-scroll">
+              <table className={tableClasses} ref={bodyTableRef} style={tableStyle}>
+                <ItemDataTableColgroup columnWidths={columnWidths} columns={columns} />
+                <tbody>
+                  {items.length > 0 ? (
+                    items.map((item) => (
+                      <tr key={getRowKey(item)}>
+                        {columns.map((column) => (
+                          <td className={column.className} data-column-key={column.key} key={column.key}>
+                            {column.render(item)}
+                          </td>
+                        ))}
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td className="normal-item-empty" colSpan={columns.length}>
+                        {emptyMessage}
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -145,14 +167,27 @@ function measureColumnContentWidths<TItem>(columns: ItemDataTableColumn<TItem>[]
   })
 }
 
-function fitColumnWidths<TItem>(columns: ItemDataTableColumn<TItem>[], measuredWidths: number[], availableWidth: number) {
-  const lastColumnIndex = Math.max(columns.length - 1, 0)
-  const fixedWidth = measuredWidths.slice(0, lastColumnIndex).reduce((sum, width) => sum + width, 0)
-  const lastMeasuredWidth = measuredWidths[lastColumnIndex] ?? 48
-  const lastWidth = Math.max(availableWidth - fixedWidth - TABLE_COLUMN_BORDER_WIDTH, lastMeasuredWidth)
+function contentColumnWidths<TItem>(columns: ItemDataTableColumn<TItem>[], measuredWidths: number[]) {
+  return Object.fromEntries(columns.map((column, index) => [column.key, Math.round(measuredWidths[index] ?? 48)]))
+}
+
+function fitColumnWidths<TItem>(
+  columns: ItemDataTableColumn<TItem>[],
+  measuredWidths: number[],
+  availableWidth: number,
+  fillColumnKey?: string,
+) {
+  const fillColumnIndex = fillColumnKey ? columns.findIndex((column) => column.key === fillColumnKey) : columns.length - 1
+  const safeFillColumnIndex = fillColumnIndex >= 0 ? fillColumnIndex : Math.max(columns.length - 1, 0)
+  const fixedWidth = measuredWidths.reduce(
+    (sum, width, index) => (index === safeFillColumnIndex ? sum : sum + width),
+    0,
+  )
+  const fillMeasuredWidth = measuredWidths[safeFillColumnIndex] ?? 48
+  const fillWidth = Math.max(availableWidth - fixedWidth - TABLE_COLUMN_BORDER_WIDTH, fillMeasuredWidth)
 
   return Object.fromEntries(
-    columns.map((column, index) => [column.key, Math.round(index === lastColumnIndex ? lastWidth : measuredWidths[index])]),
+    columns.map((column, index) => [column.key, Math.round(index === safeFillColumnIndex ? fillWidth : measuredWidths[index])]),
   )
 }
 

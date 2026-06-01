@@ -1200,49 +1200,15 @@ main {
 .runewords-table-wrap {
   border: 1px solid var(--border);
   border-radius: 8px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .normal-items-page .runewords-table-wrap {
-  overflow: hidden;
+  overflow: visible;
 }
 
 .normal-items-page .runewords-table th {
   position: static;
-}
-
-.normal-split-table {
-  display: grid;
-  overflow: visible;
-  position: relative;
-}
-
-.normal-table-horizontal-scroll {
-  overflow-x: auto;
-  overflow-y: hidden;
-}
-
-.normal-items-table-scroll {
-  overflow: visible;
-}
-
-.item-table-measure-layer {
-  contain: layout style;
-  height: 0;
-  left: -10000px;
-  overflow: hidden;
-  pointer-events: none;
-  position: fixed;
-  top: -10000px;
-  visibility: hidden;
-  white-space: nowrap;
-  width: max-content;
-}
-
-.item-table-measure-layer > div,
-.item-table-measure-layer span {
-  display: grid;
-  width: max-content;
 }
 
 .armor-items-table .normal-items-table tbody tr {
@@ -1266,190 +1232,6 @@ main {
   border-collapse: collapse;
   table-layout: auto;
   width: 100%;
-}
-
-.runeword-col-name {
-  width: max-content;
-}
-
-.runeword-col-level,
-.runeword-col-socket {
-  width: max-content;
-}
-
-.runeword-col-equipment {
-  width: max-content;
-}
-
-.runeword-col-runes {
-  width: max-content;
-}
-
-.runeword-col-options {
-  width: auto;
-}
-
-.normal-items-table {
-  table-layout: fixed;
-}
-
-.weapon-items-table {
-  table-layout: fixed;
-}
-
-.shield-items-table {
-  table-layout: fixed;
-}
-
-.weapon-items-table .normal-item-col-grade {
-  width: 72px;
-}
-
-.weapon-items-table .normal-item-col-name {
-  width: 270px;
-}
-
-.weapon-items-table .normal-item-col-damage {
-  width: 116px;
-}
-
-.weapon-items-table .normal-item-col-damage-average {
-  width: 88px;
-}
-
-.weapon-items-table .normal-item-col-range,
-.weapon-items-table .normal-item-col-socket {
-  width: 72px;
-}
-
-.weapon-items-table .normal-item-col-level,
-.weapon-items-table .normal-item-col-strength,
-.weapon-items-table .normal-item-col-dexterity {
-  width: 84px;
-}
-
-.shield-items-table .normal-item-col-grade {
-  width: 72px;
-}
-
-.shield-items-table .normal-item-col-name {
-  width: 260px;
-}
-
-.shield-items-table .normal-item-col-defense {
-  width: 120px;
-}
-
-.shield-items-table .normal-item-col-block,
-.shield-items-table .normal-item-col-smite,
-.shield-items-table .normal-item-col-socket,
-.shield-items-table .normal-item-col-level,
-.shield-items-table .normal-item-col-strength {
-  width: 84px;
-}
-
-.set-items-table {
-  table-layout: fixed;
-}
-
-.set-item-col-base {
-  width: 132px;
-}
-
-.set-item-col-options {
-  width: auto;
-}
-
-.set-items-table .normal-item-col-name {
-  width: 172px;
-}
-
-.set-items-table .normal-item-col-grade {
-  width: 60px;
-}
-
-.set-items-table .normal-item-col-defense {
-  width: 90px;
-}
-
-.set-items-table .normal-item-col-level,
-.set-items-table .normal-item-col-strength,
-.set-items-table .normal-item-col-dexterity {
-  width: 64px;
-}
-
-.set-items-table td {
-  overflow-wrap: anywhere;
-}
-
-.set-items-table .set-item-col-base {
-  overflow-wrap: anywhere;
-}
-
-.craft-recipes-table {
-  table-layout: fixed;
-}
-
-.craft-col-materials {
-  width: 210px;
-}
-
-.craft-col-rune {
-  width: 90px;
-}
-
-.craft-col-gem {
-  width: 170px;
-}
-
-.craft-col-options {
-  width: auto;
-}
-
-.normal-item-col-grade {
-  width: 9%;
-}
-
-.normal-item-col-name {
-  width: 20%;
-}
-
-.normal-item-col-weight,
-.normal-item-col-defense,
-.normal-item-col-damage,
-.normal-item-col-damage-average,
-.normal-item-col-range,
-.normal-item-col-dexterity,
-.normal-item-col-level,
-.normal-item-col-strength,
-.normal-item-col-socket {
-  width: 118px;
-}
-
-.normal-item-col-defense,
-.normal-item-col-damage {
-  width: 14%;
-}
-
-.normal-item-col-damage-average {
-  width: 10%;
-}
-
-.normal-item-col-range {
-  width: 8%;
-}
-
-.normal-item-col-weight {
-  width: 10%;
-}
-
-.runes-table {
-  min-width: 1120px;
-  table-layout: auto;
-}
-
-.runes-col-number {
-  width: 58px;
 }
 
 .runewords-table th,
@@ -1478,21 +1260,6 @@ main {
 
 .runewords-table:not(.normal-items-table, .runes-table) th:nth-child(-n + 5),
 .runewords-table:not(.normal-items-table, .runes-table) td:nth-child(-n + 5) {
-  white-space: nowrap;
-}
-
-.normal-items-table th,
-.normal-items-table td {
-  padding-left: var(--table-cell-padding-x);
-  padding-right: var(--table-cell-padding-x);
-  white-space: nowrap;
-}
-
-.normal-items-table .option-list {
-  max-width: none;
-}
-
-.normal-items-table .option-list li {
   white-space: nowrap;
 }
 
@@ -1760,10 +1527,6 @@ main {
   font-size: 11px !important;
 }
 
-.set-items-table .option-list li {
-  white-space: nowrap;
-}
-
 .set-bonus-grid {
   display: grid;
   gap: 16px;
@@ -1951,10 +1714,15 @@ main {
   text-shadow: var(--table-text-shadow);
 }
 
-.normal-item-empty {
-  color: var(--text-muted);
-  padding: 28px !important;
-  text-align: center !important;
+.floating-stat-card {
+  opacity: 1;
+  position: fixed;
+  transform: translateY(0);
+  z-index: 1000;
+}
+
+.floating-stat-card.is-above {
+  transform: translateY(-100%);
 }
 
 .version-popup {

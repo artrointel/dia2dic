@@ -1,0 +1,103 @@
+.item-data-table-block {
+  display: grid;
+}
+
+.item-data-table-block.is-content-width {
+  max-width: 100%;
+  width: max-content;
+}
+
+.item-data-table-meta {
+  color: var(--text-muted);
+  font-size: 14px;
+  justify-self: end;
+  margin: 0 0 10px;
+  padding-top: 10px;
+  text-align: right;
+}
+
+.normal-split-table {
+  display: grid;
+  overflow: visible;
+  position: relative;
+}
+
+.runewords-table-wrap:has(.normal-split-table.is-content-width) {
+  max-width: 100%;
+  width: max-content;
+}
+
+.normal-split-table.is-content-width {
+  max-width: 100%;
+  width: max-content;
+}
+
+.normal-table-horizontal-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.normal-items-table-scroll {
+  overflow: visible;
+}
+
+.item-table-measure-layer {
+  contain: layout style;
+  height: 0;
+  left: -10000px;
+  overflow: hidden;
+  pointer-events: none;
+  position: fixed;
+  top: -10000px;
+  visibility: hidden;
+  white-space: nowrap;
+  width: max-content;
+}
+
+.item-table-measure-layer > div {
+  display: grid;
+  width: max-content;
+}
+
+.item-table-measure-layer > div > span {
+  display: block;
+  width: max-content;
+}
+
+.item-table-measure-layer .normal-item-name-cell {
+  display: inline-flex;
+}
+
+.item-table-measure-layer .info-tip-card,
+.item-table-measure-layer .max-defense-card,
+.item-table-measure-layer .weapon-damage-card,
+.item-table-measure-layer .rune-mini-card,
+.item-table-measure-layer .bow-ias-card {
+  display: none;
+}
+
+.normal-items-table {
+  table-layout: fixed;
+}
+
+.normal-items-table th,
+.normal-items-table td {
+  padding-left: var(--table-cell-padding-x);
+  padding-right: var(--table-cell-padding-x);
+  white-space: nowrap;
+}
+
+.normal-items-table .option-list {
+  max-width: none;
+}
+
+.normal-items-table .option-list li {
+  white-space: nowrap;
+}
+
+.normal-item-empty {
+  color: var(--text-muted);
+  padding: 28px !important;
+  text-align: center !important;
+}
