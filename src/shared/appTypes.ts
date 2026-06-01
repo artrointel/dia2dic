@@ -302,4 +302,30 @@ export type LevelingEfficiency = {
   }>
 }
 
+export type BreakpointTableId = 'fbr' | 'fcr' | 'fhr'
+
+export type BreakpointTable = {
+  frameLabel: string
+  frames: number[]
+  fullName: string
+  id: BreakpointTableId
+  label: string
+  rows: Array<{
+    character: string
+    condition: string
+    values: Record<string, string>
+  }>
+  tips: string[]
+  title: string
+  valueLabel: string
+}
+
+export type BreakpointsData = {
+  source: {
+    title: string
+    url: string
+  }
+  tables: BreakpointTable[]
+}
+
 

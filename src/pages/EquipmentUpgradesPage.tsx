@@ -1,8 +1,10 @@
-﻿import { Fragment, useMemo } from 'react'
+import { Fragment, useMemo, useRef } from 'react'
 import { PackageSearch } from 'lucide-react'
 import { PageHeading } from '../components/PageHeading'
 import { UpgradeIngredient } from '../components/UpgradeIngredient'
+import { useTableCrosshair } from '../hooks/useTableCrosshair'
 import { equipmentUpgrades } from '../shared/gameData'
+import type { EquipmentUpgrade } from '../shared/appTypes'
 
 export function EquipmentUpgradesPage() {
   const groups = useMemo(
@@ -31,53 +33,7 @@ export function EquipmentUpgradesPage() {
               <span>{group.recipes.length}개 조합</span>
             </div>
 
-            <div className="upgrade-recipe-table-wrap">
-              <table className="upgrade-recipe-table">
-                <thead>
-                  <tr>
-                    <th>대상</th>
-                    <th>업그레이드</th>
-                    <th>조합</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {group.recipes.map((recipe, index) => {
-                    const isFirstTargetRow =
-                      index === 0 || group.recipes[index - 1].대상 !== recipe.대상
-                    const targetRowSpan = isFirstTargetRow
-                      ? group.recipes.filter((candidate) => candidate.대상 === recipe.대상).length
-                      : 0
-
-                    return (
-                      <tr key={`${recipe.분류}-${recipe.현재등급}-${recipe.결과등급}`}>
-                        {isFirstTargetRow && (
-                          <td className="upgrade-target-cell" rowSpan={targetRowSpan}>
-                            {recipe.대상}
-                          </td>
-                        )}
-                        <td>
-                          <div className="upgrade-recipe-flow">
-                            <b>{recipe.현재등급}</b>
-                            <span>→</span>
-                            <b>{recipe.결과등급}</b>
-                          </div>
-                        </td>
-                        <td>
-                          <div className="upgrade-ingredient-list">
-                            {recipe.재료.map((ingredient, ingredientIndex) => (
-                              <Fragment key={`${ingredient}-${ingredientIndex}`}>
-                                {ingredientIndex > 0 && <span className="upgrade-plus">+</span>}
-                                <UpgradeIngredient ingredient={ingredient} />
-                              </Fragment>
-                            ))}
-                          </div>
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
-            </div>
+            <EquipmentUpgradeTable recipes={group.recipes} />
           </section>
         ))}
       </div>
@@ -85,4 +41,56 @@ export function EquipmentUpgradesPage() {
   )
 }
 
+function EquipmentUpgradeTable({ recipes }: { recipes: EquipmentUpgrade[] }) {
+  const tableRef = useRef<HTMLTableElement>(null)
+  useTableCrosshair(tableRef)
 
+  return (
+    <div className="upgrade-recipe-table-wrap">
+      <table className="table-crosshair upgrade-recipe-table" ref={tableRef}>
+        <thead>
+          <tr>
+            <th>대상</th>
+            <th>업그레이드</th>
+            <th>조합</th>
+          </tr>
+        </thead>
+        <tbody>
+          {recipes.map((recipe, index) => {
+            const isFirstTargetRow = index === 0 || recipes[index - 1].대상 !== recipe.대상
+            const targetRowSpan = isFirstTargetRow
+              ? recipes.filter((candidate) => candidate.대상 === recipe.대상).length
+              : 0
+
+            return (
+              <tr key={`${recipe.분류}-${recipe.현재등급}-${recipe.결과등급}`}>
+                {isFirstTargetRow && (
+                  <td className="upgrade-target-cell" rowSpan={targetRowSpan}>
+                    {recipe.대상}
+                  </td>
+                )}
+                <td>
+                  <div className="upgrade-recipe-flow">
+                    <b>{recipe.현재등급}</b>
+                    <span>→</span>
+                    <b>{recipe.결과등급}</b>
+                  </div>
+                </td>
+                <td>
+                  <div className="upgrade-ingredient-list">
+                    {recipe.재료.map((ingredient, ingredientIndex) => (
+                      <Fragment key={`${ingredient}-${ingredientIndex}`}>
+                        {ingredientIndex > 0 && <span className="upgrade-plus">+</span>}
+                        <UpgradeIngredient ingredient={ingredient} />
+                      </Fragment>
+                    ))}
+                  </div>
+                </td>
+              </tr>
+            )
+          })}
+        </tbody>
+      </table>
+    </div>
+  )
+}

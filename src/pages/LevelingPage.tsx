@@ -1,10 +1,13 @@
-﻿import { useMemo, useState, type CSSProperties, type MouseEvent } from 'react'
+﻿import { useMemo, useRef, useState, type CSSProperties, type MouseEvent } from 'react'
 import { TrendingUp } from 'lucide-react'
 import { PageHeading } from '../components/PageHeading'
+import { useTableCrosshair } from '../hooks/useTableCrosshair'
 import { levelingEfficiency } from '../shared/gameData'
 import type { LevelingEfficiency } from '../shared/appTypes'
 
 export function LevelingPage() {
+  const tableRef = useRef<HTMLTableElement>(null)
+  useTableCrosshair(tableRef)
   const [hoveredLevel, setHoveredLevel] = useState<{
     row: LevelingEfficiency['rows'][number]
     x: number
@@ -42,7 +45,7 @@ export function LevelingPage() {
       />
 
       <div className="leveling-table-wrap">
-        <table className="leveling-table">
+        <table className="table-crosshair leveling-table" ref={tableRef}>
           <thead>
             <tr>
               <th className="leveling-level-header" rowSpan={2}>레벨</th>
@@ -166,5 +169,6 @@ function levelingEfficiencyClass(value: number) {
 
   return 'leveling-efficiency-cell is-low'
 }
+
 
 

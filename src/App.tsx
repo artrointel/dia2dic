@@ -5,6 +5,7 @@ import { routePages } from './navigation/navigation'
 import { CategoryPage } from './pages/CategoryPage'
 import { CraftingPage } from './pages/CraftingPage'
 import { EquipmentUpgradesPage } from './pages/EquipmentUpgradesPage'
+import { FrameBreakpointsPage } from './pages/FrameBreakpointsPage'
 import { HomePage } from './pages/HomePage'
 import { LevelingPage } from './pages/LevelingPage'
 import { NormalItemsPage } from './pages/NormalItemsPage'
@@ -14,6 +15,7 @@ import { SetItemsPage } from './pages/SetItemsPage'
 import { SocketRecipesPage } from './pages/SocketRecipesPage'
 import { getInitialTheme } from './shared/theme'
 import type { Theme } from './shared/appTypes'
+import './styles/tableCrosshair.css'
 import './App.css'
 
 function App() {
@@ -43,6 +45,8 @@ function App() {
           <Route path="/items/sets" element={<SetItemsPage />} />
           <Route path="/items/runes" element={<RunesPage />} />
           <Route path="/leveling" element={<LevelingPage />} />
+          <Route path="/character/leveling" element={<LevelingPage />} />
+          <Route path="/character/breakpoints" element={<FrameBreakpointsPage />} />
 
           {routePages.map((page) => (
             <Route path={page.path} element={<CategoryPage {...page} />} key={page.path} />

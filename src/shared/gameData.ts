@@ -1,6 +1,7 @@
 ﻿import armorBasesData from '../data/armor-bases.json'
 import beltBasesData from '../data/belt-bases.json'
 import bootBasesData from '../data/boot-bases.json'
+import breakpointsData from '../data/breakpoints.json'
 import bowIasFramesData from '../data/bow-ias-frames.json'
 import craftItemsData from '../data/craft-items.json'
 import equipmentUpgradesData from '../data/equipment-upgrades.json'
@@ -17,6 +18,7 @@ import weaponPolearmBasesData from '../data/weapon-polearm-bases.json'
 import weaponSpearBasesData from '../data/weapon-spear-bases.json'
 import type {
   ArmorBases,
+  BreakpointsData,
   BowIasFrames,
   CraftItemsData,
   EquipmentUpgrade,
@@ -31,6 +33,7 @@ export const equipmentUpgrades = equipmentUpgradesData as EquipmentUpgrade[]
 export const armorBases = armorBasesData as ArmorBases
 export const beltBases = beltBasesData as ArmorBases
 export const bootBases = bootBasesData as ArmorBases
+export const breakpoints = breakpointsData as unknown as BreakpointsData
 export const bowIasFrames = bowIasFramesData as BowIasFrames
 export const craftItems = craftItemsData as CraftItemsData
 export const gloveBases = gloveBasesData as ArmorBases

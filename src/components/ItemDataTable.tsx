@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import type { CSSProperties, ReactNode } from 'react'
+import { useTableCrosshair } from '../hooks/useTableCrosshair'
 import './ItemDataTable.css'
 
 export type ItemDataTableColumn<TItem> = {
@@ -41,7 +42,10 @@ export function ItemDataTable<TItem>({
   const measureRef = useRef<HTMLDivElement>(null)
   const [availableWidth, setAvailableWidth] = useState(0)
   const [columnWidths, setColumnWidths] = useState<Record<string, number>>({})
-  const tableClasses = ['runewords-table', 'normal-items-table', tableClassName]
+  useTableCrosshair(headerTableRef)
+  useTableCrosshair(bodyTableRef)
+
+  const tableClasses = ['table-crosshair', 'runewords-table', 'normal-items-table', tableClassName]
     .filter(Boolean)
     .join(' ')
   const tableWidth = Math.ceil(Object.values(columnWidths).reduce((sum, width) => sum + width, 0))

@@ -1,12 +1,15 @@
-﻿import { Fragment, useState } from 'react'
+﻿import { Fragment, useRef, useState } from 'react'
 import { PackageSearch } from 'lucide-react'
 import { ImageViewer } from '../components/ImageViewer'
 import { PageHeading } from '../components/PageHeading'
 import { UpgradeIngredient } from '../components/UpgradeIngredient'
+import { useTableCrosshair } from '../hooks/useTableCrosshair'
 import { assetUrl, socketRecipes } from '../shared/gameData'
 
 export function SocketRecipesPage() {
+  const tableRef = useRef<HTMLTableElement>(null)
   const [isSocketImageOpen, setIsSocketImageOpen] = useState(false)
+  useTableCrosshair(tableRef)
 
   return (
     <section className="socket-recipes-page">
@@ -38,7 +41,7 @@ export function SocketRecipesPage() {
       </button>
 
       <div className="upgrade-recipe-table-wrap socket-recipe-table-wrap">
-        <table className="upgrade-recipe-table socket-recipe-table">
+        <table className="table-crosshair upgrade-recipe-table socket-recipe-table" ref={tableRef}>
           <thead>
             <tr>
               <th>대상</th>
@@ -77,5 +80,6 @@ export function SocketRecipesPage() {
     </section>
   )
 }
+
 
 

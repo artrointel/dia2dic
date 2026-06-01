@@ -1,0 +1,135 @@
+.frame-breakpoints-page {
+  padding: 56px 0 72px;
+}
+
+.breakpoint-info-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: grid;
+  gap: 18px;
+  grid-template-columns: minmax(180px, 0.28fr) minmax(0, 1fr);
+  margin-top: 18px;
+  padding: 18px;
+}
+
+.breakpoint-info-panel span {
+  color: var(--accent);
+  display: block;
+  font-size: 13px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.breakpoint-info-panel h2 {
+  font-size: 22px;
+  margin: 0;
+}
+
+.breakpoint-info-panel ul {
+  display: grid;
+  gap: 7px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.breakpoint-info-panel li {
+  color: var(--text);
+  line-height: 1.45;
+}
+
+.breakpoint-info-panel li::before {
+  color: var(--accent);
+  content: '•';
+  font-weight: 900;
+  margin-right: 8px;
+}
+
+.breakpoint-table-card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-top: 18px;
+  overflow: hidden;
+}
+
+.breakpoint-table-scroll {
+  overflow-x: auto;
+}
+
+.breakpoint-table {
+  border-collapse: collapse;
+  min-width: 1040px;
+  width: 100%;
+}
+
+.breakpoint-table th,
+.breakpoint-table td {
+  border: 1px solid color-mix(in srgb, var(--table-border) 72%, transparent);
+  padding: 11px 12px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.breakpoint-table thead tr:first-child th {
+  border-top: 0;
+}
+
+.breakpoint-table tr > :first-child {
+  border-left: 0;
+}
+
+.breakpoint-table tr > :last-child {
+  border-right: 0;
+}
+
+.breakpoint-table tbody tr:last-child > * {
+  border-bottom: 0;
+}
+
+.breakpoint-table thead th {
+  background: var(--table-head-bg);
+  color: var(--text-strong);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.breakpoint-table tbody th {
+  color: var(--table-name);
+  font-weight: 900;
+  text-align: left;
+  text-shadow: var(--table-name-shadow);
+}
+
+.breakpoint-table tbody td {
+  color: var(--text);
+}
+
+.breakpoint-table tbody tr:nth-child(odd) {
+  background: var(--table-row-odd);
+}
+
+.breakpoint-table tbody tr:nth-child(even) {
+  background: var(--table-row-even);
+}
+
+.breakpoint-table .has-breakpoint {
+  color: var(--table-option);
+  font-weight: 800;
+  text-shadow: var(--table-text-shadow);
+}
+
+.breakpoint-source {
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 12px;
+  margin: 0;
+  padding: 10px 12px;
+  text-align: right;
+}
+
+@media (max-width: 860px) {
+  .breakpoint-info-panel {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,13 @@
+.table-crosshair th,
+.table-crosshair td {
+  position: relative;
+}
+
+.table-crosshair .is-crosshair-row,
+.table-crosshair .is-crosshair-column {
+  box-shadow: inset 0 0 0 9999px color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+.table-crosshair .is-crosshair-cell {
+  box-shadow: inset 0 0 0 9999px color-mix(in srgb, var(--accent) 18%, transparent);
+}

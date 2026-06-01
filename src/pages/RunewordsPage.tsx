@@ -1,9 +1,10 @@
-﻿import { useMemo, useState } from 'react'
+﻿import { useMemo, useRef, useState } from 'react'
 import { Gem, Plus, Trash2 } from 'lucide-react'
 import { OptionList } from '../components/OptionList'
 import { PageHeading } from '../components/PageHeading'
 import { RuneMiniCard } from '../components/RuneMiniCard'
 import { FilterPanel, NameSearch, SortControl, TableToolbar } from '../components/TableControls'
+import { useTableCrosshair } from '../hooks/useTableCrosshair'
 import { runeUpgrades, runewords } from '../shared/gameData'
 import type { FilterType, Runeword, RunewordFilter, SortType } from '../shared/appTypes'
 
@@ -97,6 +98,8 @@ export function RunewordsPage() {
   const [filters, setFilters] = useState<RunewordFilter[]>([])
   const [nameQuery, setNameQuery] = useState('')
   const [sortType, setSortType] = useState<SortType>('level-asc')
+  const tableRef = useRef<HTMLTableElement>(null)
+  useTableCrosshair(tableRef)
   const equipmentTypes = useMemo(
     () =>
       [
@@ -231,7 +234,7 @@ export function RunewordsPage() {
       </div>
 
       <div className="runewords-table-wrap">
-        <table className="runewords-table">
+        <table className="table-crosshair runewords-table" ref={tableRef}>
           <thead>
             <tr>
               <th>이름</th>
@@ -526,6 +529,7 @@ function RunewordFilterRow({
     </div>
   )
 }
+
 
 
 

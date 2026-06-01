@@ -1,9 +1,14 @@
-﻿import { Gem } from 'lucide-react'
+﻿import { useRef } from 'react'
+import { Gem } from 'lucide-react'
 import { PageHeading } from '../components/PageHeading'
 import { countessRateLines, RuneEffectLines } from '../components/RuneMiniCard'
+import { useTableCrosshair } from '../hooks/useTableCrosshair'
 import { assetUrl, runeUpgrades } from '../shared/gameData'
 
 export function RunesPage() {
+  const tableRef = useRef<HTMLTableElement>(null)
+  useTableCrosshair(tableRef)
+
   return (
     <section className="runes-page">
       <PageHeading
@@ -16,7 +21,7 @@ export function RunesPage() {
       <div className="table-meta">총 {runeUpgrades.length}개 룬 표시</div>
 
       <div className="runes-table-wrap">
-        <table className="runewords-table runes-table">
+        <table className="table-crosshair runewords-table runes-table" ref={tableRef}>
           <thead>
             <tr>
               <th>번호</th>
@@ -66,6 +71,7 @@ export function RunesPage() {
     </section>
   )
 }
+
 
 
 

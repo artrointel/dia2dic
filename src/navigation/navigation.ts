@@ -1,4 +1,4 @@
-﻿import { Boxes, ExternalLink, FlaskConical, Gem, PackageSearch, TrendingUp } from 'lucide-react'
+import { Activity, Boxes, ExternalLink, FlaskConical, Gem, PackageSearch, TrendingUp } from 'lucide-react'
 import type { NavigationItem, Page } from '../shared/appTypes'
 
 export const pages: Page[] = [
@@ -39,10 +39,10 @@ export const pages: Page[] = [
     icon: FlaskConical,
   },
   {
-    path: '/leveling',
-    title: '레벨업 효율표',
-    description: '레벨 구간별 추천 지역과 경험치 효율 정보를 정리합니다.',
-    icon: TrendingUp,
+    path: '/character',
+    title: '캐릭터 정보',
+    description: '레벨업, 프레임, 캐릭터별 주요 정보를 정리합니다.',
+    icon: Activity,
   },
 ]
 
@@ -73,9 +73,33 @@ export const itemCategoryPages: Page[] = [
   },
 ]
 
-export const routePages = [...pages, ...itemCategoryPages]
+export const characterPages: Page[] = [
+  {
+    path: '/character/leveling',
+    title: '레벨업 효율표',
+    description: '레벨 구간별 추천 지역과 경험치 효율 정보를 정리합니다.',
+    icon: TrendingUp,
+  },
+  {
+    path: '/character/breakpoints',
+    title: '프레임 표',
+    description: '캐릭터별 패캐, 패힛, 패블럭 임계점을 정리합니다.',
+    icon: Activity,
+  },
+]
+
+export const routePages = [...pages, ...itemCategoryPages, ...characterPages]
 
 export const navigationItems: NavigationItem[] = [
+  {
+    title: '캐릭터 정보',
+    icon: Activity,
+    children: characterPages.map((page) => ({
+      title: page.title,
+      path: page.path,
+      icon: page.icon,
+    })),
+  },
   {
     title: '아이템 정보',
     icon: PackageSearch,
@@ -100,11 +124,6 @@ export const navigationItems: NavigationItem[] = [
     title: '룬 시세표',
     href: 'https://tradia.me/diablo2/rune_price',
     icon: Gem,
-  },
-  {
-    title: '레벨업 효율표',
-    path: '/leveling',
-    icon: TrendingUp,
   },
   {
     title: '외부 페이지',
@@ -133,7 +152,3 @@ export const navigationItems: NavigationItem[] = [
     ],
   },
 ]
-
-
-
-
