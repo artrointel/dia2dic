@@ -22,13 +22,17 @@ import {
 import { NavLink, Route, Routes } from 'react-router-dom'
 import { ItemDataTable, type ItemDataTableColumn } from './components/ItemDataTable'
 import armorBasesData from './data/armor-bases.json'
+import beltBasesData from './data/belt-bases.json'
+import bootBasesData from './data/boot-bases.json'
 import bowIasFramesData from './data/bow-ias-frames.json'
+import craftItemsData from './data/craft-items.json'
 import equipmentUpgradesData from './data/equipment-upgrades.json'
 import gloveBasesData from './data/glove-bases.json'
 import helmBasesData from './data/helm-bases.json'
 import levelingEfficiencyData from './data/leveling-efficiency.json'
 import runeUpgradesData from './data/rune-upgrades.json'
 import runewordsData from './data/runewords.json'
+import setItemsData from './data/set-items.json'
 import shieldBasesData from './data/shield-bases.json'
 import shieldPaladinBasesData from './data/shield-paladin-bases.json'
 import weaponBowBasesData from './data/weapon-bow-bases.json'
@@ -39,7 +43,7 @@ import './App.css'
 type Theme = 'dark' | 'light'
 
 const TERROR_ZONE_IMAGE_URL = 'https://www.d2emu.com/tz/tz_KR.png'
-const TERROR_ZONE_REFRESH_MS = 30 * 60 * 1000 + 5000
+const TERROR_ZONE_REFRESH_MS = 5 * 60 * 1000
 
 type Page = {
   path: string
@@ -152,6 +156,90 @@ type BowIasFrames = {
   items: BowIasFrameItem[]
 }
 
+type SetItemRange = {
+  최소: number | null
+  최대: number | null
+  원문: string | null
+}
+
+type SetItem = {
+  이름: string
+  영문명: string
+  베이스: string
+  등급: string | null
+  방어력: SetItemRange
+  피해: SetItemRange
+  내구도: number | null
+  요구레벨: number | null
+  필요힘: number | null
+  필요민첩: number | null
+  막기확률: string | null
+  강타피해: SetItemRange
+  옵션: string[]
+  부분세트효과: string[]
+}
+
+type SetItemGroup = {
+  id: string
+  이름: string
+  영문명: string
+  url: string
+  items: SetItem[]
+  세트효과: {
+    부분: string[]
+    완성: string[]
+  }
+}
+
+type SetItemsData = {
+  source: {
+    title: string
+    url: string
+  }
+  sets: SetItemGroup[]
+}
+
+type SetItemRow = SetItem & {
+  id: string
+  세트: string
+  세트영문명: string
+  세트Id: string
+}
+
+type CraftRecipe = {
+  이름: string
+  재료: string[]
+  룬: string
+  보석주얼: string
+  고정옵션: string[]
+  용도: {
+    용도: string
+    우대: string
+  }
+}
+
+type CraftCategory = {
+  id: string
+  이름: string
+  url: string
+  recipes: CraftRecipe[]
+}
+
+type CraftItemsData = {
+  source: {
+    title: string
+    url: string
+  }
+  tips: string[]
+  categories: CraftCategory[]
+}
+
+type CraftRecipeRow = CraftRecipe & {
+  id: string
+  종류: string
+  종류Id: string
+}
+
 type ArmorBaseItem = {
   이름: string
   영문명?: string
@@ -256,12 +344,16 @@ type LevelingEfficiency = {
 
 const equipmentUpgrades = equipmentUpgradesData as EquipmentUpgrade[]
 const armorBases = armorBasesData as ArmorBases
+const beltBases = beltBasesData as ArmorBases
+const bootBases = bootBasesData as ArmorBases
 const bowIasFrames = bowIasFramesData as BowIasFrames
+const craftItems = craftItemsData as CraftItemsData
 const gloveBases = gloveBasesData as ArmorBases
 const helmBases = helmBasesData as ArmorBases
 const levelingEfficiency = levelingEfficiencyData as LevelingEfficiency
 const runeUpgrades = runeUpgradesData as RuneUpgrade[]
 const runewords = runewordsData as Runeword[]
+const setItems = setItemsData as SetItemsData
 const shieldBases = shieldBasesData as ArmorBases
 const shieldPaladinBases = shieldPaladinBasesData as ArmorBases
 const weaponBowBases = weaponBowBasesData as WeaponBases
@@ -817,8 +909,6 @@ const normalItemCategories: NormalItemCategory[] = [
   '신발',
   '무기',
   '방패',
-  '목걸이',
-  '반지',
 ]
 const normalItemGradeFilters: NormalItemGradeFilter[] = ['전체', '노멀', '익셉셔널', '엘리트']
 const normalShieldTypeFilters: NormalShieldTypeFilter[] = ['일반 방패', '팔라딘 방패']
@@ -853,6 +943,8 @@ function NormalItemsPage() {
   const [nameQuery, setNameQuery] = useState('')
   const [sortType, setSortType] = useState<NormalItemSortType>('weight-asc')
   const armorItems = useMemo(() => getArmorBaseRows(), [])
+  const beltItems = useMemo(() => getBeltBaseRows(), [])
+  const bootItems = useMemo(() => getBootBaseRows(), [])
   const gloveItems = useMemo(() => getGloveBaseRows(), [])
   const helmItems = useMemo(() => getHelmBaseRows(), [])
   const shieldItems = useMemo(() => getShieldBaseRows(shieldBases), [])
@@ -882,6 +974,10 @@ function NormalItemsPage() {
     const sourceItems =
       selectedCategory === '갑옷'
         ? armorItems
+        : selectedCategory === '신발'
+          ? bootItems
+        : selectedCategory === '벨트'
+          ? beltItems
         : selectedCategory === '장갑'
           ? gloveItems
         : selectedCategory === '투구'
@@ -906,10 +1002,14 @@ function NormalItemsPage() {
           : true,
       )
       .toSorted((left, right) => sortNormalItems(left, right, sortType))
-  }, [armorItems, bowItems, gloveItems, helmItems, nameQuery, paladinShieldItems, polearmItems, selectedCategory, selectedGrade, selectedShieldType, selectedWeaponType, shieldItems, sortType, spearItems])
+  }, [armorItems, beltItems, bootItems, bowItems, gloveItems, helmItems, nameQuery, paladinShieldItems, polearmItems, selectedCategory, selectedGrade, selectedShieldType, selectedWeaponType, shieldItems, sortType, spearItems])
   const totalItemCount =
     selectedCategory === '갑옷'
       ? armorItems.length
+      : selectedCategory === '신발'
+        ? bootItems.length
+      : selectedCategory === '벨트'
+        ? beltItems.length
       : selectedCategory === '장갑'
         ? gloveItems.length
       : selectedCategory === '투구'
@@ -1041,6 +1141,10 @@ function NormalItemsPage() {
       <div className="runewords-table-wrap">
         {selectedCategory === '갑옷' ? (
           <ArmorItemsTable items={filteredItems.filter(isArmorItemRow)} />
+        ) : selectedCategory === '신발' ? (
+          <DefensiveItemsTable emptyMessage="신발 데이터는 아직 준비 중입니다." items={filteredItems.filter(isArmorItemRow)} />
+        ) : selectedCategory === '벨트' ? (
+          <DefensiveItemsTable emptyMessage="벨트 데이터는 아직 준비 중입니다." items={filteredItems.filter(isArmorItemRow)} />
         ) : selectedCategory === '장갑' ? (
           <DefensiveItemsTable emptyMessage="장갑 데이터는 아직 준비 중입니다." items={filteredItems.filter(isArmorItemRow)} />
         ) : selectedCategory === '투구' ? (
@@ -1055,6 +1159,229 @@ function NormalItemsPage() {
       </div>
     </section>
   )
+}
+
+function SetItemsPage() {
+  const [selectedSetId, setSelectedSetId] = useState('전체')
+  const [nameQuery, setNameQuery] = useState('')
+  const canSearchByName = selectedSetId === '전체'
+  const setRows = useMemo(
+    () =>
+      setItems.sets.flatMap((set) =>
+        set.items.map((item) => ({
+          ...item,
+          id: `${set.id}-${item.이름}`,
+          세트: set.이름,
+          세트영문명: set.영문명,
+          세트Id: set.id,
+        })),
+      ),
+    [],
+  )
+  const selectedSet = selectedSetId === '전체' ? null : setItems.sets.find((set) => set.id === selectedSetId) ?? null
+  const filteredRows = useMemo(() => {
+    const normalizedQuery = canSearchByName ? nameQuery.trim().toLowerCase() : ''
+
+    return setRows
+      .filter((item) => (selectedSetId === '전체' ? true : item.세트Id === selectedSetId))
+      .filter((item) =>
+        normalizedQuery
+          ? `${item.세트} ${item.세트영문명} ${item.이름} ${item.영문명} ${item.베이스}`.toLowerCase().includes(normalizedQuery)
+          : true,
+      )
+      .toSorted(
+        (left, right) =>
+          left.세트.localeCompare(right.세트) ||
+          nullableNumber(left.요구레벨) - nullableNumber(right.요구레벨) ||
+          left.이름.localeCompare(right.이름),
+      )
+  }, [canSearchByName, nameQuery, selectedSetId, setRows])
+
+  return (
+    <section className="normal-items-page set-items-page">
+      <div className="category-heading">
+        <Boxes aria-hidden="true" />
+        <span>아이템 정보</span>
+        <h1>세트</h1>
+        <p>트레디아 세트 아이템 사전을 기반으로 세트 구성품과 옵션을 정리합니다.</p>
+      </div>
+
+      <div className="table-toolbar">
+        <div className="filter-panel">
+          <div className="filter-panel-header">
+            <strong>필터</strong>
+          </div>
+
+          <label className="set-select-control">
+            <span>세트</span>
+            <select
+              value={selectedSetId}
+              onChange={(event) => {
+                const nextSetId = event.target.value
+                setSelectedSetId(nextSetId)
+
+                if (nextSetId !== '전체') {
+                  setNameQuery('')
+                }
+              }}
+            >
+              <option value="전체">전체</option>
+              {setItems.sets.map((set) => (
+                <option key={set.id} value={set.id}>
+                  {set.이름}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+      </div>
+
+      {canSearchByName && (
+        <div className="name-search-row">
+          <label className="name-search-control">
+            <span>이름 검색</span>
+            <input
+              type="search"
+              placeholder="예: 시곤, Tal Rasha, 장갑"
+              value={nameQuery}
+              onChange={(event) => setNameQuery(event.target.value)}
+            />
+          </label>
+        </div>
+      )}
+
+      {selectedSet && <SetBonusPanel set={selectedSet} />}
+
+      <div className="table-meta">
+        총 {setRows.length}개 중 {filteredRows.length}개 표시
+      </div>
+
+      <div className="runewords-table-wrap">
+        <SetItemsTable items={filteredRows} />
+      </div>
+    </section>
+  )
+}
+
+function SetBonusPanel({ set }: { set: SetItemGroup }) {
+  return (
+    <section className="set-bonus-panel">
+      <div>
+        <strong>{set.이름}</strong>
+        <span>{set.영문명}</span>
+      </div>
+      <div className="set-bonus-grid">
+        <SetBonusList title="부분 세트 효과" values={set.세트효과.부분} variant="partial" />
+        <SetBonusList title="완성 세트 효과" values={set.세트효과.완성} variant="complete" />
+      </div>
+    </section>
+  )
+}
+
+function SetBonusList({ title, values, variant }: { title: string; values: string[]; variant: 'partial' | 'complete' }) {
+  return (
+    <div>
+      <b>{title}</b>
+      {values.length > 0 ? (
+        <ul className={`option-list set-bonus-list set-bonus-list-${variant}`}>
+          {values.map((value) => (
+            <li key={value}>{value}</li>
+          ))}
+        </ul>
+      ) : (
+        <span className="muted-text">-</span>
+      )}
+    </div>
+  )
+}
+
+function SetItemsTable({ items }: { items: SetItemRow[] }) {
+  const columns: ItemDataTableColumn<SetItemRow>[] = [
+    {
+      key: 'name',
+      header: '이름',
+      className: 'normal-item-col-name',
+      render: (item) => (
+        <span className="set-item-name">
+          <strong>{item.이름}</strong>
+          <span>{item.영문명}</span>
+          <span className="set-item-parent">{item.세트}</span>
+        </span>
+      ),
+    },
+    {
+      key: 'base',
+      header: '베이스',
+      className: 'set-item-col-base',
+      render: (item) => item.베이스,
+    },
+    {
+      key: 'grade',
+      header: '등급',
+      className: 'normal-item-col-grade',
+      render: (item) => <span className="normal-item-grade">{item.등급 ?? '-'}</span>,
+    },
+    {
+      key: 'value',
+      header: '방어/피해',
+      className: 'normal-item-col-defense',
+      render: (item) => formatSetPrimaryValue(item),
+    },
+    {
+      key: 'level',
+      header: '요구레벨',
+      className: 'normal-item-col-level',
+      render: (item) => formatNullableNumber(item.요구레벨),
+    },
+    {
+      key: 'strength',
+      header: '필요힘',
+      className: 'normal-item-col-strength',
+      render: (item) => formatNullableNumber(item.필요힘),
+    },
+    {
+      key: 'dexterity',
+      header: '필요민첩',
+      className: 'normal-item-col-dexterity',
+      render: (item) => formatNullableNumber(item.필요민첩),
+    },
+    {
+      key: 'options',
+      header: '옵션',
+      className: 'set-item-col-options',
+      render: (item) => (
+        <ul className="option-list">
+          {[...item.옵션, ...item.부분세트효과].map((option) => (
+            <li className={setItemOptionClassName(option)} key={option}>
+              {option}
+            </li>
+          ))}
+        </ul>
+      ),
+    },
+  ]
+
+  return (
+    <ItemDataTable
+      columns={columns}
+      emptyMessage="세트 아이템 데이터가 없습니다."
+      getRowKey={(item) => item.id}
+      items={items}
+      tableClassName="set-items-table"
+    />
+  )
+}
+
+function setItemOptionClassName(option: string) {
+  if (option.startsWith('부분 세트')) {
+    return 'set-bonus-text-partial'
+  }
+
+  if (option.startsWith('완성 세트')) {
+    return 'set-bonus-text-complete'
+  }
+
+  return undefined
 }
 
 function ArmorItemsTable({ items }: { items: NormalItemRow[] }) {
@@ -1438,6 +1765,180 @@ function BowIasFanaticismTable({
   )
 }
 
+function CraftingPage() {
+  const [selectedCraftId, setSelectedCraftId] = useState(craftItems.categories[0]?.id ?? '')
+  const [nameQuery, setNameQuery] = useState('')
+  const selectedCategory = craftItems.categories.find((category) => category.id === selectedCraftId) ?? craftItems.categories[0]
+  const rows = useMemo(
+    () =>
+      selectedCategory.recipes.map((recipe) => ({
+        ...recipe,
+        id: `${selectedCategory.id}-${recipe.이름}`,
+        종류: selectedCategory.이름,
+        종류Id: selectedCategory.id,
+      })),
+    [selectedCategory],
+  )
+  const filteredRows = useMemo(() => {
+    const normalizedQuery = nameQuery.trim().toLowerCase()
+
+    return rows.filter((recipe) =>
+      normalizedQuery
+        ? `${recipe.이름} ${recipe.재료.join(' ')} ${recipe.룬} ${recipe.보석주얼} ${recipe.고정옵션.join(' ')}`.toLowerCase().includes(normalizedQuery)
+        : true,
+    )
+  }, [nameQuery, rows])
+
+  return (
+    <section className="normal-items-page craft-page">
+      <div className="category-heading">
+        <FlaskConical aria-hidden="true" />
+        <span>호라드릭 함</span>
+        <h1>크래프트 조합</h1>
+        <p>히트 파워, 블러드, 캐스터, 세이프티 크래프트 조합식을 비교합니다.</p>
+      </div>
+
+      <CraftTips tips={craftItems.tips} />
+
+      <div className="table-toolbar">
+        <div className="filter-panel">
+          <div className="filter-panel-header">
+            <strong>필터</strong>
+          </div>
+
+          <div className="normal-category-filter">
+            {craftItems.categories.map((category) => (
+              <button
+                className={category.id === selectedCraftId ? 'is-active' : ''}
+                key={category.id}
+                onClick={() => setSelectedCraftId(category.id)}
+                type="button"
+              >
+                {category.이름}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="name-search-row">
+        <label className="name-search-control">
+          <span>검색</span>
+          <input
+            type="search"
+            placeholder="예: 목걸이, 랄 룬, 시전 속도"
+            value={nameQuery}
+            onChange={(event) => setNameQuery(event.target.value)}
+          />
+        </label>
+      </div>
+
+      <div className="table-meta">
+        총 {rows.length}개 중 {filteredRows.length}개 표시
+      </div>
+
+      <div className="runewords-table-wrap">
+        <CraftRecipesTable items={filteredRows} />
+      </div>
+    </section>
+  )
+}
+
+function CraftTips({ tips }: { tips: string[] }) {
+  return (
+    <section className="craft-tips-panel">
+      {tips.map((tip) => (
+        <span key={tip}>{tip}</span>
+      ))}
+    </section>
+  )
+}
+
+function CraftRecipesTable({ items }: { items: CraftRecipeRow[] }) {
+  const columns: ItemDataTableColumn<CraftRecipeRow>[] = [
+    {
+      key: 'name',
+      header: '이름',
+      className: 'normal-item-col-name',
+      render: (item) => <span className="runeword-name">{item.이름}</span>,
+    },
+    {
+      key: 'materials',
+      header: '재료',
+      className: 'craft-col-materials',
+      render: (item) => (
+        <span className="craft-material-list">
+          {item.재료.map((material) => (
+            <span key={material}>{material}</span>
+          ))}
+        </span>
+      ),
+    },
+    {
+      key: 'rune',
+      header: '룬',
+      className: 'craft-col-rune',
+      render: (item) => item.룬,
+    },
+    {
+      key: 'gem',
+      header: '보석 / 주얼',
+      className: 'craft-col-gem',
+      render: (item) => <CraftGemJewelLines value={item.보석주얼} />,
+    },
+    {
+      key: 'options',
+      header: '고정 옵션',
+      className: 'craft-col-options',
+      render: (item) => (
+        <ul className="option-list">
+          {item.고정옵션.map((option) => (
+            <li key={option}>{option}</li>
+          ))}
+          {item.용도.용도 && <li>용도: {item.용도.용도}</li>}
+          {item.용도.우대 && <li>우대: {item.용도.우대}</li>}
+        </ul>
+      ),
+    },
+  ]
+
+  return (
+    <ItemDataTable
+      columns={columns}
+      emptyMessage="크래프트 조합 데이터가 없습니다."
+      getRowKey={(item) => item.id}
+      items={items}
+      tableClassName="craft-recipes-table"
+    />
+  )
+}
+
+function CraftGemJewelLines({ value }: { value: string }) {
+  const parts = value
+    .split('/')
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .flatMap(splitKoreanEnglish)
+
+  return (
+    <span className="craft-gem-jewel-lines">
+      {parts.map((part) => (
+        <span key={part}>{part}</span>
+      ))}
+    </span>
+  )
+}
+
+function splitKoreanEnglish(value: string) {
+  const match = value.match(/^(.*?)([A-Za-z][A-Za-z\s]+)$/)
+
+  if (!match) {
+    return [value]
+  }
+
+  return [match[1].trim(), match[2].trim()].filter(Boolean)
+}
+
 function EmptyNormalItemsTable({ category }: { category: NormalItemCategory }) {
   return (
     <table className="runewords-table normal-items-table">
@@ -1452,6 +1953,14 @@ function EmptyNormalItemsTable({ category }: { category: NormalItemCategory }) {
 
 function getArmorBaseRows(): NormalItemRow[] {
   return getDefensiveBaseRows(armorBases)
+}
+
+function getBeltBaseRows(): NormalItemRow[] {
+  return getDefensiveBaseRows(beltBases)
+}
+
+function getBootBaseRows(): NormalItemRow[] {
+  return getDefensiveBaseRows(bootBases)
 }
 
 function getGloveBaseRows(): NormalItemRow[] {
@@ -1640,6 +2149,22 @@ function formatItemRange(range: ArmorBaseItem['강타피해']) {
   }
 
   return `${range.최소} - ${range.최대}`
+}
+
+function formatSetPrimaryValue(item: SetItem) {
+  if (item.방어력.원문) {
+    return `방어 ${item.방어력.원문}`
+  }
+
+  if (item.피해.원문) {
+    return `피해 ${item.피해.원문}`
+  }
+
+  if (item.막기확률) {
+    return `막기 ${item.막기확률}`
+  }
+
+  return '-'
 }
 
 function WeaponDamageCell({ damage }: { damage: WeaponBaseItem['양손데미지'] }) {
@@ -2774,10 +3299,12 @@ function App() {
           <Route path="/cube/runewords" element={<RunewordsPage />} />
           <Route path="/cube/equipment-upgrades" element={<EquipmentUpgradesPage />} />
           <Route path="/cube/socket-recipes" element={<SocketRecipesPage />} />
+          <Route path="/cube/crafting" element={<CraftingPage />} />
           <Route path="/items/normal" element={<NormalItemsPage />} />
+          <Route path="/items/sets" element={<SetItemsPage />} />
           <Route path="/items/runes" element={<RunesPage />} />
           <Route path="/leveling" element={<LevelingPage />} />
-          {routePages.filter((page) => !['/cube/runewords', '/cube/equipment-upgrades', '/cube/socket-recipes', '/items/normal', '/items/runes', '/leveling'].includes(page.path)).map((page) => (
+          {routePages.filter((page) => !['/cube/runewords', '/cube/equipment-upgrades', '/cube/socket-recipes', '/cube/crafting', '/items/normal', '/items/sets', '/items/runes', '/leveling'].includes(page.path)).map((page) => (
             <Route
               key={page.path}
               path={page.path}

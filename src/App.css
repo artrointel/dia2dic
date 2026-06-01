@@ -540,7 +540,7 @@ main {
 .leveling-table td {
   border-bottom: 1px solid var(--border);
   border-right: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
-  padding: 7px 9px;
+  padding: 7px var(--table-cell-padding-x);
   text-align: center;
 }
 
@@ -871,9 +871,18 @@ main {
 .upgrade-recipe-table th,
 .upgrade-recipe-table td {
   border-bottom: 1px solid var(--border);
-  padding: 12px 14px;
+  padding: 12px var(--table-cell-padding-x);
   text-align: left;
   vertical-align: middle;
+}
+
+.leveling-table th + th,
+.leveling-table td + td,
+.runewords-table th + th,
+.runewords-table td + td,
+.upgrade-recipe-table th + th,
+.upgrade-recipe-table td + td {
+  border-left: 1px solid var(--table-column-border);
 }
 
 .upgrade-recipe-table th {
@@ -1191,12 +1200,11 @@ main {
 .runewords-table-wrap {
   border: 1px solid var(--border);
   border-radius: 8px;
-  overflow: visible;
+  overflow: hidden;
 }
 
 .normal-items-page .runewords-table-wrap {
-  overflow-x: visible;
-  overflow-y: visible;
+  overflow: hidden;
 }
 
 .normal-items-page .runewords-table th {
@@ -1205,10 +1213,36 @@ main {
 
 .normal-split-table {
   display: grid;
+  overflow: visible;
+  position: relative;
+}
+
+.normal-table-horizontal-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .normal-items-table-scroll {
   overflow: visible;
+}
+
+.item-table-measure-layer {
+  contain: layout style;
+  height: 0;
+  left: -10000px;
+  overflow: hidden;
+  pointer-events: none;
+  position: fixed;
+  top: -10000px;
+  visibility: hidden;
+  white-space: nowrap;
+  width: max-content;
+}
+
+.item-table-measure-layer > div,
+.item-table-measure-layer span {
+  display: grid;
+  width: max-content;
 }
 
 .armor-items-table .normal-items-table tbody tr {
@@ -1314,6 +1348,64 @@ main {
   width: 84px;
 }
 
+.set-items-table {
+  table-layout: fixed;
+}
+
+.set-item-col-base {
+  width: 132px;
+}
+
+.set-item-col-options {
+  width: auto;
+}
+
+.set-items-table .normal-item-col-name {
+  width: 172px;
+}
+
+.set-items-table .normal-item-col-grade {
+  width: 60px;
+}
+
+.set-items-table .normal-item-col-defense {
+  width: 90px;
+}
+
+.set-items-table .normal-item-col-level,
+.set-items-table .normal-item-col-strength,
+.set-items-table .normal-item-col-dexterity {
+  width: 64px;
+}
+
+.set-items-table td {
+  overflow-wrap: anywhere;
+}
+
+.set-items-table .set-item-col-base {
+  overflow-wrap: anywhere;
+}
+
+.craft-recipes-table {
+  table-layout: fixed;
+}
+
+.craft-col-materials {
+  width: 210px;
+}
+
+.craft-col-rune {
+  width: 90px;
+}
+
+.craft-col-gem {
+  width: 170px;
+}
+
+.craft-col-options {
+  width: auto;
+}
+
 .normal-item-col-grade {
   width: 9%;
 }
@@ -1363,7 +1455,9 @@ main {
 .runewords-table th,
 .runewords-table td {
   border-bottom: 1px solid var(--border);
-  padding: 12px 10px;
+  padding: 12px var(--table-cell-padding-x);
+  padding-left: var(--table-cell-padding-x);
+  padding-right: var(--table-cell-padding-x);
   text-align: left;
   vertical-align: top;
 }
@@ -1382,8 +1476,23 @@ main {
   font-size: 14px;
 }
 
-.runewords-table th:nth-child(-n + 5),
-.runewords-table td:nth-child(-n + 5) {
+.runewords-table:not(.normal-items-table, .runes-table) th:nth-child(-n + 5),
+.runewords-table:not(.normal-items-table, .runes-table) td:nth-child(-n + 5) {
+  white-space: nowrap;
+}
+
+.normal-items-table th,
+.normal-items-table td {
+  padding-left: var(--table-cell-padding-x);
+  padding-right: var(--table-cell-padding-x);
+  white-space: nowrap;
+}
+
+.normal-items-table .option-list {
+  max-width: none;
+}
+
+.normal-items-table .option-list li {
   white-space: nowrap;
 }
 
@@ -1601,6 +1710,134 @@ main {
   color: var(--table-equipment);
   font-weight: 800;
   text-shadow: var(--table-text-shadow);
+}
+
+.set-select-control {
+  display: grid;
+  gap: 8px;
+  max-width: 360px;
+}
+
+.set-select-control span {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.set-bonus-panel {
+  background: color-mix(in srgb, var(--surface) 85%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: grid;
+  gap: 14px;
+  margin-bottom: 16px;
+  padding: 16px;
+}
+
+.set-bonus-panel > div:first-child {
+  display: grid;
+  gap: 4px;
+}
+
+.set-bonus-panel > div:first-child strong,
+.set-item-name strong,
+.set-item-set-name strong {
+  color: var(--table-name);
+  text-shadow: var(--table-text-shadow);
+}
+
+.set-bonus-panel > div:first-child span,
+.set-item-name span,
+.set-item-set-name span {
+  color: var(--table-name-sub);
+  font-size: 12px;
+  font-weight: 700;
+  text-shadow: var(--table-text-shadow);
+}
+
+.set-item-parent {
+  color: var(--text-muted) !important;
+  font-size: 11px !important;
+}
+
+.set-items-table .option-list li {
+  white-space: nowrap;
+}
+
+.set-bonus-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.set-bonus-grid > div,
+.set-item-name,
+.set-item-set-name {
+  display: grid;
+  gap: 4px;
+}
+
+.set-bonus-grid b {
+  color: var(--text-strong);
+  font-size: 13px;
+}
+
+.set-bonus-list li {
+  font-weight: 750;
+  text-shadow: var(--table-text-shadow);
+}
+
+.set-bonus-panel .option-list.set-bonus-list-complete li,
+.option-list li.set-bonus-text-complete {
+  color: var(--set-bonus-complete);
+}
+
+.set-bonus-panel .option-list.set-bonus-list-partial li,
+.option-list li.set-bonus-text-partial {
+  color: var(--set-bonus-partial);
+}
+
+.craft-tips-panel {
+  background: color-mix(in srgb, var(--surface) 86%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: grid;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 14px 16px;
+}
+
+.craft-tips-panel span {
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.craft-tips-panel span::before {
+  color: var(--accent-strong);
+  content: '• ';
+  font-weight: 900;
+}
+
+.craft-material-list {
+  color: var(--table-equipment);
+  display: grid;
+  gap: 3px;
+  font-weight: 800;
+  text-shadow: var(--table-text-shadow);
+}
+
+.craft-gem-jewel-lines {
+  color: var(--table-equipment);
+  display: grid;
+  gap: 2px;
+  font-weight: 800;
+  text-shadow: var(--table-text-shadow);
+}
+
+.craft-gem-jewel-lines span:nth-child(even) {
+  color: var(--table-name-sub);
+  font-size: 12px;
 }
 
 .info-tip-trigger {
