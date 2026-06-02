@@ -806,12 +806,6 @@
   position: relative;
 }
 
-.weapon-ias-trigger:hover .bow-ias-mini-card {
-  display: grid;
-  opacity: 1;
-  transform: translateY(0);
-}
-
 .bow-ias-mini-card {
   background: var(--surface-strong);
   border: 1px solid var(--border);
@@ -1114,12 +1108,6 @@
   white-space: nowrap;
 }
 
-.info-tip-trigger:hover .info-tip-card {
-  display: grid;
-  opacity: 1;
-  transform: translateY(0);
-}
-
 .info-tip-card {
   background: var(--surface-strong);
   border: 1px solid var(--border);
@@ -1164,12 +1152,6 @@
 .max-defense-trigger > strong,
 .weapon-damage-trigger > strong {
   font-weight: 800;
-}
-
-.max-defense-trigger:hover .max-defense-card,
-.weapon-damage-trigger:hover .weapon-damage-card {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .max-defense-card,
@@ -1259,9 +1241,9 @@
   z-index: 4;
 }
 
-.runeword-name-cell:hover .version-popup {
-  opacity: 1;
-  transform: translateY(0);
+.runeword-version-trigger {
+  cursor: help;
+  display: inline-flex;
 }
 
 .table-line,
@@ -1342,13 +1324,6 @@
 
 .rune-card-trigger {
   position: relative;
-}
-
-.rune-card-trigger:hover .rune-mini-card {
-  display: grid;
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(0);
 }
 
 .rune-name {
@@ -1519,6 +1494,11 @@
   padding-left: 0;
 }
 
+.info-tip-card.floating-stat-card,
+.max-defense-card.floating-stat-card,
+.weapon-damage-card.floating-stat-card,
+.bow-ias-mini-card.floating-stat-card,
+.version-popup.floating-stat-card,
 .rune-mini-card.floating-stat-card {
   display: grid;
   opacity: 1;
@@ -1527,6 +1507,11 @@
   z-index: 1000;
 }
 
+.info-tip-card.floating-stat-card.is-above,
+.max-defense-card.floating-stat-card.is-above,
+.weapon-damage-card.floating-stat-card.is-above,
+.bow-ias-mini-card.floating-stat-card.is-above,
+.version-popup.floating-stat-card.is-above,
 .rune-mini-card.floating-stat-card.is-above {
   transform: translateY(-100%);
 }

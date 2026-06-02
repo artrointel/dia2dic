@@ -169,8 +169,13 @@ export function ItemDataTable<TItem>({
               <thead>
                 {customHeader ?? (
                   <tr>
-                    {columns.map((column) => (
-                      <th className={column.className} data-column-key={column.key} key={column.key}>
+                    {columns.map((column, columnIndex) => (
+                      <th
+                        className={column.className}
+                        data-column-key={column.key}
+                        data-sticky-column={columnIndex === 0 ? 'true' : undefined}
+                        key={column.key}
+                      >
                         {column.header}
                       </th>
                     ))}
@@ -185,7 +190,7 @@ export function ItemDataTable<TItem>({
                       key={getRowKey(item)}
                       {...getRowProps?.(item, rowIndex, items)}
                     >
-                      {columns.map((column) => {
+                      {columns.map((column, columnIndex) => {
                         const cellProps = column.getCellProps?.(item, rowIndex, items)
 
                         if (cellProps?.hidden) {
@@ -202,6 +207,7 @@ export function ItemDataTable<TItem>({
                               .filter(Boolean)
                               .join(' ')}
                             data-column-key={column.key}
+                            data-sticky-column={columnIndex === 0 ? 'true' : undefined}
                             key={column.key}
                             {...tableCellProps}
                           >

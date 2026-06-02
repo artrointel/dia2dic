@@ -13,22 +13,42 @@ import { RunesPage } from './pages/RunesPage'
 import { RunewordsPage } from './pages/RunewordsPage'
 import { SetItemsPage } from './pages/SetItemsPage'
 import { SocketRecipesPage } from './pages/SocketRecipesPage'
-import { getInitialTheme } from './shared/theme'
+import { getInitialTheme, getSavedTheme, getSystemTheme, saveTheme } from './shared/theme'
 import type { Theme } from './shared/appTypes'
 import './styles/tableCrosshair.css'
 import './App.css'
 
 function App() {
   const [theme, setTheme] = useState<Theme>(getInitialTheme)
+  const [hasSavedTheme, setHasSavedTheme] = useState(() => getSavedTheme() !== null)
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme
     document.documentElement.style.colorScheme = theme
-    window.localStorage.setItem('dia2dic-theme', theme)
   }, [theme])
 
+  useEffect(() => {
+    if (hasSavedTheme) {
+      return undefined
+    }
+
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: light)')
+    const updateSystemTheme = () => setTheme(getSystemTheme())
+
+    mediaQuery.addEventListener('change', updateSystemTheme)
+
+    return () => mediaQuery.removeEventListener('change', updateSystemTheme)
+  }, [hasSavedTheme])
+
   const toggleTheme = () => {
-    setTheme((current) => (current === 'dark' ? 'light' : 'dark'))
+    setTheme((current) => {
+      const nextTheme = current === 'dark' ? 'light' : 'dark'
+
+      saveTheme(nextTheme)
+
+      return nextTheme
+    })
+    setHasSavedTheme(true)
   }
 
   return (

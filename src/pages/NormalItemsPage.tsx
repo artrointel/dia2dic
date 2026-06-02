@@ -812,14 +812,19 @@ function formatNullableNumber(value: number | null | undefined) {
 
 function MaxDefenseHeaderTip() {
   return (
-    <span className="info-tip-trigger">
+    <FloatingTooltip
+      cardClassName="info-tip-card"
+      content={
+        <>
+          <strong>최대 방어력</strong>
+          <span>에테리얼의 경우 기본 방어력이 50% 증가한다.</span>
+          <span>고급 접두사의 경우 최대 15% 방어력이 증가한다.</span>
+        </>
+      }
+      triggerClassName="info-tip-trigger"
+    >
       <span>최대 방어력*</span>
-      <span className="info-tip-card" role="tooltip">
-        <strong>최대 방어력</strong>
-        <span>에테리얼의 경우 기본 방어력이 50% 증가한다.</span>
-        <span>고급 접두사의 경우 최대 15% 방어력이 증가한다.</span>
-      </span>
-    </span>
+    </FloatingTooltip>
   )
 }
 
@@ -925,14 +930,19 @@ function formatDamageRange(damage: WeaponBaseItem['양손데미지']) {
 
 function WeightHeaderTip() {
   return (
-    <span className="info-tip-trigger">
+    <FloatingTooltip
+      cardClassName="info-tip-card"
+      content={
+        <>
+          <strong>무게</strong>
+          <span>무게가 가벼울수록 이동속도가 빠르다.</span>
+          <span>Light &gt; Medium &gt; Heavy 순</span>
+        </>
+      }
+      triggerClassName="info-tip-trigger"
+    >
       <span>무게*</span>
-      <span className="info-tip-card" role="tooltip">
-        <strong>무게</strong>
-        <span>무게가 가벼울수록 이동속도가 빠르다.</span>
-        <span>Light &gt; Medium &gt; Heavy 순</span>
-      </span>
-    </span>
+    </FloatingTooltip>
   )
 }
 

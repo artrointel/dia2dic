@@ -43,7 +43,7 @@ export function LevelingPage() {
   const customHeader = (
     <>
       <tr>
-        <th className="leveling-level-header" rowSpan={2}>레벨</th>
+        <th className="leveling-level-header" data-sticky-column="true" rowSpan={2}>레벨</th>
         {difficultyGroups.map((group) => (
           <th className="leveling-difficulty-header" colSpan={group.columns.length} key={group.difficulty}>
             {group.difficulty}
@@ -56,7 +56,7 @@ export function LevelingPage() {
         ))}
       </tr>
       <tr>
-        <th className="leveling-average-label">평균 경험치</th>
+        <th className="leveling-average-label" data-sticky-column="true">평균 경험치</th>
         {levelingEfficiency.columns.map((column) => (
           <th className="leveling-average-exp" key={`${column.id}-average`}>
             {column.averageExp.toLocaleString()}

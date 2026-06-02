@@ -1,5 +1,6 @@
 ﻿import { useMemo, useState } from 'react'
 import { Gem, Plus, Trash2 } from 'lucide-react'
+import { FloatingTooltip } from '../components/FloatingTooltip'
 import { ItemDataTable, type ItemDataTableColumn } from '../components/ItemDataTable'
 import { OptionList } from '../components/OptionList'
 import { PageHeading } from '../components/PageHeading'
@@ -189,21 +190,22 @@ export function RunewordsPage() {
       key: 'name',
       header: '이름',
       className: 'runeword-name-cell',
-      render: (item) => (
-        <>
-          <span className={`runeword-name ${item.버전.length > 0 ? 'has-version' : ''}`}>
-            <FormattedRunewordName name={item.이름} />
-            {item.버전.length > 0 ? '*' : ''}
-          </span>
-          {item.버전.length > 0 && (
-            <span className="version-popup">
-              {item.버전.map((line) => (
-                <span key={line}>{line}</span>
-              ))}
+      render: (item) =>
+        item.버전.length > 0 ? (
+          <FloatingTooltip
+            cardClassName="version-popup"
+            content={<RunewordVersionPopup versions={item.버전} />}
+            triggerClassName="runeword-version-trigger"
+          >
+            <span className="runeword-name has-version">
+              <FormattedRunewordName name={item.이름} />*
             </span>
-          )}
-        </>
-      ),
+          </FloatingTooltip>
+        ) : (
+          <span className="runeword-name">
+            <FormattedRunewordName name={item.이름} />
+          </span>
+        ),
     },
     {
       key: 'level',
@@ -307,6 +309,16 @@ function EquipmentLines({ equipment }: { equipment: string }) {
       <span className="equipment-primary">{primaryLine}</span>
       {englishLine && <span className="equipment-english">({englishLine})</span>}
     </span>
+  )
+}
+
+function RunewordVersionPopup({ versions }: { versions: string[] }) {
+  return (
+    <>
+      {versions.map((line) => (
+        <span key={line}>{line}</span>
+      ))}
+    </>
   )
 }
 

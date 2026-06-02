@@ -2,6 +2,7 @@
   display: grid;
   max-width: 100%;
   min-width: 0;
+  overflow-x: clip;
 }
 
 .item-data-table-block.is-content-width {
@@ -25,6 +26,12 @@
   position: relative;
 }
 
+.item-data-table-block > .runewords-table-wrap.runewords-table-wrap {
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
 .runewords-table-wrap:has(.normal-split-table.is-content-width) {
   max-width: 100%;
   min-width: 0;
@@ -39,9 +46,12 @@
 .normal-table-horizontal-scroll {
   max-width: 100%;
   min-width: 0;
+  overscroll-behavior-x: contain;
   overflow-x: auto;
   overflow-y: hidden;
+  touch-action: pan-x pan-y;
   width: 100%;
+  -webkit-overflow-scrolling: touch;
 }
 
 .normal-items-table-scroll {
@@ -110,26 +120,26 @@
   white-space: nowrap;
 }
 
-.normal-split-table.has-sticky-first-column .normal-items-table tr > :first-child {
+.normal-split-table.has-sticky-first-column .normal-items-table [data-sticky-column='true'] {
   left: 0;
   position: sticky;
   z-index: 2;
 }
 
-.normal-split-table.has-sticky-first-column .normal-items-table thead tr > :first-child {
+.normal-split-table.has-sticky-first-column .normal-items-table thead [data-sticky-column='true'] {
   background: var(--surface-strong);
   z-index: 4;
 }
 
-.normal-split-table.has-sticky-first-column .normal-items-table tbody tr:nth-child(odd) > :first-child {
+.normal-split-table.has-sticky-first-column .normal-items-table tbody tr:nth-child(odd) > [data-sticky-column='true'] {
   background: var(--table-row-odd);
 }
 
-.normal-split-table.has-sticky-first-column .normal-items-table tbody tr:nth-child(even) > :first-child {
+.normal-split-table.has-sticky-first-column .normal-items-table tbody tr:nth-child(even) > [data-sticky-column='true'] {
   background: var(--table-row-even);
 }
 
-.normal-split-table.has-sticky-first-column .normal-items-table tr:hover > :first-child {
+.normal-split-table.has-sticky-first-column .normal-items-table tr:hover > [data-sticky-column='true'] {
   background: var(--table-row-hover);
 }
 
