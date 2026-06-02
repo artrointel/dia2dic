@@ -14,17 +14,28 @@ export function ImageViewer({
   src: string
   title: string
 }) {
+  if (!isOpen) {
+    return null
+  }
+
+  return <ImageViewerContent key={src} alt={alt} onClose={onClose} src={src} title={title} />
+}
+
+function ImageViewerContent({
+  alt,
+  onClose,
+  src,
+  title,
+}: {
+  alt: string
+  onClose: () => void
+  src: string
+  title: string
+}) {
   const [scale, setScale] = useState(1)
   const [naturalSize, setNaturalSize] = useState<{ width: number; height: number } | null>(null)
 
   useEffect(() => {
-    if (!isOpen) {
-      return
-    }
-
-    setScale(1)
-    setNaturalSize(null)
-
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         onClose()
@@ -34,11 +45,7 @@ export function ImageViewer({
     window.addEventListener('keydown', handleKeyDown)
 
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isOpen, onClose, src])
-
-  if (!isOpen) {
-    return null
-  }
+  }, [onClose])
 
   const updateScale = (nextScale: number) => {
     setScale(Math.min(4, Math.max(0.4, nextScale)))

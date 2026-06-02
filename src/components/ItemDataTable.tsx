@@ -17,6 +17,7 @@ type ItemDataTableProps<TItem> = {
   items: TItem[]
   fillColumnKey?: string
   metaLabel?: ReactNode
+  stickyFirstColumn?: boolean
   tableClassName?: string
   widthMode?: 'fill' | 'content'
   wrapperClassName?: string
@@ -32,6 +33,7 @@ export function ItemDataTable<TItem>({
   getRowKey,
   items,
   metaLabel,
+  stickyFirstColumn = true,
   tableClassName = '',
   widthMode = 'fill',
   wrapperClassName = '',
@@ -98,7 +100,12 @@ export function ItemDataTable<TItem>({
 
       <div className="runewords-table-wrap">
         <div
-          className={['normal-split-table', widthMode === 'content' ? 'is-content-width' : '', wrapperClassName]
+          className={[
+            'normal-split-table',
+            stickyFirstColumn ? 'has-sticky-first-column' : '',
+            widthMode === 'content' ? 'is-content-width' : '',
+            wrapperClassName,
+          ]
             .filter(Boolean)
             .join(' ')}
           ref={wrapperRef}

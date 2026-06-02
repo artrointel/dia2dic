@@ -1,11 +1,11 @@
-﻿import { useMemo, useRef, useState } from 'react'
+﻿import { useMemo, useState } from 'react'
 import { Gem, Plus, Trash2 } from 'lucide-react'
+import { ItemDataTable, type ItemDataTableColumn } from '../components/ItemDataTable'
 import { OptionList } from '../components/OptionList'
 import { PageHeading } from '../components/PageHeading'
-import { RuneMiniCard } from '../components/RuneMiniCard'
+import { RuneCombinationToken } from '../components/RuneMiniCard'
 import { FilterPanel, NameSearch, SortControl, TableToolbar } from '../components/TableControls'
-import { useTableCrosshair } from '../hooks/useTableCrosshair'
-import { runeUpgrades, runewords } from '../shared/gameData'
+import { runewords } from '../shared/gameData'
 import type { FilterType, Runeword, RunewordFilter, SortType } from '../shared/appTypes'
 
 const EQUIPMENT_FILTER_GROUPS = [
@@ -98,8 +98,6 @@ export function RunewordsPage() {
   const [filters, setFilters] = useState<RunewordFilter[]>([])
   const [nameQuery, setNameQuery] = useState('')
   const [sortType, setSortType] = useState<SortType>('level-asc')
-  const tableRef = useRef<HTMLTableElement>(null)
-  useTableCrosshair(tableRef)
   const equipmentTypes = useMemo(
     () =>
       [
@@ -186,6 +184,61 @@ export function RunewordsPage() {
         return left.렙제 - right.렙제
       })
   }, [filters, nameQuery, sortType])
+  const columns: ItemDataTableColumn<Runeword>[] = [
+    {
+      key: 'name',
+      header: '이름',
+      className: 'runeword-name-cell',
+      render: (item) => (
+        <>
+          <span className={`runeword-name ${item.버전.length > 0 ? 'has-version' : ''}`}>
+            <FormattedRunewordName name={item.이름} />
+            {item.버전.length > 0 ? '*' : ''}
+          </span>
+          {item.버전.length > 0 && (
+            <span className="version-popup">
+              {item.버전.map((line) => (
+                <span key={line}>{line}</span>
+              ))}
+            </span>
+          )}
+        </>
+      ),
+    },
+    {
+      key: 'level',
+      header: '렙제',
+      className: 'runeword-col-level',
+      render: (item) => item.렙제,
+    },
+    {
+      key: 'equipment',
+      header: '장비',
+      className: 'runeword-col-equipment',
+      render: (item) => <EquipmentLines equipment={getRunewordEquipment(item)} />,
+    },
+    {
+      key: 'sockets',
+      header: '소켓',
+      className: 'runeword-col-sockets',
+      render: (item) => item['소켓 수'],
+    },
+    {
+      key: 'runes',
+      header: '룬조합',
+      className: 'runeword-col-runes',
+      render: (item) =>
+        item.룬조합.map((line) => (
+          <RuneCombinationLine line={line} key={line} />
+        )),
+    },
+    {
+      key: 'options',
+      header: '옵션',
+      className: 'runeword-col-options',
+      render: (item) => <OptionList items={item.options} />,
+    },
+  ]
 
   return (
     <section className="runewords-page">
@@ -229,56 +282,14 @@ export function RunewordsPage() {
         value={nameQuery}
         onChange={setNameQuery}
       />
-      <div className="table-meta">
-        총 {runewords.length}개 중 {filteredRunewords.length}개 표시
-      </div>
-
-      <div className="runewords-table-wrap">
-        <table className="table-crosshair runewords-table" ref={tableRef}>
-          <thead>
-            <tr>
-              <th>이름</th>
-              <th>렙제</th>
-              <th>장비</th>
-              <th>소켓</th>
-              <th>룬조합</th>
-              <th>옵션</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredRunewords.map((item) => (
-              <tr key={item.id}>
-                <td className="runeword-name-cell">
-                  <span className={`runeword-name ${item.버전.length > 0 ? 'has-version' : ''}`}>
-                    <FormattedRunewordName name={item.이름} />
-                    {item.버전.length > 0 ? '*' : ''}
-                  </span>
-                  {item.버전.length > 0 && (
-                    <span className="version-popup">
-                      {item.버전.map((line) => (
-                        <span key={line}>{line}</span>
-                      ))}
-                    </span>
-                  )}
-                </td>
-                <td>{item.렙제}</td>
-                <td>
-                  <EquipmentLines equipment={getRunewordEquipment(item)} />
-                </td>
-                <td>{item['소켓 수']}</td>
-                <td>
-                  {item.룬조합.map((line) => (
-                    <RuneCombinationLine line={line} key={line} />
-                  ))}
-                </td>
-                <td>
-                  <OptionList items={item.options} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <ItemDataTable
+        columns={columns}
+        emptyMessage="룬워드 데이터가 없습니다."
+        getRowKey={(item) => item.id}
+        items={filteredRunewords}
+        metaLabel={`총 ${runewords.length}개 중 ${filteredRunewords.length}개 표시`}
+        widthMode="content"
+      />
     </section>
   )
 }
@@ -393,31 +404,6 @@ function RuneCombinationParts({
       shouldRenderPlus ? <span className="rune-plus" key={`${part}-${index}-plus`}>+</span> : null,
     ]
   })
-}
-
-function RuneCombinationToken({ name }: { name: string }) {
-  const rune = findRuneByKoreanName(name)
-
-  if (!rune) {
-    return <span>{name}</span>
-  }
-
-  return (
-    <span className="rune-card-trigger rune-token">
-      {name}
-      <RuneMiniCard rune={rune} />
-    </span>
-  )
-}
-
-function findRuneByKoreanName(name: string) {
-  const normalizedBaseName = name.replace(/\s+/g, '').trim()
-  const runeAliases: Record<string, string> = {
-    이스트: '아이스트',
-  }
-  const normalizedName = `${runeAliases[normalizedBaseName] ?? normalizedBaseName}룬`
-
-  return runeUpgrades.find((rune) => rune.한글명.replace(/\s+/g, '') === normalizedName)
 }
 
 function RunewordFilterRow({

@@ -1,7 +1,8 @@
 ﻿import { useRef } from 'react'
 import { Gem } from 'lucide-react'
 import { PageHeading } from '../components/PageHeading'
-import { countessRateLines, RuneEffectLines } from '../components/RuneMiniCard'
+import { RuneEffectLines } from '../components/RuneMiniCard'
+import { countessRateLines } from '../components/runeMiniCardUtils'
 import { useTableCrosshair } from '../hooks/useTableCrosshair'
 import { assetUrl, runeUpgrades } from '../shared/gameData'
 

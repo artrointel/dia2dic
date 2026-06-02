@@ -1,10 +1,12 @@
 .item-data-table-block {
   display: grid;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .item-data-table-block.is-content-width {
   max-width: 100%;
-  width: max-content;
+  width: 100%;
 }
 
 .item-data-table-meta {
@@ -18,24 +20,29 @@
 
 .normal-split-table {
   display: grid;
+  max-width: 100%;
+  min-width: 0;
   overflow: visible;
   position: relative;
 }
 
 .runewords-table-wrap:has(.normal-split-table.is-content-width) {
   max-width: 100%;
-  width: max-content;
+  min-width: 0;
+  width: 100%;
 }
 
 .normal-split-table.is-content-width {
   max-width: 100%;
-  width: max-content;
+  width: 100%;
 }
 
 .normal-table-horizontal-scroll {
   max-width: 100%;
+  min-width: 0;
   overflow-x: auto;
   overflow-y: hidden;
+  width: 100%;
 }
 
 .normal-items-table-scroll {
@@ -44,8 +51,10 @@
 
 .item-table-measure-layer {
   contain: layout style;
+  font-size: 14px;
   height: 0;
   left: -10000px;
+  line-height: 1.35;
   overflow: hidden;
   pointer-events: none;
   position: fixed;
@@ -65,6 +74,11 @@
   width: max-content;
 }
 
+.item-table-measure-layer > div > span:first-child {
+  font-size: 13px;
+  font-weight: 700;
+}
+
 .item-table-measure-layer .normal-item-name-cell {
   display: inline-flex;
 }
@@ -73,7 +87,8 @@
 .item-table-measure-layer .max-defense-card,
 .item-table-measure-layer .weapon-damage-card,
 .item-table-measure-layer .rune-mini-card,
-.item-table-measure-layer .bow-ias-card {
+.item-table-measure-layer .bow-ias-card,
+.item-table-measure-layer .version-popup {
   display: none;
 }
 
@@ -86,6 +101,29 @@
   padding-left: var(--table-cell-padding-x);
   padding-right: var(--table-cell-padding-x);
   white-space: nowrap;
+}
+
+.normal-split-table.has-sticky-first-column .normal-items-table tr > :first-child {
+  left: 0;
+  position: sticky;
+  z-index: 2;
+}
+
+.normal-split-table.has-sticky-first-column .normal-items-table thead tr > :first-child {
+  background: var(--surface-strong);
+  z-index: 4;
+}
+
+.normal-split-table.has-sticky-first-column .normal-items-table tbody tr:nth-child(odd) > :first-child {
+  background: var(--table-row-odd);
+}
+
+.normal-split-table.has-sticky-first-column .normal-items-table tbody tr:nth-child(even) > :first-child {
+  background: var(--table-row-even);
+}
+
+.normal-split-table.has-sticky-first-column .normal-items-table tr:hover > :first-child {
+  background: var(--table-row-hover);
 }
 
 .normal-items-table .option-list {

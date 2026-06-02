@@ -1,4 +1,4 @@
-﻿import { useEffect, useMemo, useState } from 'react'
+﻿import { useMemo, useState } from 'react'
 import { PackageSearch } from 'lucide-react'
 import { ItemDataTable, type ItemDataTableColumn } from '../components/ItemDataTable'
 import { FloatingTooltip } from '../components/FloatingTooltip'
@@ -96,13 +96,9 @@ export function NormalItemsPage() {
         ? armorSortOptions
         : defensiveSortOptions
 
-  useEffect(() => {
-    const availableSortValues = new Set(sortOptions.map((option) => option.value))
-
-    if (!availableSortValues.has(sortType)) {
-      setSortType(sortOptions[0].value)
-    }
-  }, [sortOptions, sortType])
+  const activeSortType = sortOptions.some((option) => option.value === sortType)
+    ? sortType
+    : sortOptions[0].value
 
   const filteredItems = useMemo(() => {
     const normalizedNameQuery = nameQuery.trim().toLowerCase()
@@ -136,8 +132,8 @@ export function NormalItemsPage() {
           ? `${item.이름} ${isArmorItemRow(item) ? item.영문명 ?? '' : ''}`.toLowerCase().includes(normalizedNameQuery)
           : true,
       )
-      .toSorted((left, right) => sortNormalItems(left, right, sortType))
-  }, [armorItems, beltItems, bootItems, bowItems, gloveItems, helmItems, nameQuery, paladinShieldItems, polearmItems, selectedCategory, selectedGrade, selectedShieldType, selectedWeaponType, shieldItems, sortType, spearItems])
+      .toSorted((left, right) => sortNormalItems(left, right, activeSortType))
+  }, [activeSortType, armorItems, beltItems, bootItems, bowItems, gloveItems, helmItems, nameQuery, paladinShieldItems, polearmItems, selectedCategory, selectedGrade, selectedShieldType, selectedWeaponType, shieldItems, spearItems])
   const totalItemCount =
     selectedCategory === '갑옷'
       ? armorItems.length
@@ -170,7 +166,7 @@ export function NormalItemsPage() {
         title="일반"
       />
 
-      <TableToolbar sort={<SortControl options={sortOptions} value={sortType} onChange={setSortType} />}>
+      <TableToolbar sort={<SortControl options={sortOptions} value={activeSortType} onChange={setSortType} />}>
         <FilterPanel>
           <SegmentedFilter
             items={normalItemCategories}
