@@ -1,8 +1,8 @@
-import { useMemo, useRef, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Activity } from 'lucide-react'
+import { ItemDataTable, type ItemDataTableColumn } from '../components/ItemDataTable'
 import { PageHeading } from '../components/PageHeading'
 import { FilterPanel, SegmentedFilter, TableToolbar } from '../components/TableControls'
-import { useTableCrosshair } from '../hooks/useTableCrosshair'
 import { breakpoints } from '../shared/gameData'
 import type { BreakpointTable, BreakpointTableId } from '../shared/appTypes'
 import './FrameBreakpointsPage.css'
@@ -11,6 +11,8 @@ const breakpointFilterOptions = breakpoints.tables.map((table) => ({
   label: table.label,
   value: table.id,
 }))
+
+type BreakpointRow = BreakpointTable['rows'][number]
 
 export function FrameBreakpointsPage() {
   const [selectedTableId, setSelectedTableId] = useState<BreakpointTableId>('fcr')
@@ -63,37 +65,38 @@ function BreakpointInfo({ table }: { table: BreakpointTable }) {
 }
 
 function BreakpointTableView({ table }: { table: BreakpointTable }) {
-  const tableRef = useRef<HTMLTableElement>(null)
-  useTableCrosshair(tableRef)
+  const columns: ItemDataTableColumn<BreakpointRow>[] = [
+    {
+      key: 'character',
+      header: '캐릭터',
+      className: 'breakpoint-col-character',
+      render: (row) => row.character,
+    },
+    {
+      key: 'condition',
+      header: '조건',
+      className: 'breakpoint-col-condition',
+      render: (row) => row.condition,
+    },
+    ...table.frames.map<ItemDataTableColumn<BreakpointRow>>((frame) => ({
+      key: String(frame),
+      header: frame,
+      className: 'breakpoint-col-frame',
+      getCellClassName: (row) => (row.values[String(frame)] ? 'has-breakpoint' : undefined),
+      render: (row) => row.values[String(frame)] ?? '-',
+    })),
+  ]
 
   return (
     <div className="breakpoint-table-card">
-      <div className="breakpoint-table-scroll">
-        <table className="table-crosshair breakpoint-table" ref={tableRef}>
-          <thead>
-            <tr>
-              <th>캐릭터</th>
-              <th>조건</th>
-              {table.frames.map((frame) => (
-                <th key={frame}>{frame}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {table.rows.map((row) => (
-              <tr key={`${row.character}-${row.condition}`}>
-                <th scope="row">{row.character}</th>
-                <td>{row.condition}</td>
-                {table.frames.map((frame) => (
-                  <td className={row.values[String(frame)] ? 'has-breakpoint' : undefined} key={frame}>
-                    {row.values[String(frame)] ?? '-'}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <ItemDataTable
+        columns={columns}
+        emptyMessage="프레임 데이터가 없습니다."
+        getRowKey={(row) => `${row.character}-${row.condition}`}
+        items={table.rows}
+        tableClassName="breakpoint-table"
+        widthMode="content"
+      />
       <p className="breakpoint-source">출처: {breakpoints.source.title}</p>
     </div>
   )

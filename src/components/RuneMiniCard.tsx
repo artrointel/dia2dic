@@ -1,12 +1,21 @@
 import { assetUrl } from '../shared/gameData'
 import type { RuneUpgrade } from '../shared/appTypes'
+import { FloatingTooltip } from './FloatingTooltip'
 import { countessRateLines, findRuneByKoreanName } from './runeMiniCardUtils'
 
 export function RuneMiniCard({ rune }: { rune: RuneUpgrade }) {
+  return (
+    <span className="rune-mini-card" role="tooltip">
+      <RuneMiniCardContent rune={rune} />
+    </span>
+  )
+}
+
+function RuneMiniCardContent({ rune }: { rune: RuneUpgrade }) {
   const countessRates = countessRateLines(rune)
 
   return (
-    <span className="rune-mini-card" role="tooltip">
+    <>
       <span className="rune-mini-card-header">
         <img src={assetUrl(rune.이미지)} alt="" aria-hidden="true" />
         <span>
@@ -49,7 +58,7 @@ export function RuneMiniCard({ rune }: { rune: RuneUpgrade }) {
           </span>
         </span>
       )}
-    </span>
+    </>
   )
 }
 
@@ -61,10 +70,13 @@ export function RuneCombinationToken({ name }: { name: string }) {
   }
 
   return (
-    <span className="rune-card-trigger rune-token">
+    <FloatingTooltip
+      cardClassName="rune-mini-card"
+      content={<RuneMiniCardContent rune={rune} />}
+      triggerClassName="rune-card-trigger rune-token"
+    >
       {name}
-      <RuneMiniCard rune={rune} />
-    </span>
+    </FloatingTooltip>
   )
 }
 

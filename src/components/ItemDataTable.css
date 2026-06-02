@@ -6,7 +6,6 @@
 
 .item-data-table-block.is-content-width {
   max-width: 100%;
-  width: 100%;
 }
 
 .item-data-table-meta {
@@ -81,6 +80,14 @@
 
 .item-table-measure-layer .normal-item-name-cell {
   display: inline-flex;
+}
+
+.item-table-measure-layer .upgrade-ingredient-list,
+.item-table-measure-layer .upgrade-recipe-flow,
+.normal-items-table .upgrade-ingredient-list,
+.normal-items-table .upgrade-recipe-flow {
+  flex-wrap: nowrap;
+  width: max-content;
 }
 
 .item-table-measure-layer .info-tip-card,

@@ -1,15 +1,15 @@
-﻿import { useMemo, useRef, useState, type CSSProperties, type MouseEvent } from 'react'
+import { useMemo, useState, type CSSProperties, type MouseEvent } from 'react'
 import { TrendingUp } from 'lucide-react'
+import { ItemDataTable, type ItemDataTableColumn } from '../components/ItemDataTable'
 import { PageHeading } from '../components/PageHeading'
-import { useTableCrosshair } from '../hooks/useTableCrosshair'
 import { levelingEfficiency } from '../shared/gameData'
 import type { LevelingEfficiency } from '../shared/appTypes'
 
+type LevelingRow = LevelingEfficiency['rows'][number]
+
 export function LevelingPage() {
-  const tableRef = useRef<HTMLTableElement>(null)
-  useTableCrosshair(tableRef)
   const [hoveredLevel, setHoveredLevel] = useState<{
-    row: LevelingEfficiency['rows'][number]
+    row: LevelingRow
     x: number
     y: number
   } | null>(null)
@@ -23,9 +23,51 @@ export function LevelingPage() {
       ),
     [],
   )
+  const columns: ItemDataTableColumn<LevelingRow>[] = [
+    {
+      key: 'level',
+      header: '레벨',
+      className: 'leveling-level',
+      minWidth: 84,
+      render: (row) => row.level,
+    },
+    ...levelingEfficiency.columns.map<ItemDataTableColumn<LevelingRow>>((column) => ({
+      key: column.id,
+      header: column.act,
+      className: 'leveling-efficiency-cell',
+      getCellClassName: (row) => levelingEfficiencyClass(row.values[column.id]),
+      minWidth: 66,
+      render: (row) => `${row.values[column.id]}%`,
+    })),
+  ]
+  const customHeader = (
+    <>
+      <tr>
+        <th className="leveling-level-header" rowSpan={2}>레벨</th>
+        {difficultyGroups.map((group) => (
+          <th className="leveling-difficulty-header" colSpan={group.columns.length} key={group.difficulty}>
+            {group.difficulty}
+          </th>
+        ))}
+      </tr>
+      <tr>
+        {levelingEfficiency.columns.map((column) => (
+          <th key={`${column.id}-act`}>{column.act}</th>
+        ))}
+      </tr>
+      <tr>
+        <th className="leveling-average-label">평균 경험치</th>
+        {levelingEfficiency.columns.map((column) => (
+          <th className="leveling-average-exp" key={`${column.id}-average`}>
+            {column.averageExp.toLocaleString()}
+          </th>
+        ))}
+      </tr>
+    </>
+  )
   const updateHoveredLevel = (
     event: MouseEvent<HTMLTableRowElement>,
-    row: LevelingEfficiency['rows'][number],
+    row: LevelingRow,
   ) => {
     const position = getLevelingCardPosition(event.clientX, event.clientY)
 
@@ -44,55 +86,23 @@ export function LevelingPage() {
         title="레벨업 효율표"
       />
 
-      <div className="leveling-table-wrap">
-        <table className="table-crosshair leveling-table" ref={tableRef}>
-          <thead>
-            <tr>
-              <th className="leveling-level-header" rowSpan={2}>레벨</th>
-              {difficultyGroups.map((group) => (
-                <th className="leveling-difficulty-header" colSpan={group.columns.length} key={group.difficulty}>
-                  {group.difficulty}
-                </th>
-              ))}
-            </tr>
-            <tr>
-              {levelingEfficiency.columns.map((column) => (
-                <th key={`${column.id}-act`}>{column.act}</th>
-              ))}
-            </tr>
-            <tr>
-              <th className="leveling-average-label">평균 경험치</th>
-              {levelingEfficiency.columns.map((column) => (
-                <th className="leveling-average-exp" key={`${column.id}-average`}>
-                  {column.averageExp.toLocaleString()}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {levelingEfficiency.rows.map((row) => (
-              <tr
-                className={row.level % 5 === 0 ? 'is-level-marker' : undefined}
-                key={row.level}
-                onMouseEnter={(event) => updateHoveredLevel(event, row)}
-                onMouseLeave={() => setHoveredLevel(null)}
-                onMouseMove={(event) => updateHoveredLevel(event, row)}
-              >
-                <td className="leveling-level">{row.level}</td>
-                {levelingEfficiency.columns.map((column) => {
-                  const efficiency = row.values[column.id]
+      <ItemDataTable
+        columns={columns}
+        customHeader={customHeader}
+        emptyMessage="레벨업 효율 데이터가 없습니다."
+        getRowClassName={(row) => (row.level % 5 === 0 ? 'is-level-marker' : undefined)}
+        getRowKey={(row) => String(row.level)}
+        getRowProps={(row) => ({
+          onMouseEnter: (event) => updateHoveredLevel(event, row),
+          onMouseLeave: () => setHoveredLevel(null),
+          onMouseMove: (event) => updateHoveredLevel(event, row),
+        })}
+        items={levelingEfficiency.rows}
+        tableClassName="leveling-table"
+        wrapperClassName="leveling-table-wrap"
+        widthMode="content"
+      />
 
-                  return (
-                    <td className={levelingEfficiencyClass(efficiency)} key={column.id}>
-                      {efficiency}%
-                    </td>
-                  )
-                })}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
       {hoveredLevel ? (
         <LevelingMiniCard
           row={hoveredLevel.row}
@@ -123,7 +133,7 @@ function LevelingMiniCard({
   row,
   style,
 }: {
-  row: LevelingEfficiency['rows'][number]
+  row: LevelingRow
   style?: CSSProperties
 }) {
   const bestColumns = levelingEfficiency.columns
@@ -156,19 +166,16 @@ function LevelingMiniCard({
 
 function levelingEfficiencyClass(value: number) {
   if (value >= 95) {
-    return 'leveling-efficiency-cell is-peak'
+    return 'is-peak'
   }
 
   if (value >= 75) {
-    return 'leveling-efficiency-cell is-high'
+    return 'is-high'
   }
 
   if (value >= 45) {
-    return 'leveling-efficiency-cell is-mid'
+    return 'is-mid'
   }
 
-  return 'leveling-efficiency-cell is-low'
+  return 'is-low'
 }
-
-
-

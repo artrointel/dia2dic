@@ -166,6 +166,8 @@ main {
   background: var(--bg);
   border-right: 1px solid var(--border);
   box-shadow: 30px 0 80px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
   height: 100svh;
   left: 0;
   max-width: calc(100vw - 40px);
@@ -177,7 +179,6 @@ main {
   width: 336px;
   z-index: 30;
   overflow-y: auto;
-  padding-bottom: 104px;
 }
 
 .side-navigation.is-open {
@@ -280,18 +281,17 @@ main {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 8px;
-  bottom: 20px;
   box-shadow: var(--shadow-strong);
   color: var(--text);
   cursor: pointer;
   display: grid;
+  flex: 0 0 auto;
   gap: 12px;
   grid-template-columns: auto minmax(0, 1fr);
-  left: 20px;
+  margin-top: 18px;
   padding: 12px;
-  position: absolute;
   text-align: left;
-  width: calc(100% - 40px);
+  width: 100%;
 }
 
 .theme-toggle:hover {

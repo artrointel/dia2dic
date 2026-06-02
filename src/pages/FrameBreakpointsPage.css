@@ -57,6 +57,11 @@
   overflow-x: auto;
 }
 
+.breakpoint-table-card .runewords-table-wrap {
+  border: 0;
+  border-radius: 0;
+}
+
 .breakpoint-table {
   border-collapse: collapse;
   min-width: 1040px;

@@ -565,25 +565,26 @@ function WeaponName({ item }: { item: WeaponItemRow }) {
   }
 
   return (
-    <span className="weapon-ias-trigger">
+    <FloatingTooltip
+      cardClassName="bow-ias-mini-card"
+      content={<BowIasMiniCardContent data={iasFrame} />}
+      triggerClassName="weapon-ias-trigger"
+    >
       <span className="runeword-name">{item.이름}</span>
-      <BowIasMiniCard data={iasFrame} />
-    </span>
+    </FloatingTooltip>
   )
 }
 
-function BowIasMiniCard({ data }: { data: BowIasFrameItem }) {
+function BowIasMiniCardContent({ data }: { data: BowIasFrameItem }) {
   return (
-    <span className="bow-ias-mini-card" role="tooltip">
+    <>
       <strong>{data.이름}</strong>
       <span className="bow-ias-mini-card-title">공속 프레임 별 공속 요구치</span>
 
       <BowIasFrameTable title="광신 미적용 시" frames={data.광신미적용} />
 
-      {data.광신적용.length > 0 && (
-        <BowIasFanaticismTable title="광신 적용 시" groups={data.광신적용} />
-      )}
-    </span>
+      {data.광신적용.length > 0 && <BowIasFanaticismTable title="광신 적용 시" groups={data.광신적용} />}
+    </>
   )
 }
 
@@ -654,13 +655,19 @@ function BowIasFanaticismTable({
 
 function EmptyNormalItemsTable({ category }: { category: NormalItemCategory }) {
   return (
-    <table className="runewords-table normal-items-table">
-      <tbody>
-        <tr>
-          <td className="normal-item-empty">{category} 데이터는 아직 준비 중입니다.</td>
-        </tr>
-      </tbody>
-    </table>
+    <ItemDataTable
+      columns={[
+        {
+          key: 'empty',
+          header: category,
+          className: 'normal-item-empty',
+          render: () => category,
+        },
+      ]}
+      emptyMessage={`${category} 데이터는 아직 준비 중입니다.`}
+      getRowKey={(item) => item.id}
+      items={[] as Array<{ id: string }>}
+    />
   )
 }
 

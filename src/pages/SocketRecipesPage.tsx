@@ -1,15 +1,43 @@
-﻿import { Fragment, useRef, useState } from 'react'
+import { Fragment, useState } from 'react'
 import { PackageSearch } from 'lucide-react'
 import { ImageViewer } from '../components/ImageViewer'
+import { ItemDataTable, type ItemDataTableColumn } from '../components/ItemDataTable'
 import { PageHeading } from '../components/PageHeading'
 import { UpgradeIngredient } from '../components/UpgradeIngredient'
-import { useTableCrosshair } from '../hooks/useTableCrosshair'
 import { assetUrl, socketRecipes } from '../shared/gameData'
+import type { SocketRecipe } from '../shared/appTypes'
 
 export function SocketRecipesPage() {
-  const tableRef = useRef<HTMLTableElement>(null)
   const [isSocketImageOpen, setIsSocketImageOpen] = useState(false)
-  useTableCrosshair(tableRef)
+  const columns: ItemDataTableColumn<SocketRecipe>[] = [
+    {
+      key: 'target',
+      header: '대상',
+      className: 'upgrade-target-cell',
+      render: (recipe) => recipe.대상,
+    },
+    {
+      key: 'materials',
+      header: '조합',
+      className: 'socket-recipe-materials',
+      render: (recipe) => (
+        <div className="upgrade-ingredient-list">
+          {recipe.재료.map((ingredient, ingredientIndex) => (
+            <Fragment key={`${recipe.대상}-${ingredient}`}>
+              {ingredientIndex > 0 && <span className="upgrade-plus">+</span>}
+              <UpgradeIngredient ingredient={ingredient} />
+            </Fragment>
+          ))}
+        </div>
+      ),
+    },
+    {
+      key: 'result',
+      header: '결과',
+      className: 'socket-recipe-result',
+      render: (recipe) => recipe.결과,
+    },
+  ]
 
   return (
     <section className="socket-recipes-page">
@@ -40,35 +68,15 @@ export function SocketRecipesPage() {
         <h2>아이템 별 숨렙에 따른 최대 소켓 수 보기</h2>
       </button>
 
-      <div className="upgrade-recipe-table-wrap socket-recipe-table-wrap">
-        <table className="table-crosshair upgrade-recipe-table socket-recipe-table" ref={tableRef}>
-          <thead>
-            <tr>
-              <th>대상</th>
-              <th>조합</th>
-              <th>결과</th>
-            </tr>
-          </thead>
-          <tbody>
-            {socketRecipes.map((recipe) => (
-              <tr key={recipe.대상}>
-                <td className="upgrade-target-cell">{recipe.대상}</td>
-                <td>
-                  <div className="upgrade-ingredient-list">
-                    {recipe.재료.map((ingredient, ingredientIndex) => (
-                      <Fragment key={`${recipe.대상}-${ingredient}`}>
-                        {ingredientIndex > 0 && <span className="upgrade-plus">+</span>}
-                        <UpgradeIngredient ingredient={ingredient} />
-                      </Fragment>
-                    ))}
-                  </div>
-                </td>
-                <td className="socket-recipe-result">{recipe.결과}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <ItemDataTable
+        columns={columns}
+        emptyMessage="소켓 조합 데이터가 없습니다."
+        getRowKey={(recipe) => recipe.대상}
+        items={socketRecipes}
+        tableClassName="upgrade-recipe-table socket-recipe-table"
+        widthMode="content"
+        wrapperClassName="socket-recipe-table-wrap"
+      />
 
       <ImageViewer
         alt="아이템 별 숨렙에 따른 최대 소켓 수"
@@ -80,6 +88,3 @@ export function SocketRecipesPage() {
     </section>
   )
 }
-
-
-

@@ -1,19 +1,29 @@
 import { useLayoutEffect, useRef, useState } from 'react'
-import type { CSSProperties, ReactNode } from 'react'
+import type { CSSProperties, HTMLAttributes, ReactNode, TdHTMLAttributes } from 'react'
 import { useTableCrosshair } from '../hooks/useTableCrosshair'
 import './ItemDataTable.css'
+
+type ItemDataTableCellProps = Pick<TdHTMLAttributes<HTMLTableCellElement>, 'colSpan' | 'rowSpan'> & {
+  hidden?: boolean
+}
 
 export type ItemDataTableColumn<TItem> = {
   key: string
   header: ReactNode
   className: string
+  getCellClassName?: (item: TItem, index: number, items: TItem[]) => string | undefined
+  getCellProps?: (item: TItem, index: number, items: TItem[]) => ItemDataTableCellProps | undefined
+  minWidth?: number
   render: (item: TItem) => ReactNode
 }
 
 type ItemDataTableProps<TItem> = {
   columns: ItemDataTableColumn<TItem>[]
+  customHeader?: ReactNode
   emptyMessage: string
+  getRowClassName?: (item: TItem, index: number, items: TItem[]) => string | undefined
   getRowKey: (item: TItem) => string
+  getRowProps?: (item: TItem, index: number, items: TItem[]) => HTMLAttributes<HTMLTableRowElement> | undefined
   items: TItem[]
   fillColumnKey?: string
   metaLabel?: ReactNode
@@ -25,12 +35,16 @@ type ItemDataTableProps<TItem> = {
 
 const TABLE_CELL_HORIZONTAL_PADDING = 24
 const TABLE_COLUMN_BORDER_WIDTH = 1
+const TABLE_CARD_BORDER_WIDTH = 2
 
 export function ItemDataTable<TItem>({
   columns,
+  customHeader,
   emptyMessage,
+  getRowClassName,
   fillColumnKey,
   getRowKey,
+  getRowProps,
   items,
   metaLabel,
   stickyFirstColumn = true,
@@ -39,20 +53,22 @@ export function ItemDataTable<TItem>({
   wrapperClassName = '',
 }: ItemDataTableProps<TItem>) {
   const wrapperRef = useRef<HTMLDivElement>(null)
-  const headerTableRef = useRef<HTMLTableElement>(null)
-  const bodyTableRef = useRef<HTMLTableElement>(null)
+  const tableRef = useRef<HTMLTableElement>(null)
   const measureRef = useRef<HTMLDivElement>(null)
   const [availableWidth, setAvailableWidth] = useState(0)
   const [columnWidths, setColumnWidths] = useState<Record<string, number>>({})
-  useTableCrosshair(headerTableRef)
-  useTableCrosshair(bodyTableRef)
+  useTableCrosshair(tableRef)
 
   const tableClasses = ['table-crosshair', 'runewords-table', 'normal-items-table', tableClassName]
     .filter(Boolean)
     .join(' ')
   const tableWidth = Math.ceil(Object.values(columnWidths).reduce((sum, width) => sum + width, 0))
   const tableStyle: CSSProperties | undefined =
-    tableWidth > 0 ? { minWidth: widthMode === 'fill' ? '100%' : undefined, width: `${tableWidth}px` } : undefined
+    tableWidth > 0 ? { minWidth: widthMode === 'fill' ? '100%' : `${tableWidth}px`, width: `${tableWidth}px` } : undefined
+  const contentWidthStyle: CSSProperties | undefined =
+    widthMode === 'content' && tableWidth > 0
+      ? { width: `min(100%, ${tableWidth + TABLE_CARD_BORDER_WIDTH}px)` }
+      : undefined
 
   useLayoutEffect(() => {
     const wrapper = wrapperRef.current
@@ -94,17 +110,43 @@ export function ItemDataTable<TItem>({
     })
   }, [availableWidth, columns, fillColumnKey, items, widthMode])
 
+  useLayoutEffect(() => {
+    const table = tableRef.current
+
+    if (!table || tableWidth <= 0) {
+      return
+    }
+
+    const renderedWidths = renderedColumnWidths(columns, table)
+    const hasExpandedColumn = Object.entries(renderedWidths).some(
+      ([key, width]) => width > (columnWidths[key] ?? 0) + TABLE_COLUMN_BORDER_WIDTH,
+    )
+
+    if (!hasExpandedColumn) {
+      return
+    }
+
+    setColumnWidths((currentWidths) => ({
+      ...currentWidths,
+      ...Object.fromEntries(
+        Object.entries(renderedWidths).filter(([key, width]) => width > (currentWidths[key] ?? 0)),
+      ),
+    }))
+  }, [columnWidths, columns, tableWidth])
+
   return (
-    <div className={['item-data-table-block', widthMode === 'content' ? 'is-content-width' : ''].filter(Boolean).join(' ')}>
+    <div
+      className={['item-data-table-block', widthMode === 'content' ? 'is-content-width' : ''].filter(Boolean).join(' ')}
+      style={contentWidthStyle}
+    >
       {metaLabel ? <div className="item-data-table-meta">{metaLabel}</div> : null}
 
-      <div className="runewords-table-wrap">
+      <div className={['runewords-table-wrap', wrapperClassName].filter(Boolean).join(' ')} style={contentWidthStyle}>
         <div
           className={[
             'normal-split-table',
             stickyFirstColumn ? 'has-sticky-first-column' : '',
             widthMode === 'content' ? 'is-content-width' : '',
-            wrapperClassName,
           ]
             .filter(Boolean)
             .join(' ')}
@@ -122,43 +164,62 @@ export function ItemDataTable<TItem>({
           </div>
 
           <div className="normal-table-horizontal-scroll">
-            <table className={tableClasses} ref={headerTableRef} style={tableStyle}>
+            <table className={tableClasses} ref={tableRef} style={tableStyle}>
               <ItemDataTableColgroup columnWidths={columnWidths} columns={columns} />
               <thead>
-                <tr>
-                  {columns.map((column) => (
-                    <th className={column.className} data-column-key={column.key} key={column.key}>
-                      {column.header}
-                    </th>
-                  ))}
-                </tr>
+                {customHeader ?? (
+                  <tr>
+                    {columns.map((column) => (
+                      <th className={column.className} data-column-key={column.key} key={column.key}>
+                        {column.header}
+                      </th>
+                    ))}
+                  </tr>
+                )}
               </thead>
-            </table>
+              <tbody>
+                {items.length > 0 ? (
+                  items.map((item, rowIndex) => (
+                    <tr
+                      className={getRowClassName?.(item, rowIndex, items)}
+                      key={getRowKey(item)}
+                      {...getRowProps?.(item, rowIndex, items)}
+                    >
+                      {columns.map((column) => {
+                        const cellProps = column.getCellProps?.(item, rowIndex, items)
 
-            <div className="normal-items-table-scroll">
-              <table className={tableClasses} ref={bodyTableRef} style={tableStyle}>
-                <ItemDataTableColgroup columnWidths={columnWidths} columns={columns} />
-                <tbody>
-                  {items.length > 0 ? (
-                    items.map((item) => (
-                      <tr key={getRowKey(item)}>
-                        {columns.map((column) => (
-                          <td className={column.className} data-column-key={column.key} key={column.key}>
+                        if (cellProps?.hidden) {
+                          return null
+                        }
+
+                        const tableCellProps = cellProps
+                          ? { colSpan: cellProps.colSpan, rowSpan: cellProps.rowSpan }
+                          : undefined
+
+                        return (
+                          <td
+                            className={[column.className, column.getCellClassName?.(item, rowIndex, items)]
+                              .filter(Boolean)
+                              .join(' ')}
+                            data-column-key={column.key}
+                            key={column.key}
+                            {...tableCellProps}
+                          >
                             {column.render(item)}
                           </td>
-                        ))}
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td className="normal-item-empty" colSpan={columns.length}>
-                        {emptyMessage}
-                      </td>
+                        )
+                      })}
                     </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+                  ))
+                ) : (
+                  <tr>
+                    <td className="normal-item-empty" colSpan={columns.length}>
+                      {emptyMessage}
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -174,7 +235,7 @@ function measureColumnContentWidths<TItem>(columns: ItemDataTableColumn<TItem>[]
       0,
     )
 
-    return Math.ceil(Math.max(measuredWidth + TABLE_CELL_HORIZONTAL_PADDING + TABLE_COLUMN_BORDER_WIDTH, 48))
+    return Math.ceil(Math.max(measuredWidth + TABLE_CELL_HORIZONTAL_PADDING + TABLE_COLUMN_BORDER_WIDTH, column.minWidth ?? 48))
   })
 }
 
@@ -199,6 +260,20 @@ function fitColumnWidths<TItem>(
 
   return Object.fromEntries(
     columns.map((column, index) => [column.key, Math.round(index === safeFillColumnIndex ? fillWidth : measuredWidths[index])]),
+  )
+}
+
+function renderedColumnWidths<TItem>(columns: ItemDataTableColumn<TItem>[], table: HTMLTableElement) {
+  return Object.fromEntries(
+    columns.map((column) => {
+      const cells = table.querySelectorAll<HTMLElement>(`[data-column-key="${CSS.escape(column.key)}"]`)
+      const width = Array.from(cells).reduce(
+        (maxWidth, cell) => Math.max(maxWidth, cell.getBoundingClientRect().width),
+        0,
+      )
+
+      return [column.key, Math.ceil(Math.max(width, column.minWidth ?? 48))]
+    }),
   )
 }
 
