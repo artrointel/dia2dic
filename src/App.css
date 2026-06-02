@@ -3,12 +3,9 @@
 }
 
 .hero-section {
-  align-items: center;
+  align-items: start;
   display: grid;
-  gap: 52px;
-  grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
-  min-height: calc(100svh - 128px);
-  padding: 56px 0 44px;
+  padding: 56px 0 34px;
 }
 
 .eyebrow {
@@ -65,54 +62,9 @@
   padding: 10px 18px;
 }
 
-.hero-visual {
-  background: var(--hero-panel);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  box-shadow: var(--shadow-strong);
-  display: grid;
-  min-height: 460px;
-  overflow: hidden;
-  place-items: center;
-  position: relative;
-}
-
-.stone-arch {
-  border: 18px solid var(--portal-border);
-  border-bottom: 0;
-  border-radius: 120px 120px 0 0;
-  box-shadow:
-    inset 0 0 0 2px rgba(255, 210, 135, 0.12),
-    0 0 80px rgba(213, 97, 37, 0.22);
-  height: 280px;
-  position: relative;
-  width: 220px;
-}
-
-.stone-arch span {
-  border: 1px solid rgba(240, 200, 125, 0.24);
-  border-bottom: 0;
-  border-radius: 90px 90px 0 0;
-  inset: 28px;
-  position: absolute;
-}
-
-.rune-grid {
-  bottom: 34px;
-  display: grid;
-  gap: 10px;
-  grid-template-columns: repeat(3, 68px);
-  position: absolute;
-}
-
-.rune-grid b {
-  background: color-mix(in srgb, var(--bg) 72%, transparent);
-  border: 1px solid rgba(240, 200, 125, 0.24);
-  border-radius: 6px;
-  color: var(--accent-strong);
-  font-family: var(--serif);
-  padding: 10px 0;
-  text-align: center;
+.home-search-results {
+  margin-top: 16px;
+  max-width: 760px;
 }
 
 .section-grid {
@@ -430,6 +382,123 @@
   color: var(--text-strong);
   font-size: 16px;
   margin: 0;
+}
+
+.search-result-summary {
+  align-items: baseline;
+  display: flex;
+  gap: 10px;
+  margin: 0 0 10px;
+}
+
+.search-result-summary strong {
+  color: var(--text-strong);
+}
+
+.search-result-summary span,
+.search-empty-message {
+  color: var(--text-muted);
+}
+
+.search-result-list {
+  background: color-mix(in srgb, var(--surface) 86%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: grid;
+  gap: 10px;
+  max-height: 440px;
+  max-width: 860px;
+  overflow-y: auto;
+  padding: 10px;
+  scrollbar-color: color-mix(in srgb, var(--accent) 42%, var(--border)) transparent;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+}
+
+.search-result-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.search-result-list::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--accent) 42%, var(--border));
+  border-radius: 999px;
+}
+
+.search-result-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.search-result-card {
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  display: grid;
+  gap: 8px 14px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  min-height: 0;
+  overflow: hidden;
+  padding: 14px;
+  text-decoration: none;
+}
+
+.search-result-card:hover {
+  background: var(--surface-strong);
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+}
+
+.search-result-card h2 {
+  color: var(--text-strong);
+  font-size: 18px;
+  margin: 2px 0 4px;
+}
+
+.search-result-card p,
+.search-result-card span {
+  color: var(--text-muted);
+  font-size: 13px;
+  margin: 0;
+}
+
+.search-result-card p {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.search-result-card ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  grid-column: 1;
+  list-style: none;
+  margin: 0;
+  max-height: 24px;
+  overflow: hidden;
+  padding: 0;
+}
+
+.search-result-card li {
+  color: var(--table-name);
+  font-size: 13px;
+  font-weight: 800;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: var(--table-text-shadow);
+  white-space: nowrap;
+}
+
+.search-result-card li:nth-child(n + 4) {
+  display: none;
+}
+
+.search-result-card > svg {
+  color: var(--accent);
+  grid-column: 2;
+  grid-row: 1 / span 2;
 }
 
 .image-viewer-overlay {
@@ -1522,14 +1591,8 @@
   }
 
   .hero-section {
-    gap: 28px;
-    grid-template-columns: 1fr;
     min-height: auto;
     padding-top: 38px;
-  }
-
-  .hero-visual {
-    min-height: 340px;
   }
 
   .search-panel {
@@ -1542,6 +1605,15 @@
 
   .section-grid {
     grid-template-columns: 1fr;
+  }
+
+  .search-result-card {
+    align-items: start;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .search-result-card ul {
+    grid-column: 1 / -1;
   }
 
   .upgrade-recipe-table-wrap {

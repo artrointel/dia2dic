@@ -1,8 +1,25 @@
-import { Search } from 'lucide-react'
+import { ArrowRight, Search } from 'lucide-react'
+import { useState, type FormEvent } from 'react'
 import { NavLink } from 'react-router-dom'
 import { pages } from '../navigation/navigation'
+import { searchPageCandidates } from '../shared/searchIndex'
 
 export function HomePage() {
+  const [query, setQuery] = useState('')
+  const [submittedQuery, setSubmittedQuery] = useState('')
+  const candidates = searchPageCandidates(submittedQuery)
+
+  const submitSearch = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const nextQuery = query.trim()
+
+    if (!nextQuery) {
+      return
+    }
+
+    setSubmittedQuery(nextQuery)
+  }
+
   return (
     <>
       <section className="hero-section">
@@ -14,27 +31,52 @@ export function HomePage() {
             비교할 수 있는 아카이브로 확장해 나갈 기본 골격입니다.
           </p>
 
-          <form className="search-panel" role="search">
+          <form className="search-panel" onSubmit={submitSearch} role="search">
             <Search aria-hidden="true" size={20} />
             <input
               type="search"
               placeholder="예: 수수께끼, 샤코, 장비 업글"
               aria-label="자료 검색"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
             />
             <button type="submit">검색</button>
           </form>
+
+          {submittedQuery ? (
+            <div className="home-search-results">
+              <div className="search-result-summary">
+                <strong>{submittedQuery}</strong>
+                <span>{candidates.length > 0 ? `${candidates.length}개 페이지 후보` : '검색 결과 없음'}</span>
+              </div>
+
+              {candidates.length > 0 ? (
+                <div className="search-result-list">
+                  {candidates.map((candidate) => (
+                    <NavLink className="search-result-card" key={candidate.path} to={candidate.path}>
+                      <div>
+                        <span>{candidate.count}개 매칭</span>
+                        <h2>{candidate.title}</h2>
+                        <p>{candidate.description}</p>
+                      </div>
+
+                      <ul>
+                        {candidate.examples.map((example) => (
+                          <li key={example}>{example}</li>
+                        ))}
+                      </ul>
+
+                      <ArrowRight aria-hidden="true" size={20} />
+                    </NavLink>
+                  ))}
+                </div>
+              ) : (
+                <p className="search-empty-message">해당 검색어가 포함된 JSON 데이터 페이지를 찾지 못했습니다.</p>
+              )}
+            </div>
+          ) : null}
         </div>
 
-        <div className="hero-visual" aria-hidden="true">
-          <div className="stone-arch">
-            <span />
-          </div>
-          <div className="rune-grid">
-            {['El', 'Tir', 'Tal', 'Sol', 'Ber', 'Jah'].map((rune) => (
-              <b key={rune}>{rune}</b>
-            ))}
-          </div>
-        </div>
       </section>
 
       <section className="section-grid" aria-label="자료 분류">
