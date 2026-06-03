@@ -1,5 +1,7 @@
 ﻿import { useMemo, useState } from 'react'
 import { Gem, Plus, Trash2 } from 'lucide-react'
+import { useEffect, useRef } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { FloatingTooltip } from '../components/FloatingTooltip'
 import { ItemDataTable, type ItemDataTableColumn } from '../components/ItemDataTable'
 import { OptionList } from '../components/OptionList'
@@ -7,6 +9,8 @@ import { PageHeading } from '../components/PageHeading'
 import { RuneCombinationToken } from '../components/RuneMiniCard'
 import { FilterPanel, NameSearch, SortControl, TableToolbar } from '../components/TableControls'
 import { runewords } from '../shared/gameData'
+import { readPageSearchQuery } from '../shared/searchNavigation'
+import { matchesSearchText } from '../shared/searchUtils'
 import type { FilterType, Runeword, RunewordFilter, SortType } from '../shared/appTypes'
 
 const EQUIPMENT_FILTER_GROUPS = [
@@ -83,7 +87,7 @@ function groupEquipmentTypes(equipmentTypes: string[]) {
 }
 
 
-function createFilter(): RunewordFilter {
+function createFilter(next: Partial<RunewordFilter> = {}): RunewordFilter {
   return {
     id: Date.now() + Math.floor(Math.random() * 1000),
     enabled: true,
@@ -92,12 +96,17 @@ function createFilter(): RunewordFilter {
     socketMax: '',
     equipmentType: '',
     text: '',
+    ...next,
   }
 }
 
 export function RunewordsPage() {
-  const [filters, setFilters] = useState<RunewordFilter[]>([])
-  const [nameQuery, setNameQuery] = useState('')
+  const [searchParams] = useSearchParams()
+  const incomingSearchQuery = readPageSearchQuery(searchParams)
+  const initialSearchState = useMemo(() => resolveRunewordSearchState(incomingSearchQuery), [incomingSearchQuery])
+  const lastAppliedSearchQuery = useRef(incomingSearchQuery)
+  const [filters, setFilters] = useState<RunewordFilter[]>(initialSearchState.filters)
+  const [nameQuery, setNameQuery] = useState(initialSearchState.nameQuery)
   const [sortType, setSortType] = useState<SortType>('level-asc')
   const equipmentTypes = useMemo(
     () =>
@@ -109,6 +118,17 @@ export function RunewordsPage() {
     [],
   )
   const equipmentGroups = useMemo(() => groupEquipmentTypes(equipmentTypes), [equipmentTypes])
+
+  useEffect(() => {
+    if (incomingSearchQuery === lastAppliedSearchQuery.current) {
+      return
+    }
+
+    const nextSearchState = resolveRunewordSearchState(incomingSearchQuery)
+    lastAppliedSearchQuery.current = incomingSearchQuery
+    setNameQuery(nextSearchState.nameQuery)
+    setFilters(nextSearchState.filters)
+  }, [incomingSearchQuery])
 
   const updateFilter = (id: number, next: Partial<RunewordFilter>) => {
     setFilters((current) =>
@@ -123,12 +143,10 @@ export function RunewordsPage() {
   const filteredRunewords = useMemo(() => {
     const activeFilters = filters.filter((filter) => filter.enabled)
 
-    const normalizedNameQuery = nameQuery.trim().toLowerCase()
-
     return runewords
       .filter((item) =>
-        normalizedNameQuery
-          ? item.이름.toLowerCase().includes(normalizedNameQuery)
+        nameQuery.trim()
+          ? matchesSearchText(item.이름, nameQuery)
           : true,
       )
       .filter((item) =>
@@ -151,10 +169,10 @@ export function RunewordsPage() {
           }
 
           if (filter.type === 'rune') {
-            const keyword = filter.text.trim().toLowerCase()
+            const keyword = filter.text.trim()
 
             return keyword
-              ? item.룬조합.some((runeLine) => runeLine.toLowerCase().includes(keyword))
+              ? item.룬조합.some((runeLine) => matchesSearchText(runeLine, keyword))
               : true
           }
 
@@ -162,10 +180,10 @@ export function RunewordsPage() {
             return item.버전.some((version) => version.replace(/\s+/g, '').includes('래더전용'))
           }
 
-          const keyword = filter.text.trim().toLowerCase()
+          const keyword = filter.text.trim()
 
           return keyword
-            ? item.options.some((option) => option.toLowerCase().includes(keyword))
+            ? item.options.some((option) => matchesSearchText(option, keyword))
             : true
         }),
       )
@@ -294,6 +312,42 @@ export function RunewordsPage() {
       />
     </section>
   )
+}
+
+function resolveRunewordSearchState(query: string): {
+  filters: RunewordFilter[]
+  nameQuery: string
+} {
+  const trimmedQuery = query.trim()
+
+  if (!trimmedQuery) {
+    return { filters: [], nameQuery: '' }
+  }
+
+  if (runewords.some((item) => matchesSearchText(item.이름, trimmedQuery))) {
+    return { filters: [], nameQuery: trimmedQuery }
+  }
+
+  if (runewords.some((item) => item.룬조합.some((runeLine) => matchesSearchText(runeLine, trimmedQuery)))) {
+    return { filters: [createFilter({ type: 'rune', text: trimmedQuery })], nameQuery: '' }
+  }
+
+  const matchingEquipmentType = [
+    ...new Set(runewords.flatMap((item) => splitEquipmentTypes(getRunewordEquipment(item)))),
+  ].find((equipmentType) => matchesSearchText(equipmentType, trimmedQuery))
+
+  if (matchingEquipmentType) {
+    return {
+      filters: [createFilter({ type: 'equipment', equipmentType: matchingEquipmentType })],
+      nameQuery: '',
+    }
+  }
+
+  if (runewords.some((item) => item.options.some((option) => matchesSearchText(option, trimmedQuery)))) {
+    return { filters: [createFilter({ type: 'option', text: trimmedQuery })], nameQuery: '' }
+  }
+
+  return { filters: [], nameQuery: trimmedQuery }
 }
 
 function EquipmentLines({ equipment }: { equipment: string }) {

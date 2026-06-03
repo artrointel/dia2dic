@@ -1,5 +1,7 @@
 ﻿import { useMemo, useState } from 'react'
 import { PackageSearch } from 'lucide-react'
+import { useEffect, useRef } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { ItemDataTable, type ItemDataTableColumn } from '../components/ItemDataTable'
 import { FloatingTooltip } from '../components/FloatingTooltip'
 import { PageHeading } from '../components/PageHeading'
@@ -17,6 +19,8 @@ import {
   weaponPolearmBases,
   weaponSpearBases,
 } from '../shared/gameData'
+import { readPageSearchQuery } from '../shared/searchNavigation'
+import { matchesSearchText } from '../shared/searchUtils'
 import type {
   ArmorBaseItem,
   ArmorBases,
@@ -71,11 +75,15 @@ const weaponSortOptions: Array<{ value: NormalItemSortType; label: string }> = [
 
 
 export function NormalItemsPage() {
-  const [selectedCategory, setSelectedCategory] = useState<NormalItemCategory>('갑옷')
+  const [searchParams] = useSearchParams()
+  const incomingSearchQuery = readPageSearchQuery(searchParams)
+  const initialSearchState = useMemo(() => resolveNormalSearchState(incomingSearchQuery), [incomingSearchQuery])
+  const lastAppliedSearchQuery = useRef(incomingSearchQuery)
+  const [selectedCategory, setSelectedCategory] = useState<NormalItemCategory>(initialSearchState.category)
   const [selectedGrade, setSelectedGrade] = useState<NormalItemGradeFilter>('전체')
-  const [selectedShieldType, setSelectedShieldType] = useState<NormalShieldTypeFilter>('일반 방패')
-  const [selectedWeaponType, setSelectedWeaponType] = useState<NormalWeaponTypeFilter>('폴암')
-  const [nameQuery, setNameQuery] = useState('')
+  const [selectedShieldType, setSelectedShieldType] = useState<NormalShieldTypeFilter>(initialSearchState.shieldType)
+  const [selectedWeaponType, setSelectedWeaponType] = useState<NormalWeaponTypeFilter>(initialSearchState.weaponType)
+  const [nameQuery, setNameQuery] = useState(initialSearchState.nameQuery)
   const [sortType, setSortType] = useState<NormalItemSortType>('weight-asc')
   const armorItems = useMemo(() => getArmorBaseRows(), [])
   const beltItems = useMemo(() => getBeltBaseRows(), [])
@@ -101,7 +109,6 @@ export function NormalItemsPage() {
     : sortOptions[0].value
 
   const filteredItems = useMemo(() => {
-    const normalizedNameQuery = nameQuery.trim().toLowerCase()
     const sourceItems =
       selectedCategory === '갑옷'
         ? armorItems
@@ -128,12 +135,26 @@ export function NormalItemsPage() {
     return sourceItems
       .filter((item) => (selectedGrade === '전체' ? true : item.등급 === selectedGrade))
       .filter((item) =>
-        normalizedNameQuery
-          ? `${item.이름} ${isArmorItemRow(item) ? item.영문명 ?? '' : ''}`.toLowerCase().includes(normalizedNameQuery)
+        nameQuery.trim()
+          ? matchesSearchText(`${item.이름} ${isArmorItemRow(item) ? item.영문명 ?? '' : ''}`, nameQuery)
           : true,
       )
       .toSorted((left, right) => sortNormalItems(left, right, activeSortType))
   }, [activeSortType, armorItems, beltItems, bootItems, bowItems, gloveItems, helmItems, nameQuery, paladinShieldItems, polearmItems, selectedCategory, selectedGrade, selectedShieldType, selectedWeaponType, shieldItems, spearItems])
+
+  useEffect(() => {
+    if (incomingSearchQuery === lastAppliedSearchQuery.current) {
+      return
+    }
+
+    const nextSearchState = resolveNormalSearchState(incomingSearchQuery)
+    lastAppliedSearchQuery.current = incomingSearchQuery
+    setSelectedCategory(nextSearchState.category)
+    setSelectedShieldType(nextSearchState.shieldType)
+    setSelectedWeaponType(nextSearchState.weaponType)
+    setNameQuery(nextSearchState.nameQuery)
+  }, [incomingSearchQuery])
+
   const totalItemCount =
     selectedCategory === '갑옷'
       ? armorItems.length
@@ -257,6 +278,71 @@ export function NormalItemsPage() {
   )
 }
 
+function resolveNormalSearchState(query: string): {
+  category: NormalItemCategory
+  nameQuery: string
+  shieldType: NormalShieldTypeFilter
+  weaponType: NormalWeaponTypeFilter
+} {
+  const trimmedQuery = query.trim()
+  const defaultState = {
+    category: '갑옷' as NormalItemCategory,
+    nameQuery: trimmedQuery,
+    shieldType: '일반 방패' as NormalShieldTypeFilter,
+    weaponType: '폴암' as NormalWeaponTypeFilter,
+  }
+
+  if (!trimmedQuery) {
+    return defaultState
+  }
+
+  const defensiveGroups: Array<{ category: NormalItemCategory; data: ArmorBases }> = [
+    { category: '투구', data: helmBases },
+    { category: '갑옷', data: armorBases },
+    { category: '장갑', data: gloveBases },
+    { category: '벨트', data: beltBases },
+    { category: '신발', data: bootBases },
+  ]
+  const matchingDefensiveGroup = defensiveGroups.find(({ data }) => armorBasesMatchSearch(data, trimmedQuery))
+
+  if (matchingDefensiveGroup) {
+    return { ...defaultState, category: matchingDefensiveGroup.category }
+  }
+
+  if (armorBasesMatchSearch(shieldPaladinBases, trimmedQuery)) {
+    return { ...defaultState, category: '방패', shieldType: '팔라딘 방패' }
+  }
+
+  if (armorBasesMatchSearch(shieldBases, trimmedQuery)) {
+    return { ...defaultState, category: '방패' }
+  }
+
+  const matchingWeaponGroup = [
+    weaponPolearmBases,
+    weaponBowBases,
+    weaponSpearBases,
+  ].find((data) => weaponBasesMatchSearch(data, trimmedQuery))
+
+  if (matchingWeaponGroup) {
+    return { ...defaultState, category: '무기', weaponType: matchingWeaponGroup.type }
+  }
+
+  return defaultState
+}
+
+function armorBasesMatchSearch(data: ArmorBases, query: string) {
+  return data.sections.some((section) =>
+    matchesSearchText([data.category, section.title, section.grade].join(' '), query) ||
+    section.items.some((item) => matchesSearchText([item.이름, item.영문명 ?? '', item.무게 ?? '', item.전용 ?? ''].join(' '), query)),
+  )
+}
+
+function weaponBasesMatchSearch(data: WeaponBases, query: string) {
+  return data.sections.some((section) =>
+    matchesSearchText([data.category, data.type, section.title, section.grade].join(' '), query) ||
+    section.items.some((item) => matchesSearchText([item.이름, item.전용 ?? ''].join(' '), query)),
+  )
+}
 
 function ArmorItemsTable({ items, metaLabel }: { items: NormalItemRow[]; metaLabel: string }) {
   const columns: ItemDataTableColumn<NormalItemRow>[] = [

@@ -1,16 +1,23 @@
 ﻿import { useMemo, useState } from 'react'
 import { Boxes } from 'lucide-react'
+import { useEffect, useRef } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { FloatingTooltip } from '../components/FloatingTooltip'
 import { ItemDataTable, type ItemDataTableColumn } from '../components/ItemDataTable'
 import { OptionList } from '../components/OptionList'
 import { PageHeading } from '../components/PageHeading'
 import { FilterPanel, NameSearch, TableToolbar } from '../components/TableControls'
 import { setItems } from '../shared/gameData'
+import { readPageSearchQuery } from '../shared/searchNavigation'
+import { matchesSearchText } from '../shared/searchUtils'
 import type { SetItem, SetItemGroup, SetItemRow } from '../shared/appTypes'
 
 export function SetItemsPage() {
+  const [searchParams] = useSearchParams()
+  const incomingSearchQuery = readPageSearchQuery(searchParams)
+  const lastAppliedSearchQuery = useRef(incomingSearchQuery)
   const [selectedSetId, setSelectedSetId] = useState('전체')
-  const [nameQuery, setNameQuery] = useState('')
+  const [nameQuery, setNameQuery] = useState(incomingSearchQuery)
   const canSearchByName = selectedSetId === '전체'
   const setRows = useMemo(
     () =>
@@ -38,13 +45,26 @@ export function SetItemsPage() {
     [],
   )
   const filteredRows = useMemo(() => {
-    const normalizedQuery = canSearchByName ? nameQuery.trim().toLowerCase() : ''
+    const activeQuery = canSearchByName ? nameQuery.trim() : ''
 
     return setRows
       .filter((item) => (selectedSetId === '전체' ? true : item.세트Id === selectedSetId))
       .filter((item) =>
-        normalizedQuery
-          ? `${item.세트} ${item.세트영문명} ${item.이름} ${item.영문명} ${item.베이스}`.toLowerCase().includes(normalizedQuery)
+        activeQuery
+          ? matchesSearchText(
+              [
+                item.세트,
+                item.세트영문명,
+                item.이름,
+                item.영문명,
+                item.베이스,
+                item.옵션.join(' '),
+                item.부분세트효과.join(' '),
+                item.세트부분효과.join(' '),
+                item.세트완성효과.join(' '),
+              ].join(' '),
+              activeQuery,
+            )
           : true,
       )
       .toSorted(
@@ -54,6 +74,16 @@ export function SetItemsPage() {
           left.이름.localeCompare(right.이름),
       )
   }, [canSearchByName, nameQuery, selectedSetId, setRows])
+
+  useEffect(() => {
+    if (incomingSearchQuery === lastAppliedSearchQuery.current) {
+      return
+    }
+
+    lastAppliedSearchQuery.current = incomingSearchQuery
+    setSelectedSetId('전체')
+    setNameQuery(incomingSearchQuery)
+  }, [incomingSearchQuery])
 
   return (
     <section className="normal-items-page set-items-page">

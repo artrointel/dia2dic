@@ -17,6 +17,7 @@ import {
   weaponSpearBases,
 } from './gameData'
 import type { ArmorBases, WeaponBases } from './appTypes'
+import { matchesSearchText } from './searchUtils'
 
 export type SearchPageCandidate = {
   count: number
@@ -135,14 +136,12 @@ const pageIndexes: SearchPageIndex[] = [
 ]
 
 export function searchPageCandidates(query: string): SearchPageCandidate[] {
-  const normalizedQuery = normalizeSearchText(query)
-
-  if (!normalizedQuery) {
+  if (!query.trim()) {
     return []
   }
 
   return pageIndexes.flatMap((page) => {
-    const matches = page.documents.filter((document) => normalizeSearchText(document.text).includes(normalizedQuery))
+    const matches = page.documents.filter((document) => matchesSearchText(document.text, query))
 
     if (matches.length === 0) {
       return []
@@ -189,8 +188,4 @@ function weaponDocuments(data: WeaponBases): SearchDocument[] {
       text: [data.category, data.type, section.title, section.grade, item.이름, item.전용].join(' '),
     })),
   )
-}
-
-function normalizeSearchText(value: string) {
-  return value.toLowerCase().replace(/\s+/g, '')
 }

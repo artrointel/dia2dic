@@ -1,17 +1,24 @@
 ﻿import { useMemo, useState } from 'react'
 import { FlaskConical } from 'lucide-react'
+import { useEffect, useRef } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { ItemDataTable, type ItemDataTableColumn } from '../components/ItemDataTable'
 import { OptionList } from '../components/OptionList'
 import { PageHeading } from '../components/PageHeading'
 import { FilterPanel, NameSearch, SegmentedFilter, TableToolbar } from '../components/TableControls'
 import { craftItems } from '../shared/gameData'
+import { readPageSearchQuery } from '../shared/searchNavigation'
+import { matchesSearchText } from '../shared/searchUtils'
 import type { CraftRecipeRow } from '../shared/appTypes'
 
 export function CraftingPage() {
+  const [searchParams] = useSearchParams()
+  const incomingSearchQuery = readPageSearchQuery(searchParams)
+  const lastAppliedSearchQuery = useRef(incomingSearchQuery)
   const [selectedCraftId, setSelectedCraftId] = useState(craftItems.categories[0]?.id ?? '')
-  const [nameQuery, setNameQuery] = useState('')
+  const [nameQuery, setNameQuery] = useState(incomingSearchQuery)
   const selectedCategory = craftItems.categories.find((category) => category.id === selectedCraftId) ?? craftItems.categories[0]
-  const rows = useMemo(
+  const selectedRows = useMemo(
     () =>
       selectedCategory.recipes.map((recipe) => ({
         ...recipe,
@@ -21,15 +28,50 @@ export function CraftingPage() {
       })),
     [selectedCategory],
   )
+  const allRows = useMemo(
+    () =>
+      craftItems.categories.flatMap((category) =>
+        category.recipes.map((recipe) => ({
+          ...recipe,
+          id: `${category.id}-${recipe.이름}`,
+          종류: category.이름,
+          종류Id: category.id,
+        })),
+      ),
+    [],
+  )
   const filteredRows = useMemo(() => {
-    const normalizedQuery = nameQuery.trim().toLowerCase()
+    const activeQuery = nameQuery.trim()
+    const sourceRows = activeQuery ? allRows : selectedRows
 
-    return rows.filter((recipe) =>
-      normalizedQuery
-        ? `${recipe.이름} ${recipe.재료.join(' ')} ${recipe.룬} ${recipe.보석주얼} ${recipe.고정옵션.join(' ')}`.toLowerCase().includes(normalizedQuery)
+    return sourceRows.filter((recipe) =>
+      activeQuery
+        ? matchesSearchText(
+            [
+              recipe.종류,
+              recipe.종류Id,
+              recipe.이름,
+              recipe.재료.join(' '),
+              recipe.룬,
+              recipe.보석주얼,
+              recipe.고정옵션.join(' '),
+              recipe.용도.용도,
+              recipe.용도.우대,
+            ].join(' '),
+            nameQuery,
+          )
         : true,
     )
-  }, [nameQuery, rows])
+  }, [allRows, nameQuery, selectedRows])
+
+  useEffect(() => {
+    if (incomingSearchQuery === lastAppliedSearchQuery.current) {
+      return
+    }
+
+    lastAppliedSearchQuery.current = incomingSearchQuery
+    setNameQuery(incomingSearchQuery)
+  }, [incomingSearchQuery])
 
   return (
     <section className="normal-items-page craft-page">
@@ -61,7 +103,10 @@ export function CraftingPage() {
         onChange={setNameQuery}
       />
 
-      <CraftRecipesTable items={filteredRows} metaLabel={`총 ${rows.length}개 중 ${filteredRows.length}개 표시`} />
+      <CraftRecipesTable
+        items={filteredRows}
+        metaLabel={`총 ${nameQuery.trim() ? allRows.length : selectedRows.length}개 중 ${filteredRows.length}개 표시`}
+      />
     </section>
   )
 }

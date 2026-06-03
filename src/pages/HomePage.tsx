@@ -3,6 +3,7 @@ import { useState, type FormEvent } from 'react'
 import { NavLink } from 'react-router-dom'
 import { pages } from '../navigation/navigation'
 import { searchPageCandidates } from '../shared/searchIndex'
+import { searchDestinationPath } from '../shared/searchNavigation'
 
 export function HomePage() {
   const [query, setQuery] = useState('')
@@ -53,7 +54,7 @@ export function HomePage() {
               {candidates.length > 0 ? (
                 <div className="search-result-list">
                   {candidates.map((candidate) => (
-                    <NavLink className="search-result-card" key={candidate.path} to={candidate.path}>
+                    <NavLink className="search-result-card" key={candidate.path} to={searchDestinationPath(candidate.path, submittedQuery)}>
                       <div>
                         <span>{candidate.count}개 매칭</span>
                         <h2>{candidate.title}</h2>
