@@ -232,6 +232,8 @@ function SetItemsTable({ items, metaLabel }: { items: SetItemRow[]; metaLabel: s
       getRowKey={(item) => item.id}
       items={items}
       metaLabel={metaLabel}
+      pageSize={7}
+      widthMode="content"
     />
   )
 }

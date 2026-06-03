@@ -12,6 +12,7 @@ import {
   shieldBases,
   shieldPaladinBases,
   socketRecipes,
+  uniqueItems,
   weaponBowBases,
   weaponPolearmBases,
   weaponSpearBases,
@@ -132,6 +133,27 @@ const pageIndexes: SearchPageIndex[] = [
         ].join(' '),
       })),
     ]),
+  },
+  {
+    path: '/items/uniques',
+    title: '유니크',
+    description: '유니크 아이템 이름, 별칭, 베이스, 요구치, 옵션에서 검색합니다.',
+    documents: uniqueItems.categories.flatMap((category) =>
+      category.items.map((item) => ({
+        label: `${item.이름}${item.별칭.length > 0 ? ` (${item.별칭.join(', ')})` : ''}`,
+        text: [
+          category.title,
+          item.이름,
+          item.별칭.join(' '),
+          item.베이스,
+          item.분류,
+          item.등급 ?? '',
+          item.기본속성.join(' '),
+          item.옵션.join(' '),
+          item.비고 ?? '',
+        ].join(' '),
+      })),
+    ),
   },
 ]
 

@@ -308,6 +308,7 @@ export function RunewordsPage() {
         getRowKey={(item) => item.id}
         items={filteredRunewords}
         metaLabel={`총 ${runewords.length}개 중 ${filteredRunewords.length}개 표시`}
+        pageSize={7}
         widthMode="content"
       />
     </section>

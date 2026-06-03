@@ -98,6 +98,7 @@ export function LevelingPage() {
           onMouseMove: (event) => updateHoveredLevel(event, row),
         })}
         items={levelingEfficiency.rows}
+        pageSize={100}
         tableClassName="leveling-table"
         wrapperClassName="leveling-table-wrap"
         widthMode="content"

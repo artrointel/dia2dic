@@ -13,6 +13,7 @@ import { RunesPage } from './pages/RunesPage'
 import { RunewordsPage } from './pages/RunewordsPage'
 import { SetItemsPage } from './pages/SetItemsPage'
 import { SocketRecipesPage } from './pages/SocketRecipesPage'
+import { UniqueItemsPage } from './pages/UniqueItemsPage'
 import { getInitialTheme, getSavedTheme, getSystemTheme, saveTheme } from './shared/theme'
 import type { Theme } from './shared/appTypes'
 import './styles/tableCrosshair.css'
@@ -63,6 +64,7 @@ function App() {
           <Route path="/cube/crafting" element={<CraftingPage />} />
           <Route path="/items/normal" element={<NormalItemsPage />} />
           <Route path="/items/sets" element={<SetItemsPage />} />
+          <Route path="/items/uniques" element={<UniqueItemsPage />} />
           <Route path="/items/runes" element={<RunesPage />} />
           <Route path="/leveling" element={<LevelingPage />} />
           <Route path="/character/leveling" element={<LevelingPage />} />

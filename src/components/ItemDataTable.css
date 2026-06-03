@@ -156,3 +156,80 @@
   padding: 28px !important;
   text-align: center !important;
 }
+
+.item-data-table-pagination {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  justify-content: flex-end;
+  margin-top: 10px;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.item-data-table-page-status {
+  color: var(--text-muted);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.item-data-table-page-buttons {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.item-data-table-page-buttons button {
+  align-items: center;
+  background: color-mix(in srgb, var(--surface-strong) 82%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-strong);
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  height: 30px;
+  justify-content: center;
+  min-width: 30px;
+  padding: 0 9px;
+}
+
+.item-data-table-page-buttons button:hover:not(:disabled),
+.item-data-table-page-buttons button.is-active {
+  border-color: color-mix(in srgb, var(--accent) 72%, var(--border));
+  color: var(--accent-strong);
+}
+
+.item-data-table-page-buttons button.is-active {
+  background: color-mix(in srgb, var(--accent) 18%, var(--surface-strong));
+}
+
+.item-data-table-page-buttons button:disabled {
+  color: var(--text-muted);
+  cursor: not-allowed;
+  opacity: 0.52;
+}
+
+.item-data-table-page-ellipsis {
+  color: var(--text-muted);
+  display: inline-flex;
+  font-size: 13px;
+  justify-content: center;
+  min-width: 18px;
+}
+
+@media (max-width: 640px) {
+  .item-data-table-pagination {
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  .item-data-table-page-buttons {
+    justify-content: flex-start;
+  }
+}

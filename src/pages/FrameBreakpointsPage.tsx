@@ -94,6 +94,7 @@ function BreakpointTableView({ table }: { table: BreakpointTable }) {
         emptyMessage="프레임 데이터가 없습니다."
         getRowKey={(row) => `${row.character}-${row.condition}`}
         items={table.rows}
+        pageSize={100}
         tableClassName="breakpoint-table"
         widthMode="content"
       />

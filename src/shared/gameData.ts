@@ -13,6 +13,7 @@ import runewordsData from '../data/runewords.json'
 import setItemsData from '../data/set-items.json'
 import shieldBasesData from '../data/shield-bases.json'
 import shieldPaladinBasesData from '../data/shield-paladin-bases.json'
+import uniqueItemsData from '../data/unique-items.json'
 import weaponBowBasesData from '../data/weapon-bow-bases.json'
 import weaponPolearmBasesData from '../data/weapon-polearm-bases.json'
 import weaponSpearBasesData from '../data/weapon-spear-bases.json'
@@ -27,6 +28,7 @@ import type {
   Runeword,
   SetItemsData,
   SocketRecipe,
+  UniqueItemsData,
   WeaponBases,
 } from './appTypes'
 export const equipmentUpgrades = equipmentUpgradesData as EquipmentUpgrade[]
@@ -44,6 +46,7 @@ export const runewords = runewordsData as Runeword[]
 export const setItems = setItemsData as SetItemsData
 export const shieldBases = shieldBasesData as ArmorBases
 export const shieldPaladinBases = shieldPaladinBasesData as ArmorBases
+export const uniqueItems = uniqueItemsData as UniqueItemsData
 export const weaponBowBases = weaponBowBasesData as WeaponBases
 export const weaponPolearmBases = weaponPolearmBasesData as WeaponBases
 export const weaponSpearBases = weaponSpearBasesData as WeaponBases

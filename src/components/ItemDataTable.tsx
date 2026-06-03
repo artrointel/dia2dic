@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import type { CSSProperties, HTMLAttributes, ReactNode, TdHTMLAttributes } from 'react'
 import { useTableCrosshair } from '../hooks/useTableCrosshair'
 import './ItemDataTable.css'
@@ -27,6 +27,7 @@ type ItemDataTableProps<TItem> = {
   items: TItem[]
   fillColumnKey?: string
   metaLabel?: ReactNode
+  pageSize?: number | 'all'
   stickyFirstColumn?: boolean
   tableClassName?: string
   widthMode?: 'fill' | 'content'
@@ -47,6 +48,7 @@ export function ItemDataTable<TItem>({
   getRowProps,
   items,
   metaLabel,
+  pageSize = 10,
   stickyFirstColumn = true,
   tableClassName = '',
   widthMode = 'fill',
@@ -57,7 +59,16 @@ export function ItemDataTable<TItem>({
   const measureRef = useRef<HTMLDivElement>(null)
   const [availableWidth, setAvailableWidth] = useState(0)
   const [columnWidths, setColumnWidths] = useState<Record<string, number>>({})
+  const [currentPage, setCurrentPage] = useState(1)
   useTableCrosshair(tableRef)
+
+  const normalizedPageSize = pageSize === 'all' ? items.length || 1 : Math.max(1, Math.floor(pageSize))
+  const pageCount = Math.max(1, Math.ceil(items.length / normalizedPageSize))
+  const hasPagination = pageSize !== 'all' && items.length > normalizedPageSize
+  const activePage = Math.min(currentPage, pageCount)
+  const pageStartIndex = hasPagination ? (activePage - 1) * normalizedPageSize : 0
+  const visibleItems = hasPagination ? items.slice(pageStartIndex, pageStartIndex + normalizedPageSize) : items
+  const paginationItems = useMemo(() => paginationRange(activePage, pageCount), [activePage, pageCount])
 
   const tableClasses = ['table-crosshair', 'runewords-table', 'normal-items-table', tableClassName]
     .filter(Boolean)
@@ -183,15 +194,15 @@ export function ItemDataTable<TItem>({
                 )}
               </thead>
               <tbody>
-                {items.length > 0 ? (
-                  items.map((item, rowIndex) => (
+                {visibleItems.length > 0 ? (
+                  visibleItems.map((item, rowIndex) => (
                     <tr
-                      className={getRowClassName?.(item, rowIndex, items)}
+                      className={getRowClassName?.(item, rowIndex, visibleItems)}
                       key={getRowKey(item)}
-                      {...getRowProps?.(item, rowIndex, items)}
+                      {...getRowProps?.(item, rowIndex, visibleItems)}
                     >
                       {columns.map((column, columnIndex) => {
-                        const cellProps = column.getCellProps?.(item, rowIndex, items)
+                        const cellProps = column.getCellProps?.(item, rowIndex, visibleItems)
 
                         if (cellProps?.hidden) {
                           return null
@@ -229,8 +240,74 @@ export function ItemDataTable<TItem>({
           </div>
         </div>
       </div>
+
+      {hasPagination ? (
+        <nav
+          aria-label="테이블 페이지"
+          className="item-data-table-pagination"
+        >
+          <span className="item-data-table-page-status">
+            {pageStartIndex + 1}-{Math.min(pageStartIndex + normalizedPageSize, items.length)} / {items.length}
+          </span>
+          <div className="item-data-table-page-buttons">
+            <button
+              aria-label="이전 페이지"
+              disabled={activePage === 1}
+              onClick={() => setCurrentPage(Math.max(1, activePage - 1))}
+              type="button"
+            >
+              이전
+            </button>
+            {paginationItems.map((item, index) =>
+              item === 'ellipsis' ? (
+                <span aria-hidden="true" className="item-data-table-page-ellipsis" key={`ellipsis-${index}`}>
+                  ...
+                </span>
+              ) : (
+                <button
+                  aria-current={item === activePage ? 'page' : undefined}
+                  className={item === activePage ? 'is-active' : undefined}
+                  key={item}
+                  onClick={() => setCurrentPage(item)}
+                  type="button"
+                >
+                  {item}
+                </button>
+              ),
+            )}
+            <button
+              aria-label="다음 페이지"
+              disabled={activePage === pageCount}
+              onClick={() => setCurrentPage(Math.min(pageCount, activePage + 1))}
+              type="button"
+            >
+              다음
+            </button>
+          </div>
+        </nav>
+      ) : null}
     </div>
   )
+}
+
+function paginationRange(currentPage: number, pageCount: number) {
+  const pages = new Set([1, pageCount, currentPage - 1, currentPage, currentPage + 1])
+  const sortedPages = [...pages]
+    .filter((page) => page >= 1 && page <= pageCount)
+    .sort((first, second) => first - second)
+  const range: Array<number | 'ellipsis'> = []
+
+  sortedPages.forEach((page) => {
+    const previous = range.at(-1)
+
+    if (typeof previous === 'number' && page - previous > 1) {
+      range.push('ellipsis')
+    }
+
+    range.push(page)
+  })
+
+  return range
 }
 
 function measureColumnContentWidths<TItem>(columns: ItemDataTableColumn<TItem>[], measureLayer: HTMLDivElement | null) {

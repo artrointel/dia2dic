@@ -46,6 +46,9 @@ export type NormalItemSortType =
   | 'damage-max-asc'
   | 'range-asc'
   | 'dexterity-asc'
+export type UniqueItemCategoryFilter = '전체' | '무기' | '방어구' | '장신구' | '기타'
+export type UniqueItemGradeFilter = '전체' | '노멀' | '익셉셔널' | '엘리트'
+export type UniqueItemSortType = 'level-asc' | 'level-desc' | 'name-asc'
 
 export type RunewordFilter = {
   id: number
@@ -155,6 +158,44 @@ export type SetItemsData = {
     url: string
   }
   sets: SetItemGroup[]
+}
+
+export type UniqueItem = {
+  id: string
+  이름: string
+  별칭: string[]
+  베이스: string
+  분류: string
+  등급: string | null
+  요구레벨: number | null
+  필요힘: number | null
+  필요민첩: number | null
+  내구도: number | null
+  피해: string | null
+  방어력: string | null
+  막기확률: string | null
+  공격속도: string | null
+  기본속성: string[]
+  옵션: string[]
+  비고: string | null
+  태그: string[]
+  이미지: string | null
+  url: string
+}
+
+export type UniqueItemCategory = {
+  id: string
+  title: string
+  url: string
+  items: UniqueItem[]
+}
+
+export type UniqueItemsData = {
+  source: {
+    title: string
+    url: string
+  }
+  categories: UniqueItemCategory[]
 }
 
 export type SetItemRow = SetItem & {
