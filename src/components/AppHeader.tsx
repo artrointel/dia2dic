@@ -25,7 +25,7 @@ export function AppHeader({ theme, onToggleTheme }: { theme: Theme; onToggleThem
       return
     }
 
-    navigate(searchDestinationPath('/', nextQuery))
+    navigate(searchDestinationPath('/search', nextQuery))
   }
 
   return (

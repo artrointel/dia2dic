@@ -1,9 +1,7 @@
 import { ArrowRight } from 'lucide-react'
-import { NavLink, useSearchParams } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { navigationItems, routePages } from '../navigation/navigation'
 import type { NavigationItem } from '../shared/appTypes'
-import { searchPageCandidates } from '../shared/searchIndex'
-import { readPageSearchQuery, searchDestinationPath } from '../shared/searchNavigation'
 
 const pageDescriptionByPath = new Map(routePages.map((page) => [page.path, page.description]))
 const homeNavigationGroups = navigationItems
@@ -14,48 +12,15 @@ const homeNavigationGroups = navigationItems
   .filter((item) => item.children.length > 0)
 
 export function HomePage() {
-  const [searchParams] = useSearchParams()
-  const searchQuery = readPageSearchQuery(searchParams)
-  const candidates = searchPageCandidates(searchQuery)
-
   return (
     <>
-      {searchQuery ? (
-        <section className="hero-section">
-          <div className="hero-copy">
-            <div className="home-search-results">
-              <div className="search-result-summary">
-                <strong>{searchQuery}</strong>
-                <span>{candidates.length > 0 ? `${candidates.length}개 페이지 후보` : '검색 결과 없음'}</span>
-              </div>
-
-              {candidates.length > 0 ? (
-                <div className="search-result-list">
-                  {candidates.map((candidate) => (
-                    <NavLink className="search-result-card" key={candidate.path} to={searchDestinationPath(candidate.path, searchQuery)}>
-                      <div>
-                        <span>{candidate.count}개 매칭</span>
-                        <h2>{candidate.title}</h2>
-                        <p>{candidate.description}</p>
-                      </div>
-
-                      <ul>
-                        {candidate.examples.map((example) => (
-                          <li key={example}>{example}</li>
-                        ))}
-                      </ul>
-
-                      <ArrowRight aria-hidden="true" size={20} />
-                    </NavLink>
-                  ))}
-                </div>
-              ) : (
-                <p className="search-empty-message">해당 검색어가 포함된 JSON 데이터 페이지를 찾지 못했습니다.</p>
-              )}
-            </div>
-          </div>
-        </section>
-      ) : null}
+      <section className="home-intro" aria-labelledby="home-intro-title">
+        <span>Diablo II knowledge base</span>
+        <h1 id="home-intro-title">디아블로2 자료를 쉽게 찾는 사전형 웹페이지</h1>
+        <p>
+          디아블로2의 모든 자료를 한 곳에서 검색할 수 있는 아카이브입니다.
+        </p>
+      </section>
 
       <section className="home-category-list" aria-label="자료 분류">
         {homeNavigationGroups.map((group) => {

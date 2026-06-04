@@ -13,6 +13,7 @@ import { MiscRecipesPage } from './pages/MiscRecipesPage'
 import { NormalItemsPage } from './pages/NormalItemsPage'
 import { RunesPage } from './pages/RunesPage'
 import { RunewordsPage } from './pages/RunewordsPage'
+import { SearchResultsPage } from './pages/SearchResultsPage'
 import { SetItemsPage } from './pages/SetItemsPage'
 import { SocketRecipesPage } from './pages/SocketRecipesPage'
 import { UniqueItemsPage } from './pages/UniqueItemsPage'
@@ -60,6 +61,7 @@ function App() {
       <main>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/search" element={<SearchResultsPage />} />
           <Route path="/cube/runewords" element={<RunewordsPage />} />
           <Route path="/cube/equipment-upgrades" element={<EquipmentUpgradesPage />} />
           <Route path="/cube/socket-recipes" element={<SocketRecipesPage />} />

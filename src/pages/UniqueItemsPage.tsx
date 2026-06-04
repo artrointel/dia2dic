@@ -27,7 +27,7 @@ const uniqueCategoryFilters: UniqueItemCategoryFilter[] = ['전체', '무기', '
 const uniqueGradeFilters: UniqueItemGradeFilter[] = ['전체', '노멀', '익셉셔널', '엘리트']
 const weaponCategoryTitles = ['단도', '도검', '도끼', '미늘창', '손톱', '쇠뇌', '지팡이', '창', '철퇴', '홀', '투창', '활']
 const armorCategoryTitles = ['투구', '갑옷', '방패', '장갑', '허리띠', '신발']
-const uniqueRecommendationFilters: Exclude<RecommendationFilter, '전체'>[] = ['추천', '맨땅']
+const uniqueRecommendationFilters: Exclude<RecommendationFilter, '전체'>[] = ['추천', '맨땅', '용병']
 const uniqueSortOptions: Array<{ value: UniqueItemSortType; label: string }> = [
   { value: 'level-asc', label: '레벨제한 오름차순' },
   { value: 'level-desc', label: '레벨제한 내림차순' },
@@ -145,17 +145,17 @@ const uniqueItemRecommendations: Record<string, RecommendationInfo> = {
     note: '원소 피해와 수량 자동 회복으로 투척 야만용사 후보.',
   },
   '사신의 종소리': {
-    tag: '추천',
+    tag: '용병',
     note: '노화 발동과 생명력 훔침으로 2막 용병 무기 최상급 후보.',
     details: ['에테리얼이면 용병용 가치가 더 높음.'],
   },
   '무덤 강탈자': {
-    tag: '추천',
+    tag: '용병',
     note: '소켓, 저항, 매찬, 높은 피해가 붙은 강력한 미늘창.',
     details: ['에테리얼 3홈은 용병 무기로 특히 가치가 높음.'],
   },
   뼈자르개: {
-    tag: '맨땅',
+    tag: '용병',
     note: '소켓과 높은 피해로 초중반 용병 무기 후보.',
   },
   '바르툭의 목 따개': {
@@ -251,7 +251,7 @@ const uniqueItemRecommendations: Record<string, RecommendationInfo> = {
     note: '저항과 피해 감소, 타격 회복이 붙어 초중반 생존 투구로 좋음.',
   },
   '흡혈귀의 눈길': {
-    tag: '추천',
+    tag: '용병',
     note: '피해 감소와 흡혈이 붙어 물리 캐릭터/용병 투구로 사용.',
   },
   '할리퀸 관모': {
@@ -267,13 +267,13 @@ const uniqueItemRecommendations: Record<string, RecommendationInfo> = {
     note: '피해 감소, 저항, 소켓이 붙은 고급 생존 투구.',
   },
   '안다리엘의 두개골': {
-    tag: '추천',
+    tag: '용병',
     note: '공속, 생명력 훔침, 힘, 기술 보너스로 용병 투구 대표 후보.',
     details: ['에테리얼이면 용병용 가치가 높음.'],
   },
   '키라의 수호자': {
-    tag: '추천',
-    note: '높은 저항과 빙결 방지로 생존 세팅에 유용.',
+    tag: '용병',
+    note: '높은 모든 저항과 빙결 방지로 용병 생존 세팅에 유용.',
   },
   '그리폰의 눈': {
     tag: '추천',
@@ -292,11 +292,11 @@ const uniqueItemRecommendations: Record<string, RecommendationInfo> = {
     note: '기술, 시전 속도, 모든 저항이 붙은 캐스터 대표 갑옷.',
   },
   '장대막이': {
-    tag: '추천',
-    note: '피해 감소가 높아 물리 피해 대응용 갑옷으로 사용.',
+    tag: '용병',
+    note: '피해 감소가 높아 물리 피해가 아픈 구간의 용병 갑옷으로 사용.',
   },
   '두리엘의 껍질': {
-    tag: '맨땅',
+    tag: '용병',
     note: '저항, 힘, 빙결 방지가 붙어 초중반 본체/용병 갑옷으로 좋음.',
   },
   '스쿨더의 분노': {
@@ -304,8 +304,8 @@ const uniqueItemRecommendations: Record<string, RecommendationInfo> = {
     note: '레벨 비례 매찬과 기술 보너스로 파밍 갑옷 후보.',
   },
   '수호 천사': {
-    tag: '추천',
-    note: '최대 저항과 막기 보너스로 특화 생존 세팅에 사용.',
+    tag: '용병',
+    note: '최대 저항 증가로 원소 피해 대응용 용병 갑옷으로 사용.',
   },
   '쿠에 히간의 지혜': {
     tag: '맨땅',

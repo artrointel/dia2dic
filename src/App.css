@@ -8,15 +8,73 @@
   padding: 32px 0 22px;
 }
 
-.home-search-results {
-  margin-top: 16px;
+.home-intro {
+  border-bottom: 1px solid var(--border);
+  display: grid;
+  gap: 8px;
+  padding: 34px 0 24px;
+}
+
+.home-intro span {
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.home-intro h1 {
+  color: var(--text-strong);
+  font-size: 28px;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.home-intro p {
+  color: var(--text-muted);
+  font-size: 15px;
+  line-height: 1.7;
+  margin: 0;
   max-width: 760px;
 }
 
 .home-category-list {
   display: grid;
   gap: 22px;
+  padding: 24px 0 56px;
+}
+
+.search-results-page {
+  display: grid;
+  gap: 16px;
   padding: 32px 0 56px;
+}
+
+.search-results-heading {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+}
+
+.search-results-heading > svg {
+  color: var(--accent);
+  flex: 0 0 auto;
+}
+
+.search-results-heading h1 {
+  color: var(--text-strong);
+  font-size: 24px;
+  margin: 0;
+}
+
+.search-results-heading p {
+  align-items: baseline;
+  color: var(--text-muted);
+  display: flex;
+  gap: 10px;
+  margin: 4px 0 0;
+}
+
+.search-results-heading strong {
+  color: var(--text-strong);
 }
 
 .home-category-group {
@@ -840,6 +898,17 @@
   color: inherit;
 }
 
+.runeword-name-with-tags {
+  align-items: start;
+  flex-wrap: wrap;
+}
+
+.runeword-version-marker {
+  color: color-mix(in srgb, #ff5b5b 58%, var(--text-strong));
+  font-weight: 900;
+  line-height: 1;
+}
+
 .normal-item-name-cell {
   align-items: baseline;
   display: flex;
@@ -1018,6 +1087,16 @@
   color: #38bdf8;
 }
 
+.normal-item-recommend.is-mercenary {
+  border-color: color-mix(in srgb, #22c55e 48%, var(--border));
+  color: #22c55e;
+}
+
+.normal-item-recommend.is-material {
+  border-color: color-mix(in srgb, #a78bfa 48%, var(--border));
+  color: #a78bfa;
+}
+
 .recommend-tip-trigger {
   cursor: help;
   display: inline-flex;
@@ -1075,6 +1154,10 @@
   font-size: 13px;
   font-weight: 800;
   line-height: 1.45;
+}
+
+.runeword-material-tip-card {
+  max-width: min(420px, calc(100vw - 24px));
 }
 
 .weapon-ias-trigger {

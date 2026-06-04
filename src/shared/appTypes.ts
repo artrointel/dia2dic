@@ -37,7 +37,25 @@ export type SortType = 'level-asc' | 'level-desc' | 'socket-asc' | 'socket-desc'
 export type NormalItemCategory = '투구' | '갑옷' | '장갑' | '벨트' | '신발' | '무기' | '방패' | '목걸이' | '반지'
 export type NormalItemGradeFilter = '전체' | '노멀' | '익셉셔널' | '엘리트'
 export type NormalShieldTypeFilter = '일반 방패' | '팔라딘 방패'
-export type NormalWeaponTypeFilter = '폴암' | '활' | '일반 활' | '아마존 활' | '창'
+export type NormalWeaponTypeFilter =
+  | '단도'
+  | '도검'
+  | '도끼'
+  | '철퇴'
+  | '홀'
+  | '폴암'
+  | '창'
+  | '지팡이'
+  | '완드'
+  | '손톱'
+  | '오브'
+  | '쇠뇌'
+  | '투창'
+  | '투척'
+  | '활'
+  | '일반 활'
+  | '아마존 활'
+  | '아마존 전용'
 export type NormalItemSortType =
   | 'level-asc'
   | 'strength-asc'
@@ -299,6 +317,7 @@ export type NormalItemRow = ArmorBaseItem & {
 
 export type WeaponBaseItem = {
   이름: string
+  영문명?: string
   양손데미지: {
     최소: number | null
     최대: number | null

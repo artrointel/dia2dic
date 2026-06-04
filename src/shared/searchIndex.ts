@@ -14,9 +14,22 @@ import {
   shieldPaladinBases,
   socketRecipes,
   uniqueItems,
+  weaponAmazonBases,
+  weaponAxeBases,
   weaponBowBases,
+  weaponClawBases,
+  weaponCrossbowBases,
+  weaponDaggerBases,
+  weaponJavelinBases,
+  weaponMaceBases,
+  weaponOrbBases,
   weaponPolearmBases,
+  weaponScepterBases,
   weaponSpearBases,
+  weaponStaffBases,
+  weaponSwordBases,
+  weaponThrowingBases,
+  weaponWandBases,
 } from './gameData'
 import { navigationItems } from '../navigation/navigation'
 import type { ArmorBases, NavigationItem, WeaponBases } from './appTypes'
@@ -43,6 +56,12 @@ type SearchPageIndex = {
 }
 
 const MAX_EXAMPLES = 5
+const searchResultPathPriority = new Map([
+  ['/items/uniques', 0],
+  ['/items/sets', 1],
+  ['/cube/crafting', 2],
+  ['/items/normal', 3],
+])
 
 const pageIndexes: SearchPageIndex[] = [
   {
@@ -205,7 +224,11 @@ export function searchPageCandidates(query: string): SearchPageCandidate[] {
       path: page.path,
       title: navigationHierarchyTitle(page.path) ?? page.title,
     }
-  })
+  }).toSorted(
+    (left, right) =>
+      (searchResultPathPriority.get(left.path) ?? Number.MAX_SAFE_INTEGER) -
+      (searchResultPathPriority.get(right.path) ?? Number.MAX_SAFE_INTEGER),
+  )
 }
 
 function navigationHierarchyTitle(path: string) {
@@ -243,9 +266,22 @@ function normalItemDocuments(): SearchDocument[] {
     ...armorDocuments(bootBases),
     ...armorDocuments(shieldBases),
     ...armorDocuments(shieldPaladinBases),
+    ...weaponDocuments(weaponDaggerBases),
+    ...weaponDocuments(weaponSwordBases),
+    ...weaponDocuments(weaponAxeBases),
     ...weaponDocuments(weaponPolearmBases),
-    ...weaponDocuments(weaponBowBases),
+    ...weaponDocuments(weaponClawBases),
+    ...weaponDocuments(weaponCrossbowBases),
+    ...weaponDocuments(weaponStaffBases),
     ...weaponDocuments(weaponSpearBases),
+    ...weaponDocuments(weaponMaceBases),
+    ...weaponDocuments(weaponScepterBases),
+    ...weaponDocuments(weaponJavelinBases),
+    ...weaponDocuments(weaponBowBases),
+    ...weaponDocuments(weaponThrowingBases),
+    ...weaponDocuments(weaponWandBases),
+    ...weaponDocuments(weaponOrbBases),
+    ...weaponDocuments(weaponAmazonBases),
   ]
 }
 
@@ -269,6 +305,7 @@ function weaponDocuments(data: WeaponBases): SearchDocument[] {
         section.title,
         section.grade,
         item.이름,
+        item.영문명,
         item.전용,
       ].join(' '),
     })),

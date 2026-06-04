@@ -6,12 +6,36 @@ import { FloatingTooltip } from '../components/FloatingTooltip'
 import { ItemDataTable, type ItemDataTableColumn } from '../components/ItemDataTable'
 import { OptionList } from '../components/OptionList'
 import { PageHeading } from '../components/PageHeading'
+import { RecommendationBadge, type RecommendationInfo } from '../components/RecommendationBadge'
 import { RuneCombinationToken } from '../components/RuneMiniCard'
 import { FilterPanel, NameSearch, SortControl, TableToolbar } from '../components/TableControls'
-import { runewords } from '../shared/gameData'
+import { recommendedItemTips } from './NormalItemsPage'
+import {
+  armorBases,
+  helmBases,
+  runewords,
+  shieldBases,
+  shieldPaladinBases,
+  weaponAmazonBases,
+  weaponAxeBases,
+  weaponBowBases,
+  weaponClawBases,
+  weaponCrossbowBases,
+  weaponDaggerBases,
+  weaponJavelinBases,
+  weaponMaceBases,
+  weaponOrbBases,
+  weaponPolearmBases,
+  weaponScepterBases,
+  weaponSpearBases,
+  weaponStaffBases,
+  weaponSwordBases,
+  weaponThrowingBases,
+  weaponWandBases,
+} from '../shared/gameData'
 import { readPageSearchQuery } from '../shared/searchNavigation'
 import { searchItemsByQuery } from '../shared/searchUtils'
-import type { FilterType, Runeword, RunewordFilter, SortType } from '../shared/appTypes'
+import type { ArmorBases, FilterType, Runeword, RunewordFilter, SortType, WeaponBases } from '../shared/appTypes'
 
 const EQUIPMENT_FILTER_GROUPS = [
   {
@@ -60,6 +84,53 @@ const runewordSortOptions: Array<{ value: SortType; label: string }> = [
   { value: 'socket-asc', label: '소켓수 오름차순' },
   { value: 'socket-desc', label: '소켓수 내림차순' },
 ]
+
+const runewordMercenaryRecommendations: Record<string, RecommendationInfo> = {
+  통찰: {
+    tag: '용병',
+    note: '명상 오라로 마나 유지가 쉬워 2막/1막 용병에게 자주 사용.',
+  },
+  치료: {
+    tag: '용병',
+    note: '정화 오라와 독 지속시간 감소로 용병 생존 보조에 유용.',
+  },
+  순종: {
+    tag: '용병',
+    note: '높은 피해, 강타, 저항 보너스로 2막 용병 무기 후보.',
+  },
+  배신: {
+    tag: '용병',
+    note: '공속과 흐리기 발동으로 저렴한 용병 갑옷으로 인기가 높음.',
+  },
+  인내: {
+    tag: '용병',
+    note: '피해 증가와 높은 방어력으로 용병 최종 갑옷 후보.',
+  },
+  무한: {
+    tag: '용병',
+    note: '선고 오라로 원소 빌드 화력을 크게 올리는 대표 용병 무기.',
+  },
+  긍지: {
+    tag: '용병',
+    note: '집중 오라로 물리 소환/물리 딜러 보조용 용병 무기.',
+  },
+  안개: {
+    tag: '용병',
+    note: '집중 오라와 관통/피해 옵션으로 1막 용병 활 후보.',
+  },
+  신념: {
+    tag: '용병',
+    note: '광신 오라로 본체 공격 속도와 물리 화력을 보조하는 1막 용병 활.',
+  },
+  조화: {
+    tag: '용병',
+    note: '원기 오라로 이동 편의성을 챙기는 1막 용병 활 후보.',
+  },
+  연기: {
+    tag: '용병',
+    note: '높은 모든 저항으로 초중반 용병 생존 갑옷으로 사용.',
+  },
+}
 
 function getRunewordEquipment(item: Runeword) {
   return item.장비 ?? item['방어구 부위'] ?? ''
@@ -199,22 +270,7 @@ export function RunewordsPage() {
       key: 'name',
       header: '이름',
       className: 'runeword-name-cell',
-      render: (item) =>
-        item.버전.length > 0 ? (
-          <FloatingTooltip
-            cardClassName="version-popup"
-            content={<RunewordVersionPopup versions={item.버전} />}
-            triggerClassName="runeword-version-trigger"
-          >
-            <span className="runeword-name has-version">
-              <FormattedRunewordName name={item.이름} />*
-            </span>
-          </FloatingTooltip>
-        ) : (
-          <span className="runeword-name">
-            <FormattedRunewordName name={item.이름} />
-          </span>
-        ),
+      render: (item) => <RunewordNameCell item={item} />,
     },
     {
       key: 'level',
@@ -340,6 +396,371 @@ function resolveRunewordSearchState(query: string): {
   }
 
   return { filters: [], nameQuery: trimmedQuery }
+}
+
+function RunewordNameCell({ item }: { item: Runeword }) {
+  const materialRecommendations = getRunewordMaterialRecommendations(item)
+  const mercenaryRecommendation = runewordMercenaryRecommendations[runewordLookupName(item.이름)]
+
+  return (
+    <span className="normal-item-name-cell runeword-name-with-tags">
+      <span className={['runeword-name', item.버전.length > 0 ? 'has-version' : ''].filter(Boolean).join(' ')}>
+        <FormattedRunewordName name={item.이름} />
+      </span>
+
+      {item.버전.length > 0 ? (
+        <FloatingTooltip
+          cardClassName="version-popup"
+          content={<RunewordVersionPopup versions={item.버전} />}
+          triggerClassName="runeword-version-trigger"
+        >
+          <span className="runeword-version-marker">*</span>
+        </FloatingTooltip>
+      ) : null}
+
+      {materialRecommendations.length > 0 ? (
+        <RunewordMaterialBadge bases={materialRecommendations} title={runewordLookupName(item.이름)} />
+      ) : null}
+
+      {mercenaryRecommendation ? (
+        <RecommendationBadge info={mercenaryRecommendation} title={runewordLookupName(item.이름)} />
+      ) : null}
+    </span>
+  )
+}
+
+type RunewordMaterialRecommendation = {
+  defenseMax: number | null
+  equipmentTypes: string[]
+  grade: string
+  maxSockets: number | null
+  name: string
+  note: string
+  recommended: boolean
+}
+
+function RunewordMaterialBadge({ bases, title }: { bases: RunewordMaterialRecommendation[]; title: string }) {
+  return (
+    <FloatingTooltip
+      cardClassName="recommend-tip-card runeword-material-tip-card"
+      content={<RunewordMaterialTip bases={bases} title={title} />}
+      triggerClassName="recommend-tip-trigger"
+    >
+      <span className="normal-item-recommend is-material">재료</span>
+    </FloatingTooltip>
+  )
+}
+
+function RunewordMaterialTip({ bases, title }: { bases: RunewordMaterialRecommendation[]; title: string }) {
+  return (
+    <>
+      <strong>{title} 추천 재료</strong>
+      {bases.map((base) => (
+        <span key={base.name}>
+          <b>{base.name}</b>
+          {base.note}
+        </span>
+      ))}
+    </>
+  )
+}
+
+function createRunewordMaterialRecommendations() {
+  const materialMap = new Map<string, RunewordMaterialRecommendation[]>()
+  const baseMetadataByName = createRecommendedBaseMetadataByName()
+
+  Object.entries(recommendedItemTips).forEach(([baseName, tip]) => {
+    const metadata = baseMetadataByName.get(baseName)
+
+    if (!metadata) {
+      return
+    }
+
+    tip.runewords.forEach((runewordName) => {
+      const key = canonicalRunewordLookupName(runewordName)
+      const currentBases = materialMap.get(key) ?? []
+
+      currentBases.push({
+        defenseMax: metadata.defenseMax,
+        equipmentTypes: metadata.equipmentTypes,
+        grade: metadata.grade,
+        maxSockets: metadata.maxSockets,
+        name: baseName,
+        note: tip.note,
+        recommended: true,
+      })
+      materialMap.set(key, currentBases)
+    })
+  })
+
+  return materialMap
+}
+
+function getRunewordMaterialRecommendations(item: Runeword) {
+  const curatedRecommendations = runewordMaterialRecommendations.get(runewordLookupName(item.이름)) ?? []
+  const equipmentTypes = splitEquipmentTypes(getRunewordEquipment(item))
+  const socketCount = item['소켓 수']
+  const compatibleBases = allRunewordBaseMetadata.filter(
+    (base) =>
+      base.maxSockets !== null &&
+      base.maxSockets >= socketCount &&
+      equipmentTypes.some((equipmentType) => materialEquipmentMatches(equipmentType, base.equipmentTypes)),
+  )
+  const contextFilteredBases = filterBasesByRunewordContext(item, compatibleBases)
+  const curatedNames = new Set(curatedRecommendations.map((recommendation) => recommendation.name))
+  const curatedBases = contextFilteredBases.filter((base) => curatedNames.has(base.name))
+  const fallbackBases = contextFilteredBases.filter((base) => base.recommended)
+  const selectedBases = curatedBases.length > 0 ? curatedBases : fallbackBases.length > 0 ? fallbackBases : contextFilteredBases
+
+  return selectedBases
+    .toSorted(sortRunewordMaterialBases)
+    .slice(0, 8)
+    .map((base) => ({
+      ...base,
+      note: curatedRecommendations.find((recommendation) => recommendation.name === base.name)?.note ?? materialBaseNote(item, base),
+    }))
+}
+
+type RecommendedBaseMetadata = {
+  defenseMax: number | null
+  equipmentTypes: string[]
+  grade: string
+  maxSockets: number | null
+  name: string
+  note: string
+  recommended: boolean
+}
+
+function createRecommendedBaseMetadataByName() {
+  return new Map(allRunewordBaseMetadata.map((base) => [base.name, base]))
+}
+
+function createAllRunewordBaseMetadata() {
+  const bases: RecommendedBaseMetadata[] = []
+
+  addArmorBaseMetadata(bases, armorBases, ['갑옷(Armor)'])
+  addArmorBaseMetadata(bases, helmBases, ['투구(Helm)'])
+  addArmorBaseMetadata(bases, shieldBases, ['방패(Shield)'])
+  addArmorBaseMetadata(bases, shieldPaladinBases, ['팔라딘 전용 방패(Paladin Shield)', '방패(Shield)'])
+
+  weaponMetadataSources.forEach(({ data, equipmentTypes }) => {
+    data.sections.forEach((section) => {
+      section.items.forEach((item) => {
+        bases.push({
+          defenseMax: null,
+          equipmentTypes,
+          grade: section.grade,
+          maxSockets: item.최대홈 ?? null,
+          name: item.이름,
+          note: '',
+          recommended: item.추천,
+        })
+      })
+    })
+  })
+
+  return bases
+}
+
+function addArmorBaseMetadata(bases: RecommendedBaseMetadata[], data: ArmorBases, equipmentTypes: string[]) {
+  data.sections.forEach((section) => {
+    section.items.forEach((item) => {
+      bases.push({
+        defenseMax: item.방어력.최대,
+        equipmentTypes,
+        grade: section.grade,
+        maxSockets: item.최대홈 ?? null,
+        name: item.이름,
+        note: '',
+        recommended: item.추천,
+      })
+    })
+  })
+}
+
+const weaponMetadataSources: Array<{ data: WeaponBases; equipmentTypes: string[] }> = [
+  { data: weaponDaggerBases, equipmentTypes: ['단도(Dagger)', '근접 무기(Melee Weapon)', '모든 무기(Weapon)'] },
+  { data: weaponSwordBases, equipmentTypes: ['도검(Sword)', '근접 무기(Melee Weapon)', '모든 무기(Weapon)'] },
+  { data: weaponAxeBases, equipmentTypes: ['도끼(Axe)', '근접 무기(Melee Weapon)', '모든 무기(Weapon)'] },
+  { data: weaponMaceBases, equipmentTypes: ['철퇴(Mace)', '근접 무기(Melee Weapon)', '모든 무기(Weapon)'] },
+  { data: weaponScepterBases, equipmentTypes: ['홀(Scepter)', '근접 무기(Melee Weapon)', '모든 무기(Weapon)'] },
+  { data: weaponPolearmBases, equipmentTypes: ['미늘창(Polearm)', '근접 무기(Melee Weapon)', '모든 무기(Weapon)'] },
+  { data: weaponSpearBases, equipmentTypes: ['창(Spear)', '근접 무기(Melee Weapon)', '모든 무기(Weapon)'] },
+  { data: weaponStaffBases, equipmentTypes: ['지팡이(Staff)', '근접 무기(Melee Weapon)', '모든 무기(Weapon)'] },
+  { data: weaponWandBases, equipmentTypes: ['완드(Wand)', '근접 무기(Melee Weapon)', '모든 무기(Weapon)'] },
+  { data: weaponClawBases, equipmentTypes: ['손톱(Claw)', '근접 무기(Melee Weapon)', '모든 무기(Weapon)'] },
+  { data: weaponOrbBases, equipmentTypes: ['오브(Orb)', '근접 무기(Melee Weapon)', '모든 무기(Weapon)'] },
+  { data: weaponBowBases, equipmentTypes: ['활(Bow)', '원거리 무기(Ranged Weapon)', '모든 무기(Weapon)'] },
+  { data: weaponCrossbowBases, equipmentTypes: ['쇠뇌(Crossbow)', '원거리 무기(Ranged Weapon)', '모든 무기(Weapon)'] },
+  { data: weaponJavelinBases, equipmentTypes: ['투창(Javelin)', '원거리 무기(Ranged Weapon)', '모든 무기(Weapon)'] },
+  { data: weaponThrowingBases, equipmentTypes: ['투척 무기(Throwing Weapon)', '원거리 무기(Ranged Weapon)', '모든 무기(Weapon)'] },
+  { data: weaponAmazonBases, equipmentTypes: ['아마존 전용 무기(Amazon Weapon)', '모든 무기(Weapon)'] },
+]
+
+const allRunewordBaseMetadata = createAllRunewordBaseMetadata()
+
+const runeRankByName = new Map(
+  [
+    '엘',
+    '엘드',
+    '티르',
+    '네프',
+    '에드',
+    '아이드',
+    '탈',
+    '랄',
+    '오르트',
+    '주울',
+    '앰',
+    '솔',
+    '샤엘',
+    '돌',
+    '헬',
+    '이오',
+    '포',
+    '룸',
+    '코',
+    '팔',
+    '렘',
+    '풀',
+    '우움',
+    '말',
+    '이스트',
+    '굴',
+    '벡스',
+    '오움',
+    '로',
+    '수르',
+    '베르',
+    '자',
+    '참',
+    '조드',
+  ].map((name, index) => [name, index + 1]),
+)
+const highRuneThreshold = runeRankByName.get('렘') ?? 20
+
+function filterBasesByRunewordContext(item: Runeword, bases: RecommendedBaseMetadata[]) {
+  let filteredBases = bases
+  const lookupName = runewordLookupName(item.이름)
+  const shouldPreferElite = isHighRuneRuneword(item) && lookupName !== '수수께끼'
+
+  if (shouldPreferElite) {
+    const eliteBases = filteredBases.filter((base) => base.grade === '엘리트')
+
+    if (eliteBases.length > 0) {
+      filteredBases = eliteBases
+    }
+  }
+
+  if (isArmorRuneword(item) && hasDefenseIncreaseOption(item) && lookupName !== '수수께끼') {
+    const defensiveBases = filteredBases.filter((base) => (base.defenseMax ?? 0) >= 400)
+
+    if (defensiveBases.length > 0) {
+      filteredBases = defensiveBases
+    }
+  }
+
+  return filteredBases
+}
+
+function isHighRuneRuneword(item: Runeword) {
+  return item.룬조합
+    .filter((line) => !line.trim().startsWith('('))
+    .flatMap((line) => line.split('+'))
+    .map((rune) => rune.replace(/룬/g, '').trim())
+    .some((rune) => (runeRankByName.get(rune) ?? 0) >= highRuneThreshold)
+}
+
+function isArmorRuneword(item: Runeword) {
+  return splitEquipmentTypes(getRunewordEquipment(item)).includes('갑옷(Armor)')
+}
+
+function hasDefenseIncreaseOption(item: Runeword) {
+  return item.options.some((option) => option.includes('방어력') && option.includes('증가'))
+}
+
+function sortRunewordMaterialBases(left: RecommendedBaseMetadata, right: RecommendedBaseMetadata) {
+  return (
+    Number(right.recommended) - Number(left.recommended) ||
+    gradeSortValue(right.grade) - gradeSortValue(left.grade) ||
+    (right.defenseMax ?? 0) - (left.defenseMax ?? 0) ||
+    left.name.localeCompare(right.name)
+  )
+}
+
+function gradeSortValue(grade: string) {
+  if (grade === '엘리트') {
+    return 3
+  }
+
+  if (grade === '익셉셔널') {
+    return 2
+  }
+
+  return 1
+}
+
+function materialBaseNote(item: Runeword, base: RecommendedBaseMetadata) {
+  if (isArmorRuneword(item) && hasDefenseIncreaseOption(item) && base.defenseMax !== null) {
+    return `방어력 증가 옵션을 살리기 좋은 ${base.grade} 베이스.`
+  }
+
+  if (isHighRuneRuneword(item) && runewordLookupName(item.이름) !== '수수께끼') {
+    return `렘 이상 룬워드라 ${base.grade} 베이스 우선.`
+  }
+
+  if (base.recommended) {
+    return '추천 태그가 붙은 호환 베이스.'
+  }
+
+  return `${base.grade} 호환 베이스.`
+}
+
+function materialEquipmentMatches(runewordEquipmentType: string, baseEquipmentTypes: string[]) {
+  if (baseEquipmentTypes.includes(runewordEquipmentType)) {
+    return true
+  }
+
+  if (runewordEquipmentType.includes('방패(')) {
+    return baseEquipmentTypes.some((equipmentType) => equipmentType.includes('방패('))
+  }
+
+  if (runewordEquipmentType === '망치(Hammer)') {
+    return baseEquipmentTypes.includes('철퇴(Mace)')
+  }
+
+  if (runewordEquipmentType === '모든 무기(Weapon)') {
+    return baseEquipmentTypes.includes('모든 무기(Weapon)')
+  }
+
+  if (runewordEquipmentType === '근접 무기(Melee Weapon)') {
+    return baseEquipmentTypes.includes('근접 무기(Melee Weapon)')
+  }
+
+  if (runewordEquipmentType === '원거리 무기(Ranged Weapon)') {
+    return baseEquipmentTypes.includes('원거리 무기(Ranged Weapon)')
+  }
+
+  return false
+}
+
+const runewordMaterialRecommendations = createRunewordMaterialRecommendations()
+
+function canonicalRunewordLookupName(name: string) {
+  const lookupName = runewordLookupName(name)
+  const matchedRuneword = runewords.find((runeword) => runewordAllLookupNames(runeword.이름).includes(lookupName))
+
+  return matchedRuneword ? runewordLookupName(matchedRuneword.이름) : lookupName
+}
+
+function runewordAllLookupNames(name: string) {
+  const parsedName = parseRunewordName(name)
+
+  return [...new Set([parsedName.primary, ...parsedName.aliases].map((value) => value.replace(/\s+/g, '')))]
+}
+
+function runewordLookupName(name: string) {
+  return parseRunewordName(name).primary.replace(/\s+/g, '')
 }
 
 function EquipmentLines({ equipment }: { equipment: string }) {

@@ -15,9 +15,22 @@ import setItemsData from '../data/set-items.json'
 import shieldBasesData from '../data/shield-bases.json'
 import shieldPaladinBasesData from '../data/shield-paladin-bases.json'
 import uniqueItemsData from '../data/unique-items.json'
+import weaponAmazonBasesData from '../data/weapon-amazon-bases.json'
+import weaponAxeBasesData from '../data/weapon-axe-bases.json'
 import weaponBowBasesData from '../data/weapon-bow-bases.json'
+import weaponClawBasesData from '../data/weapon-claw-bases.json'
+import weaponCrossbowBasesData from '../data/weapon-crossbow-bases.json'
+import weaponDaggerBasesData from '../data/weapon-dagger-bases.json'
+import weaponJavelinBasesData from '../data/weapon-javelin-bases.json'
+import weaponMaceBasesData from '../data/weapon-mace-bases.json'
+import weaponOrbBasesData from '../data/weapon-orb-bases.json'
 import weaponPolearmBasesData from '../data/weapon-polearm-bases.json'
+import weaponScepterBasesData from '../data/weapon-scepter-bases.json'
 import weaponSpearBasesData from '../data/weapon-spear-bases.json'
+import weaponStaffBasesData from '../data/weapon-staff-bases.json'
+import weaponSwordBasesData from '../data/weapon-sword-bases.json'
+import weaponThrowingBasesData from '../data/weapon-throwing-bases.json'
+import weaponWandBasesData from '../data/weapon-wand-bases.json'
 import type {
   ArmorBases,
   BreakpointsData,
@@ -50,9 +63,22 @@ export const setItems = setItemsData as SetItemsData
 export const shieldBases = shieldBasesData as ArmorBases
 export const shieldPaladinBases = shieldPaladinBasesData as ArmorBases
 export const uniqueItems = uniqueItemsData as UniqueItemsData
+export const weaponAmazonBases = weaponAmazonBasesData as WeaponBases
+export const weaponAxeBases = weaponAxeBasesData as WeaponBases
 export const weaponBowBases = weaponBowBasesData as WeaponBases
+export const weaponClawBases = weaponClawBasesData as WeaponBases
+export const weaponCrossbowBases = weaponCrossbowBasesData as WeaponBases
+export const weaponDaggerBases = weaponDaggerBasesData as WeaponBases
+export const weaponJavelinBases = weaponJavelinBasesData as WeaponBases
+export const weaponMaceBases = weaponMaceBasesData as WeaponBases
+export const weaponOrbBases = weaponOrbBasesData as WeaponBases
 export const weaponPolearmBases = weaponPolearmBasesData as WeaponBases
+export const weaponScepterBases = weaponScepterBasesData as WeaponBases
 export const weaponSpearBases = weaponSpearBasesData as WeaponBases
+export const weaponStaffBases = weaponStaffBasesData as WeaponBases
+export const weaponSwordBases = weaponSwordBasesData as WeaponBases
+export const weaponThrowingBases = weaponThrowingBasesData as WeaponBases
+export const weaponWandBases = weaponWandBasesData as WeaponBases
 export const bowIasFrameByName = new Map(bowIasFrames.items.map((item) => [item.이름, item]))
 export const assetUrl = (path: string) =>
   `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`

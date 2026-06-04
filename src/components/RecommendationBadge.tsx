@@ -1,6 +1,6 @@
 import { FloatingTooltip } from './FloatingTooltip'
 
-export type RecommendationTag = '추천' | '맨땅'
+export type RecommendationTag = '추천' | '맨땅' | '용병'
 export type RecommendationFilter = '전체' | RecommendationTag
 
 export type RecommendationInfo = {
@@ -26,7 +26,13 @@ export function RecommendationBadge({
       content={<RecommendationTipContent info={info} title={title} />}
       triggerClassName="recommend-tip-trigger"
     >
-      <span className={['normal-item-recommend', info.tag === '맨땅' ? 'is-starter' : ''].filter(Boolean).join(' ')}>
+      <span
+        className={[
+          'normal-item-recommend',
+          info.tag === '맨땅' ? 'is-starter' : '',
+          info.tag === '용병' ? 'is-mercenary' : '',
+        ].filter(Boolean).join(' ')}
+      >
         {info.tag}
       </span>
     </FloatingTooltip>
