@@ -49,8 +49,12 @@
 .breakpoint-table-card {
   border: 1px solid var(--border);
   border-radius: 8px;
+  display: grid;
+  justify-content: start;
   margin-top: 18px;
+  max-width: 100%;
   overflow: hidden;
+  width: max-content;
 }
 
 .breakpoint-table-scroll {
@@ -64,8 +68,7 @@
 
 .breakpoint-table {
   border-collapse: collapse;
-  min-width: 1040px;
-  width: 100%;
+  width: max-content;
 }
 
 .breakpoint-table th,
@@ -106,15 +109,39 @@
   text-shadow: var(--table-name-shadow);
 }
 
+.breakpoint-table tbody .breakpoint-col-character {
+  vertical-align: middle;
+}
+
 .breakpoint-table tbody td {
   color: var(--text);
 }
 
-.breakpoint-table tbody tr:nth-child(odd) {
+.breakpoint-table tbody tr:nth-child(odd) > * {
   background: var(--table-row-odd);
 }
 
-.breakpoint-table tbody tr:nth-child(even) {
+.breakpoint-table tbody tr:nth-child(even) > * {
+  background: var(--table-row-even);
+}
+
+.breakpoint-table tbody tr:hover > *:not(.breakpoint-col-character) {
+  background: var(--table-row-hover);
+}
+
+.breakpoint-table tbody tr:nth-child(odd):hover > .breakpoint-col-character {
+  background: var(--table-row-odd);
+}
+
+.breakpoint-table tbody tr:nth-child(even):hover > .breakpoint-col-character {
+  background: var(--table-row-even);
+}
+
+.breakpoint-table tbody tr:nth-child(odd) > .breakpoint-col-character {
+  background: var(--table-row-odd);
+}
+
+.breakpoint-table tbody tr:nth-child(even) > .breakpoint-col-character {
   background: var(--table-row-even);
 }
 

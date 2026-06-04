@@ -70,6 +70,17 @@ function BreakpointTableView({ table }: { table: BreakpointTable }) {
       key: 'character',
       header: '캐릭터',
       className: 'breakpoint-col-character',
+      getCellProps: (row, index, rows) => {
+        if (index > 0 && rows[index - 1].character === row.character) {
+          return { hidden: true }
+        }
+
+        const rowSpan = rows.slice(index).findIndex((nextRow) => nextRow.character !== row.character)
+
+        return {
+          rowSpan: rowSpan === -1 ? rows.length - index : rowSpan,
+        }
+      },
       render: (row) => row.character,
     },
     {

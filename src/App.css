@@ -837,20 +837,20 @@
   font-size: 14px;
 }
 
-.runewords-table:not(.normal-items-table, .runes-table) th:nth-child(-n + 5),
-.runewords-table:not(.normal-items-table, .runes-table) td:nth-child(-n + 5) {
+.runewords-table:not(.normal-items-table, .runes-table, .breakpoint-table) th:nth-child(-n + 5),
+.runewords-table:not(.normal-items-table, .runes-table, .breakpoint-table) td:nth-child(-n + 5) {
   white-space: nowrap;
 }
 
-.runewords-table tbody tr:nth-child(odd) td {
+.runewords-table:not(.breakpoint-table) tbody tr:nth-child(odd) td {
   background: var(--table-row-odd);
 }
 
-.runewords-table tbody tr:nth-child(even) td {
+.runewords-table:not(.breakpoint-table) tbody tr:nth-child(even) td {
   background: var(--table-row-even);
 }
 
-.runewords-table tr:hover td {
+.runewords-table:not(.breakpoint-table) tr:hover td {
   background: var(--table-row-hover);
 }
 
