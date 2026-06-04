@@ -109,7 +109,7 @@ const pageIndexes: SearchPageIndex[] = [
   {
     path: '/cube/recipes',
     title: '기타 조합',
-    description: '파괴참 갱신 등 기타 호라드릭 함 조합식에서 검색합니다.',
+    description: '수리, 충전, 보석, 소켓 제거, 카우 레벨, 옵션 재부여 공식에서 검색합니다.',
     documents: miscRecipes.map((recipe) => ({
       label: `${recipe.분류} - ${recipe.결과}`,
       text: [recipe.분류, recipe.대상, recipe.현재, recipe.결과, recipe.재료.join(' ')].join(' '),

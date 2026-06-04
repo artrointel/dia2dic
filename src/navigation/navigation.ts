@@ -35,7 +35,7 @@ export const pages: Page[] = [
   {
     path: '/cube/recipes',
     title: '기타 조합',
-    description: '파괴참 갱신과 특수 호라드릭 함 공식',
+    description: '수리, 보석, 소켓 제거, 카우 레벨 공식',
     icon: FlaskConical,
   },
   {

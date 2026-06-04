@@ -19,7 +19,7 @@ export function MiscRecipesPage() {
   return (
     <section className="equipment-upgrades-page misc-recipes-page">
       <PageHeading
-        description="파괴참 갱신 등 호라드릭 함 기타 조합식을 확인합니다."
+        description="수리, 충전, 보석, 소켓 제거, 카우 레벨, 아이템 옵션 재부여 공식."
         eyebrow="호라드릭 함"
         icon={FlaskConical}
         title="기타 조합"

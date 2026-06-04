@@ -47,6 +47,7 @@ export function AppHeader({ theme, onToggleTheme }: { theme: Theme; onToggleThem
           <span>
             <strong>dia2dic</strong>
             <small>Diablo II Archive</small>
+            <small className="brand-version">악마술사의 군림</small>
           </span>
         </NavLink>
 
@@ -160,6 +161,7 @@ function SideNavigation({
           <div>
             <strong>자료 메뉴</strong>
             <small>Diablo II Archive</small>
+            <small className="brand-version">악마술사의 군림</small>
           </div>
           <button className="icon-button" type="button" aria-label="메뉴 닫기" onClick={onClose}>
             <X aria-hidden="true" size={22} />
