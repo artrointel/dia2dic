@@ -18,7 +18,8 @@ import {
   weaponPolearmBases,
   weaponSpearBases,
 } from './gameData'
-import type { ArmorBases, WeaponBases } from './appTypes'
+import { navigationItems } from '../navigation/navigation'
+import type { ArmorBases, NavigationItem, WeaponBases } from './appTypes'
 import { matchesSearchText } from './searchUtils'
 
 export type SearchPageCandidate = {
@@ -184,9 +185,35 @@ export function searchPageCandidates(query: string): SearchPageCandidate[] {
       description: page.description,
       examples: [...new Set(matches.map((match) => match.label))].slice(0, MAX_EXAMPLES),
       path: page.path,
-      title: page.title,
+      title: navigationHierarchyTitle(page.path) ?? page.title,
     }
   })
+}
+
+function navigationHierarchyTitle(path: string) {
+  const hierarchy = findNavigationHierarchy(navigationItems, path)
+
+  return hierarchy.length > 0 ? hierarchy.join(' - ') : null
+}
+
+function findNavigationHierarchy(items: NavigationItem[], path: string, parents: string[] = []): string[] {
+  for (const item of items) {
+    const currentHierarchy = [...parents, item.title]
+
+    if (item.path === path) {
+      return currentHierarchy
+    }
+
+    if (item.children) {
+      const childHierarchy = findNavigationHierarchy(item.children, path, currentHierarchy)
+
+      if (childHierarchy.length > 0) {
+        return childHierarchy
+      }
+    }
+  }
+
+  return []
 }
 
 function normalItemDocuments(): SearchDocument[] {

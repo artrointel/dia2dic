@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
-import { BookOpen, ChevronDown, ExternalLink, Menu, Moon, Sun, X } from 'lucide-react'
-import { NavLink } from 'react-router-dom'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { BookOpen, ChevronDown, ExternalLink, Menu, Moon, Search, Sun, X } from 'lucide-react'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { navigationItems } from '../navigation/navigation'
 import type { NavigationItem, Theme } from '../shared/appTypes'
+import { readPageSearchQuery, searchDestinationPath } from '../shared/searchNavigation'
 import './AppHeader.css'
 
 const TERROR_ZONE_IMAGE_URL = 'https://www.d2emu.com/tz/tz_KR.png'
@@ -10,6 +11,22 @@ const TERROR_ZONE_REFRESH_MS = 5 * 60 * 1000
 
 export function AppHeader({ theme, onToggleTheme }: { theme: Theme; onToggleTheme: () => void }) {
   const [isNavOpen, setIsNavOpen] = useState(false)
+  const location = useLocation()
+  const navigate = useNavigate()
+  const searchInputRef = useRef<HTMLInputElement>(null)
+  const pageSearchQuery = readPageSearchQuery(new URLSearchParams(location.search))
+
+  const submitSearch = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const nextQuery = searchInputRef.current?.value.trim() ?? ''
+
+    if (!nextQuery) {
+      navigate('/')
+      return
+    }
+
+    navigate(searchDestinationPath('/', nextQuery))
+  }
 
   return (
     <>
@@ -33,6 +50,18 @@ export function AppHeader({ theme, onToggleTheme }: { theme: Theme; onToggleThem
           </span>
         </NavLink>
 
+        <form className="header-search" key={pageSearchQuery} onSubmit={submitSearch} role="search">
+          <Search aria-hidden="true" size={18} />
+          <input
+            ref={searchInputRef}
+            type="search"
+            placeholder="예: 수수께끼, 샤코, 크래프팅, 자룬, 소켓"
+            aria-label="자료 검색"
+            defaultValue={pageSearchQuery}
+          />
+          <button type="submit">검색</button>
+        </form>
+
         <TerrorZoneBanner />
       </header>
 
@@ -50,6 +79,7 @@ function TerrorZoneBanner() {
   const [cacheKey, setCacheKey] = useState(() => Date.now())
   const [isRefreshing, setIsRefreshing] = useState(false)
   const feedbackTimerRef = useRef<number | null>(null)
+  const sourceUrl = `${TERROR_ZONE_IMAGE_URL}?v=${cacheKey}`
 
   const refreshImage = () => {
     setCacheKey(Date.now())
@@ -86,7 +116,7 @@ function TerrorZoneBanner() {
     >
       <img
         className="terror-zone-banner"
-        src={`${TERROR_ZONE_IMAGE_URL}?v=${cacheKey}`}
+        src={sourceUrl}
         alt="디아블로2 테러존 정보"
       />
     </button>
