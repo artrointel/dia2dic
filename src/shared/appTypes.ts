@@ -311,6 +311,7 @@ export type WeaponBaseItem = {
   요구레벨: number | null
   필요힘: number | null
   필요민첩: number | null
+  베이스공속: number
   최대홈: number | null
   숨렙별최대홈?: SocketByItemLevel | null
 }

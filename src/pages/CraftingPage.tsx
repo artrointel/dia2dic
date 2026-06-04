@@ -8,7 +8,7 @@ import { PageHeading } from '../components/PageHeading'
 import { FilterPanel, NameSearch, SegmentedFilter, TableToolbar } from '../components/TableControls'
 import { craftItems } from '../shared/gameData'
 import { readPageSearchQuery } from '../shared/searchNavigation'
-import { matchesSearchText } from '../shared/searchUtils'
+import { searchItemsByQuery } from '../shared/searchUtils'
 import type { CraftRecipeRow } from '../shared/appTypes'
 
 export function CraftingPage() {
@@ -44,24 +44,7 @@ export function CraftingPage() {
     const activeQuery = nameQuery.trim()
     const sourceRows = activeQuery ? allRows : selectedRows
 
-    return sourceRows.filter((recipe) =>
-      activeQuery
-        ? matchesSearchText(
-            [
-              recipe.종류,
-              recipe.종류Id,
-              recipe.이름,
-              recipe.재료.join(' '),
-              recipe.룬,
-              recipe.보석주얼,
-              recipe.고정옵션.join(' '),
-              recipe.용도.용도,
-              recipe.용도.우대,
-            ].join(' '),
-            nameQuery,
-          )
-        : true,
-    )
+    return searchItemsByQuery(sourceRows, activeQuery, craftRecipeSearchText)
   }, [allRows, nameQuery, selectedRows])
 
   useEffect(() => {
@@ -179,6 +162,20 @@ function CraftRecipesTable({ items, headerMeta }: { items: CraftRecipeRow[]; hea
       items={items}
     />
   )
+}
+
+function craftRecipeSearchText(recipe: CraftRecipeRow) {
+  return [
+    recipe.종류,
+    recipe.종류Id,
+    recipe.이름,
+    recipe.재료.join(' '),
+    recipe.룬,
+    recipe.보석주얼,
+    recipe.고정옵션.join(' '),
+    recipe.용도.용도,
+    recipe.용도.우대,
+  ].join(' ')
 }
 
 function CraftGemJewelLines({ value }: { value: string }) {

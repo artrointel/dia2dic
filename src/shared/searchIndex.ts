@@ -20,7 +20,7 @@ import {
 } from './gameData'
 import { navigationItems } from '../navigation/navigation'
 import type { ArmorBases, NavigationItem, WeaponBases } from './appTypes'
-import { matchesSearchText } from './searchUtils'
+import { searchItemsByQuery } from './searchUtils'
 
 export type SearchPageCandidate = {
   count: number
@@ -173,8 +173,26 @@ export function searchPageCandidates(query: string): SearchPageCandidate[] {
     return []
   }
 
+  const indexedDocuments = pageIndexes.flatMap((page) =>
+    page.documents.map((document) => ({
+      ...document,
+      page,
+    })),
+  )
+  const globalMatches = searchItemsByQuery(indexedDocuments, query, (document) => document.text)
+  const matchesByPath = new Map<string, SearchDocument[]>()
+
+  globalMatches.forEach((match) => {
+    const currentMatches = matchesByPath.get(match.page.path) ?? []
+    currentMatches.push({
+      label: match.label,
+      text: match.text,
+    })
+    matchesByPath.set(match.page.path, currentMatches)
+  })
+
   return pageIndexes.flatMap((page) => {
-    const matches = page.documents.filter((document) => matchesSearchText(document.text, query))
+    const matches = matchesByPath.get(page.path) ?? []
 
     if (matches.length === 0) {
       return []

@@ -9,7 +9,7 @@ import { PageHeading } from '../components/PageHeading'
 import { FilterPanel, NameSearch, SegmentedFilter, SortControl, TableToolbar } from '../components/TableControls'
 import { uniqueItems } from '../shared/gameData'
 import { readPageSearchQuery } from '../shared/searchNavigation'
-import { matchesSearchText } from '../shared/searchUtils'
+import { searchItemsByQuery } from '../shared/searchUtils'
 import type {
   UniqueItem,
   UniqueItemCategoryFilter,
@@ -53,10 +53,11 @@ export function UniqueItemsPage() {
   const filteredItems = useMemo(() => {
     const activeQuery = nameQuery.trim()
 
-    return uniqueRows
+    const scopedRows = uniqueRows
       .filter((item) => categoryMatches(item, selectedCategory, selectedWeaponCategory, selectedArmorCategory))
       .filter((item) => selectedGrade === '전체' || item.등급 === selectedGrade)
-      .filter((item) => (activeQuery ? matchesSearchText(uniqueItemSearchText(item), activeQuery) : true))
+
+    return searchItemsByQuery(scopedRows, activeQuery, uniqueItemSearchText)
       .toSorted((left, right) => sortUniqueItems(left, right, sortType))
   }, [nameQuery, selectedArmorCategory, selectedCategory, selectedGrade, selectedWeaponCategory, sortType])
 
@@ -340,7 +341,7 @@ function resolveUniqueSearchState(query: string): {
     return defaultState
   }
 
-  const matchingItem = uniqueRows.find((item) => matchesSearchText(uniqueItemSearchText(item), trimmedQuery))
+  const matchingItem = searchItemsByQuery(uniqueRows, trimmedQuery, uniqueItemSearchText)[0]
 
   if (!matchingItem) {
     return defaultState

@@ -11,6 +11,42 @@ export function matchesSearchText(text: string, query: string) {
   return terms.length > 0 && terms.some((term) => matchesSearchTerm(text, normalizedText, term))
 }
 
+export function searchItemsByQuery<T>(items: T[], query: string, getText: (item: T) => string) {
+  const trimmedQuery = query.trim()
+
+  if (!trimmedQuery) {
+    return items
+  }
+
+  const fullMatches = items.filter((item) => matchesSearchText(getText(item), trimmedQuery))
+
+  if (fullMatches.length > 0) {
+    return fullMatches
+  }
+
+  const words = splitSearchWords(trimmedQuery)
+
+  if (words.length <= 1) {
+    return fullMatches
+  }
+
+  const andMatches = items.filter((item) => {
+    const text = getText(item)
+
+    return words.every((word) => matchesSearchText(text, word))
+  })
+
+  if (andMatches.length > 0) {
+    return andMatches
+  }
+
+  return items.filter((item) => {
+    const text = getText(item)
+
+    return words.some((word) => matchesSearchText(text, word))
+  })
+}
+
 export function expandSearchTerms(query: string) {
   const normalizedQuery = normalizeSearchText(query)
 
@@ -41,6 +77,17 @@ export function expandSearchTerms(query: string) {
   })
 
   return [...terms]
+}
+
+function splitSearchWords(query: string) {
+  return [
+    ...new Set(
+      query
+        .split(/\s+/)
+        .map((word) => word.trim())
+        .filter(Boolean),
+    ),
+  ]
 }
 
 export function normalizeSearchText(value: string) {

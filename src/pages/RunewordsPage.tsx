@@ -10,7 +10,7 @@ import { RuneCombinationToken } from '../components/RuneMiniCard'
 import { FilterPanel, NameSearch, SortControl, TableToolbar } from '../components/TableControls'
 import { runewords } from '../shared/gameData'
 import { readPageSearchQuery } from '../shared/searchNavigation'
-import { matchesSearchText } from '../shared/searchUtils'
+import { searchItemsByQuery } from '../shared/searchUtils'
 import type { FilterType, Runeword, RunewordFilter, SortType } from '../shared/appTypes'
 
 const EQUIPMENT_FILTER_GROUPS = [
@@ -142,51 +142,42 @@ export function RunewordsPage() {
 
   const filteredRunewords = useMemo(() => {
     const activeFilters = filters.filter((filter) => filter.enabled)
+    let rows = searchItemsByQuery(runewords, nameQuery, (item) => item.이름)
 
-    return runewords
-      .filter((item) =>
-        nameQuery.trim()
-          ? matchesSearchText(item.이름, nameQuery)
-          : true,
-      )
-      .filter((item) =>
-        activeFilters.every((filter) => {
-          if (filter.type === 'socket') {
-            if (!filter.socketMin && !filter.socketMax) {
-              return true
-            }
+    activeFilters.forEach((filter) => {
+      if (filter.type === 'socket') {
+        if (!filter.socketMin && !filter.socketMax) {
+          return
+        }
 
-            const min = Number(filter.socketMin || filter.socketMax)
-            const max = Number(filter.socketMax || filter.socketMin)
+        const min = Number(filter.socketMin || filter.socketMax)
+        const max = Number(filter.socketMax || filter.socketMin)
 
-            return item['소켓 수'] >= min && item['소켓 수'] <= max
-          }
+        rows = rows.filter((item) => item['소켓 수'] >= min && item['소켓 수'] <= max)
+        return
+      }
 
-          if (filter.type === 'equipment') {
-            return filter.equipmentType
-              ? splitEquipmentTypes(getRunewordEquipment(item)).includes(filter.equipmentType)
-              : true
-          }
+      if (filter.type === 'equipment') {
+        rows = filter.equipmentType
+          ? rows.filter((item) => splitEquipmentTypes(getRunewordEquipment(item)).includes(filter.equipmentType))
+          : rows
+        return
+      }
 
-          if (filter.type === 'rune') {
-            const keyword = filter.text.trim()
+      if (filter.type === 'rune') {
+        rows = searchItemsByQuery(rows, filter.text, (item) => item.룬조합.join(' '))
+        return
+      }
 
-            return keyword
-              ? item.룬조합.some((runeLine) => matchesSearchText(runeLine, keyword))
-              : true
-          }
+      if (filter.type === 'ladder') {
+        rows = rows.filter((item) => item.버전.some((version) => version.replace(/\s+/g, '').includes('래더전용')))
+        return
+      }
 
-          if (filter.type === 'ladder') {
-            return item.버전.some((version) => version.replace(/\s+/g, '').includes('래더전용'))
-          }
+      rows = searchItemsByQuery(rows, filter.text, (item) => item.options.join(' '))
+    })
 
-          const keyword = filter.text.trim()
-
-          return keyword
-            ? item.options.some((option) => matchesSearchText(option, keyword))
-            : true
-        }),
-      )
+    return rows
       .toSorted((left, right) => {
         if (sortType === 'level-desc') {
           return right.렙제 - left.렙제
@@ -325,17 +316,17 @@ function resolveRunewordSearchState(query: string): {
     return { filters: [], nameQuery: '' }
   }
 
-  if (runewords.some((item) => matchesSearchText(item.이름, trimmedQuery))) {
+  if (searchItemsByQuery(runewords, trimmedQuery, (item) => item.이름).length > 0) {
     return { filters: [], nameQuery: trimmedQuery }
   }
 
-  if (runewords.some((item) => item.룬조합.some((runeLine) => matchesSearchText(runeLine, trimmedQuery)))) {
+  if (searchItemsByQuery(runewords, trimmedQuery, (item) => item.룬조합.join(' ')).length > 0) {
     return { filters: [createFilter({ type: 'rune', text: trimmedQuery })], nameQuery: '' }
   }
 
   const matchingEquipmentType = [
     ...new Set(runewords.flatMap((item) => splitEquipmentTypes(getRunewordEquipment(item)))),
-  ].find((equipmentType) => matchesSearchText(equipmentType, trimmedQuery))
+  ].find((equipmentType) => searchItemsByQuery([equipmentType], trimmedQuery, (item) => item).length > 0)
 
   if (matchingEquipmentType) {
     return {
@@ -344,7 +335,7 @@ function resolveRunewordSearchState(query: string): {
     }
   }
 
-  if (runewords.some((item) => item.options.some((option) => matchesSearchText(option, trimmedQuery)))) {
+  if (searchItemsByQuery(runewords, trimmedQuery, (item) => item.options.join(' ')).length > 0) {
     return { filters: [createFilter({ type: 'option', text: trimmedQuery })], nameQuery: '' }
   }
 

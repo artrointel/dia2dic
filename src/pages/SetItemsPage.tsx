@@ -9,7 +9,7 @@ import { PageHeading } from '../components/PageHeading'
 import { FilterPanel, NameSearch, TableToolbar } from '../components/TableControls'
 import { setItems } from '../shared/gameData'
 import { readPageSearchQuery } from '../shared/searchNavigation'
-import { matchesSearchText } from '../shared/searchUtils'
+import { searchItemsByQuery } from '../shared/searchUtils'
 import type { SetItem, SetItemGroup, SetItemRow } from '../shared/appTypes'
 
 export function SetItemsPage() {
@@ -47,26 +47,10 @@ export function SetItemsPage() {
   const filteredRows = useMemo(() => {
     const activeQuery = canSearchByName ? nameQuery.trim() : ''
 
-    return setRows
+    const categoryRows = setRows
       .filter((item) => (selectedSetId === '전체' ? true : item.세트Id === selectedSetId))
-      .filter((item) =>
-        activeQuery
-          ? matchesSearchText(
-              [
-                item.세트,
-                item.세트영문명,
-                item.이름,
-                item.영문명,
-                item.베이스,
-                item.옵션.join(' '),
-                item.부분세트효과.join(' '),
-                item.세트부분효과.join(' '),
-                item.세트완성효과.join(' '),
-              ].join(' '),
-              activeQuery,
-            )
-          : true,
-      )
+
+    return searchItemsByQuery(categoryRows, activeQuery, setItemSearchText)
       .toSorted(
         (left, right) =>
           left.세트.localeCompare(right.세트) ||
@@ -236,6 +220,20 @@ function SetItemsTable({ items, headerMeta }: { items: SetItemRow[]; headerMeta:
       widthMode="content"
     />
   )
+}
+
+function setItemSearchText(item: SetItemRow) {
+  return [
+    item.세트,
+    item.세트영문명,
+    item.이름,
+    item.영문명,
+    item.베이스,
+    item.옵션.join(' '),
+    item.부분세트효과.join(' '),
+    item.세트부분효과.join(' '),
+    item.세트완성효과.join(' '),
+  ].join(' ')
 }
 
 function SetItemNameCell({ item }: { item: SetItemRow }) {

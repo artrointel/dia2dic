@@ -1001,6 +1001,58 @@
   white-space: nowrap;
 }
 
+.recommend-tip-trigger {
+  cursor: help;
+  display: inline-flex;
+  flex: 0 0 auto;
+}
+
+.recommend-tip-card {
+  background: var(--surface-strong);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-strong);
+  color: var(--text);
+  display: grid;
+  gap: 8px;
+  max-width: min(320px, calc(100vw - 24px));
+  padding: 12px 13px;
+  white-space: normal;
+}
+
+.recommend-tip-card > strong {
+  color: var(--table-name);
+  font-size: 14px;
+  line-height: 1.35;
+  text-shadow: var(--table-text-shadow);
+}
+
+.recommend-tip-card > span {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.recommend-tip-runewords {
+  border-top: 1px solid var(--border);
+  display: grid;
+  gap: 4px;
+  padding-top: 8px;
+}
+
+.recommend-tip-runewords b {
+  color: var(--text);
+  font-size: 12px;
+}
+
+.recommend-tip-runewords span {
+  color: var(--table-option);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
 .weapon-ias-trigger {
   cursor: help;
   display: inline-flex;
