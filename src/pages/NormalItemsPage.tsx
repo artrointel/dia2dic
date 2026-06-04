@@ -18,6 +18,7 @@ import {
   weaponBowBases,
   weaponPolearmBases,
   weaponSpearBases,
+  runewords,
 } from '../shared/gameData'
 import { readPageSearchQuery } from '../shared/searchNavigation'
 import { searchItemsByQuery } from '../shared/searchUtils'
@@ -77,16 +78,18 @@ const weaponSortOptions: Array<{ value: NormalItemSortType; label: string }> = [
 type RecommendedItemTip = {
   note: string
   runewords: string[]
+  tag?: '추천' | '맨땅'
 }
 
 const recommendedItemTips: Record<string, RecommendedItemTip> = {
   '브레스트 플레이트': {
     note: '초반 힘 요구치가 낮고 3홈 방어구 제작에 무난한 베이스.',
     runewords: ['잠행', '연기', '신화'],
+    tag: '맨땅',
   },
   '고딕 플레이트': {
-    note: '노멀 구간에서 4홈 확보가 가능한 중갑 베이스.',
-    runewords: ['용맹', '스톤', '인내'],
+    note: '낮은 요구힘의 3홈 수수께끼 외형 베이스로 선택되는 갑옷.',
+    runewords: ['수수께끼'],
   },
   '메이지 플레이트': {
     note: '힘 요구치가 낮은 3홈 방어구라 수수께끼 재료로 선호.',
@@ -119,74 +122,73 @@ const recommendedItemTips: Record<string, RecommendedItemTip> = {
   헬름: {
     note: '초반 2홈 투구 제작에 쓰기 쉬운 기본 베이스.',
     runewords: ['학식', '천저'],
+    tag: '맨땅',
   },
   '본 헬름': {
     note: '2홈 투구 룬워드와 강령술사 테마 장비에 어울리는 베이스.',
     runewords: ['학식', '천저'],
+    tag: '맨땅',
   },
   '워 햇': {
     note: '가벼운 익셉셔널 투구 베이스.',
-    runewords: ['학식', '착란'],
+    runewords: ['학식'],
+    tag: '맨땅',
   },
   샐릿: {
     note: '방어력과 요구치가 무난한 익셉셔널 투구.',
-    runewords: ['학식', '착란'],
+    runewords: ['학식'],
+    tag: '맨땅',
   },
   캐스크: {
     note: '2홈 투구 룬워드용으로 부담 없는 익셉셔널 베이스.',
     runewords: ['학식', '천저'],
+    tag: '맨땅',
   },
   '데스 마스크': {
     note: '3홈까지 가능해 고급 투구 룬워드 후보가 되는 베이스.',
-    runewords: ['착란', '꿈'],
+    runewords: ['치료', '착란', '꿈'],
   },
   '그림 헬름': {
     note: '2홈 익셉셔널 투구 중 방어력 기대치가 높은 편.',
     runewords: ['학식', '천저'],
-  },
-  샤코: {
-    note: '낮은 힘 요구치의 엘리트 투구 베이스.',
-    runewords: ['학식', '착란'],
-  },
-  '히드라 스컬': {
-    note: '방어력 높은 2홈 엘리트 투구 후보.',
-    runewords: ['학식', '천저'],
-  },
-  아메트: {
-    note: '엘리트 투구 중 요구치와 방어력 균형이 무난한 베이스.',
-    runewords: ['학식', '착란'],
+    tag: '맨땅',
   },
   데몬헤드: {
     note: '3홈까지 가능해 꿈/착란 제작 후보로 볼 수 있는 엘리트 투구.',
-    runewords: ['꿈', '착란'],
+    runewords: ['치료', '꿈', '착란'],
   },
   '본 비지즈': {
     note: '3홈 엘리트 투구 중 방어력이 높아 꿈 재료 후보.',
-    runewords: ['꿈', '착란'],
+    runewords: ['치료', '꿈', '착란'],
   },
   '라지 쉴드': {
     note: '초반 3홈 방패 룬워드에 접근하기 쉬운 베이스.',
     runewords: ['고대인의 서약', '각운'],
+    tag: '맨땅',
   },
   '본 쉴드': {
     note: '2홈 방패 룬워드에 자주 쓰이는 초반 베이스.',
     runewords: ['각운'],
+    tag: '맨땅',
   },
   스큐텀: {
     note: '익셉셔널 3홈 방패로 초중반 저항 보강에 사용.',
     runewords: ['고대인의 서약', '각운'],
+    tag: '맨땅',
   },
   모너크: {
-    note: '비팔라딘 방패 중 4홈 영혼 제작의 대표 베이스.',
+    note: '비팔라딘 방패 중 4홈 영혼 제작의 대표 베이스. 에테 모너크는 소집 스왑용 영혼으로도 선호.',
     runewords: ['영혼', '불사조'],
   },
   '아카란 타아지': {
-    note: '전용 저항 옵션을 노릴 수 있는 팔라딘 4홈 방패.',
-    runewords: ['영혼', '망명'],
+    note: '노말 카우 등에서 4홈 영혼을 빠르게 노릴 수 있는 맨땅 팔라딘 방패.',
+    runewords: ['영혼'],
+    tag: '맨땅',
   },
   '아카란 론다쉬': {
-    note: '팔라딘 전용 옵션과 4홈을 함께 노리는 익셉셔널 방패.',
-    runewords: ['영혼', '망명'],
+    note: '전용 저항 옵션과 4홈 영혼을 함께 노리는 맨땅 팔라딘 방패.',
+    runewords: ['영혼'],
+    tag: '맨땅',
   },
   '세이크리드 타아지': {
     note: '낮은 힘 요구치와 팔라딘 전용 옵션으로 영혼 재료 선호도가 높음.',
@@ -210,7 +212,7 @@ const recommendedItemTips: Record<string, RecommendedItemTip> = {
   },
   '블레이드 보우': {
     note: '빠른 기본 속도와 4홈으로 활용도가 있는 엘리트 활.',
-    runewords: ['신뢰', '조화', '안개'],
+    runewords: ['신뢰', '조화'],
   },
   '쉐도우 보우': {
     note: '5홈까지 가능하고 피해/속도 균형이 좋은 엘리트 활.',
@@ -236,9 +238,14 @@ const recommendedItemTips: Record<string, RecommendedItemTip> = {
     note: '아마존 전용 +3 기술과 높은 피해를 함께 노리는 대표 활 베이스.',
     runewords: ['신뢰', '안개'],
   },
+  싸이드: {
+    note: '낮은 요구치와 빠른 공속으로 저힘 세팅의 무한 재료 후보.',
+    runewords: ['무한', '통찰'],
+  },
   파르티잔: {
     note: '악몽 구간 통찰용으로 접근하기 쉬운 폴암.',
     runewords: ['통찰', '순종'],
+    tag: '맨땅',
   },
   벡드코방: {
     note: '6홈까지 가능하고 중반 용병 무기 재료로 사용.',
@@ -260,7 +267,28 @@ const recommendedItemTips: Record<string, RecommendedItemTip> = {
     note: '빠른 속도와 6홈을 모두 갖춘 최상급 용병 폴암 후보.',
     runewords: ['무한', '통찰', '긍지', '죽음의 숨결'],
   },
+  맨캐쳐: {
+    note: '빠른 공속과 긴 사거리로 용병 무한 재료 후보가 되는 창 베이스.',
+    runewords: ['무한', '순종'],
+  },
 }
+
+const runewordSocketByName = new Map(
+  runewords.flatMap((runeword) =>
+    runewordDisplayNames(runeword.이름).map((name) => [name, runeword['소켓 수']] as const),
+  ),
+)
+
+const mercenaryArmorBases = new Set([
+  '더스크 슈라우드',
+  '스캐럽 허스크',
+  '와이어 플리스',
+  '그레이트 허버크',
+  '아콘 플레이트',
+  '세이크리드 아머',
+])
+
+const mercenaryHelmBases = new Set(['데스 마스크', '데몬헤드', '본 비지즈'])
 
 
 export function NormalItemsPage() {
@@ -586,9 +614,9 @@ function ArmorItemsTable({ items, headerMeta }: { items: NormalItemRow[]; header
     },
     {
       key: 'strength',
-      header: '필요힘',
+      header: <RequiredStrengthHeaderTip />,
       className: 'normal-item-col-strength',
-      render: (item) => formatNullableNumber(item.필요힘),
+      render: (item) => <RequiredStatCell label="필요힘" value={item.필요힘} />,
     },
     {
       key: 'level',
@@ -658,9 +686,9 @@ function DefensiveItemsTable({
       : []),
     {
       key: 'strength',
-      header: '필요힘',
+      header: <RequiredStrengthHeaderTip />,
       className: 'normal-item-col-strength',
-      render: (item) => formatNullableNumber(item.필요힘),
+      render: (item) => <RequiredStatCell label="필요힘" value={item.필요힘} />,
     },
     {
       key: 'level',
@@ -739,9 +767,9 @@ function ShieldItemsTable({ items, headerMeta }: { items: NormalItemRow[]; heade
       : []),
     {
       key: 'strength',
-      header: '필요힘',
+      header: <RequiredStrengthHeaderTip />,
       className: 'normal-item-col-strength',
-      render: (item) => formatNullableNumber(item.필요힘),
+      render: (item) => <RequiredStatCell label="필요힘" value={item.필요힘} />,
     },
     {
       key: 'level',
@@ -793,9 +821,9 @@ function WeaponItemsTable({ items, headerMeta }: { items: WeaponItemRow[]; heade
     },
     {
       key: 'average-damage',
-      header: '평균 데미지',
+      header: <SpeedAdjustedDamageHeaderTip />,
       className: 'normal-item-col-damage-average',
-      render: (item) => formatNullableNumber(item.양손데미지.평균),
+      render: (item) => <SpeedAdjustedDamageCell item={item} />,
     },
     ...(hasRange
       ? [
@@ -821,15 +849,15 @@ function WeaponItemsTable({ items, headerMeta }: { items: WeaponItemRow[]; heade
     },
     {
       key: 'strength',
-      header: '필요힘',
+      header: <RequiredStrengthHeaderTip />,
       className: 'normal-item-col-strength',
-      render: (item) => formatNullableNumber(item.필요힘),
+      render: (item) => <RequiredStatCell label="필요힘" value={item.필요힘} />,
     },
     {
       key: 'dexterity',
-      header: '필요민첩',
+      header: <RequiredDexterityHeaderTip />,
       className: 'normal-item-col-dexterity',
-      render: (item) => formatNullableNumber(item.필요민첩),
+      render: (item) => <RequiredStatCell label="필요민첩" value={item.필요민첩} />,
     },
     {
       key: 'level',
@@ -879,6 +907,7 @@ function RecommendBadge({ item }: { item: NormalListItem }) {
     note: '룬워드 재료로 활용도가 높은 베이스.',
     runewords: [],
   }
+  const tag = tip.tag ?? '추천'
 
   return (
     <FloatingTooltip
@@ -886,24 +915,177 @@ function RecommendBadge({ item }: { item: NormalListItem }) {
       content={<RecommendTipContent item={item} tip={tip} />}
       triggerClassName="recommend-tip-trigger"
     >
-      <span className="normal-item-recommend">추천</span>
+      <span className={['normal-item-recommend', tag === '맨땅' ? 'is-starter' : ''].filter(Boolean).join(' ')}>
+        {tag}
+      </span>
     </FloatingTooltip>
   )
 }
 
 function RecommendTipContent({ item, tip }: { item: NormalListItem; tip: RecommendedItemTip }) {
+  const mercenaryTip = recommendedMercenaryTip(item)
+  const etherealTip = recommendedEtherealTip(item, mercenaryTip)
+  const strengthTip = recommendedStrengthTip(item)
+
   return (
     <>
       <strong>{item.이름}</strong>
       <span>{tip.note}</span>
+      {mercenaryTip ? (
+        <span>
+          <b>용병</b>
+          {mercenaryTip}
+        </span>
+      ) : null}
+      {etherealTip ? (
+        <span>
+          <b>에테</b>
+          {etherealTip}
+        </span>
+      ) : null}
+      {strengthTip ? (
+        <span>
+          <b>요구힘</b>
+          {strengthTip}
+        </span>
+      ) : null}
       {tip.runewords.length > 0 ? (
         <span className="recommend-tip-runewords">
           <b>대표 룬워드</b>
-          <span>{tip.runewords.join(', ')}</span>
+          <span>{tip.runewords.map(formatRecommendedRuneword).join(', ')}</span>
         </span>
       ) : null}
     </>
   )
+}
+
+function recommendedMercenaryTip(item: NormalListItem) {
+  if (isWeaponItemRow(item)) {
+    if (item.계열 === '폴암' || item.이름 === '맨캐쳐') {
+      return '2막 용병 주력 베이스.'
+    }
+
+    if (item.계열 === '활') {
+      return '1막 용병용으로도 선택 가능.'
+    }
+
+    return null
+  }
+
+  if (item.카테고리 === '갑옷') {
+    return mercenaryArmorBases.has(item.이름) ? '용병 방어구로도 선호.' : null
+  }
+
+  if (item.카테고리 === '투구') {
+    return mercenaryHelmBases.has(item.이름) ? '치료 등 3홈 용병 투구로 활용.' : null
+  }
+
+  return null
+}
+
+function recommendedEtherealTip(item: NormalListItem, mercenaryTip: string | null) {
+  if (item.이름 === '모너크') {
+    return '본체 소집 스왑용 영혼은 에테리얼도 선호.'
+  }
+
+  if (isWeaponItemRow(item) && item.계열 === '활') {
+    return null
+  }
+
+  if (mercenaryTip) {
+    return '용병용이면 에테리얼 선호.'
+  }
+
+  return null
+}
+
+function recommendedStrengthTip(item: NormalListItem) {
+  if (item.필요힘 === null || item.필요힘 === undefined) {
+    return '요구힘 부담이 낮은 초반 베이스.'
+  }
+
+  const similarItems = comparableStrengthItems(item)
+  const strengthValues = similarItems
+    .map((similarItem) => similarItem.필요힘)
+    .filter((strength): strength is number => strength !== null && strength !== undefined)
+
+  if (strengthValues.length < 2) {
+    return null
+  }
+
+  const sortedStrengths = strengthValues.toSorted((left, right) => left - right)
+  const medianStrength = sortedStrengths[Math.floor(sortedStrengths.length / 2)]
+
+  if (item.필요힘 <= medianStrength) {
+    return `요구힘 ${item.필요힘}로 유사 베이스 대비 낮은 편.`
+  }
+
+  return null
+}
+
+function comparableStrengthItems(item: NormalListItem): NormalListItem[] {
+  if (isWeaponItemRow(item)) {
+    const weaponBasesByType: Record<NormalWeaponTypeFilter, WeaponBases> = {
+      창: weaponSpearBases,
+      폴암: weaponPolearmBases,
+      활: weaponBowBases,
+    }
+
+    return getWeaponBaseRows(weaponBasesByType[item.계열]).filter((candidate) => candidate.등급 === item.등급)
+  }
+
+  const armorBasesByCategory: Partial<Record<NormalItemCategory, ArmorBases[]>> = {
+    갑옷: [armorBases],
+    방패: [shieldBases, shieldPaladinBases],
+    투구: [helmBases],
+  }
+
+  return (armorBasesByCategory[item.카테고리] ?? [])
+    .flatMap((data) => getDefensiveBaseRows(data))
+    .filter((candidate) => candidate.등급 === item.등급)
+}
+
+function formatRecommendedRuneword(name: string) {
+  const socketCount = runewordSocketByName.get(name) ?? runewordSocketByName.get(normalizeRecommendedRunewordName(name))
+
+  return socketCount ? `${name}(${socketCount})` : name
+}
+
+function runewordDisplayNames(name: string) {
+  const parsedName = parseRecommendedRunewordName(name)
+  const names = [parsedName.primary, ...parsedName.aliases].filter(Boolean)
+
+  return [...new Set(names.flatMap((displayName) => [displayName, normalizeRecommendedRunewordName(displayName)]))]
+}
+
+function normalizeRecommendedRunewordName(name: string) {
+  return name.replace(/\s+/g, '')
+}
+
+function parseRecommendedRunewordName(name: string) {
+  const normalizedName = name.replace(/\s+/g, ' ').trim()
+  const bracketMatch = normalizedName.match(/^(.*?)\s*(?:\[|\()([^\])]+)(?:\]|\))\s*$/)
+  const primarySource = (bracketMatch?.[1] ?? normalizedName).trim()
+  const content = (bracketMatch?.[2] ?? '').trim()
+  const [primary, ...inlineAliases] = primarySource
+    .split('/')
+    .map((part) => part.trim())
+    .filter(Boolean)
+  const aliases = [
+    ...inlineAliases,
+    ...content
+      .split(',')
+      .map((part) => part.trim())
+      .filter((part) => part.startsWith('구:'))
+      .flatMap((part) => part.replace(/^구:\s*/, '').split('/'))
+      .map((part) => part.trim())
+      .filter(Boolean),
+  ]
+
+  return {
+    aliases,
+    primary: primary || normalizedName,
+  }
 }
 
 function BowIasMiniCardContent({ data }: { data: BowIasFrameItem }) {
@@ -1147,6 +1329,67 @@ function formatBaseSpeed(value: number) {
   return value > 0 ? `+${value}` : value
 }
 
+function RequiredStrengthHeaderTip() {
+  return (
+    <FloatingTooltip
+      cardClassName="info-tip-card"
+      content={
+        <>
+          <strong>필요힘</strong>
+          <span>아이템 착용에 필요한 힘 수치입니다.</span>
+          <span>에테리얼 장비는 힘/민첩 요구치가 각각 10 감소합니다.</span>
+        </>
+      }
+      triggerClassName="info-tip-trigger"
+    >
+      <span>필요힘*</span>
+    </FloatingTooltip>
+  )
+}
+
+function RequiredDexterityHeaderTip() {
+  return (
+    <FloatingTooltip
+      cardClassName="info-tip-card"
+      content={
+        <>
+          <strong>필요민첩</strong>
+          <span>아이템 착용에 필요한 민첩 수치입니다.</span>
+          <span>에테리얼 장비는 힘/민첩 요구치가 각각 10 감소합니다.</span>
+        </>
+      }
+      triggerClassName="info-tip-trigger"
+    >
+      <span>필요민첩*</span>
+    </FloatingTooltip>
+  )
+}
+
+function RequiredStatCell({ label, value }: { label: '필요민첩' | '필요힘'; value: number | null | undefined }) {
+  if (value === null || value === undefined) {
+    return <span className="muted-text">-</span>
+  }
+
+  const etherealValue = Math.max(0, value - 10)
+
+  return (
+    <FloatingTooltip
+      cardClassName="info-tip-card"
+      content={
+        <>
+          <strong>에테리얼 {label}</strong>
+          <span>일반: {value}</span>
+          <span>에테리얼: {etherealValue}</span>
+          <span>감소량: -{value - etherealValue}</span>
+        </>
+      }
+      triggerClassName="info-tip-trigger"
+    >
+      <strong>{value}</strong>
+    </FloatingTooltip>
+  )
+}
+
 function BaseSpeedHeaderTip() {
   return (
     <FloatingTooltip
@@ -1161,6 +1404,25 @@ function BaseSpeedHeaderTip() {
       triggerClassName="info-tip-trigger"
     >
       <span>베이스 공속*</span>
+    </FloatingTooltip>
+  )
+}
+
+function SpeedAdjustedDamageHeaderTip() {
+  return (
+    <FloatingTooltip
+      cardClassName="info-tip-card"
+      content={
+        <>
+          <strong>공속보정 평균</strong>
+          <span>표기 평균 피해에 베이스 공속(WSM)만 반영한 비교 지수입니다.</span>
+          <span>낮은 WSM은 빠른 베이스라 더 높은 값으로 보정됩니다.</span>
+          <span>실제 DPS는 직업/용병 모션, 기술, IAS, 브레이크포인트에 따라 달라집니다.</span>
+        </>
+      }
+      triggerClassName="info-tip-trigger"
+    >
+      <span>공속보정 평균*</span>
     </FloatingTooltip>
   )
 }
@@ -1398,6 +1660,52 @@ function WeaponDamageCell({ damage }: { damage: WeaponBaseItem['양손데미지'
       <strong>{formatDamageRange(damage)}</strong>
     </FloatingTooltip>
   )
+}
+
+function SpeedAdjustedDamageCell({ item }: { item: WeaponItemRow }) {
+  const averageDamage = averageWeaponDamage(item.양손데미지)
+
+  if (averageDamage === null) {
+    return <span className="muted-text">-</span>
+  }
+
+  const multiplier = baseSpeedDamageMultiplier(item.베이스공속)
+  const adjustedDamage = averageDamage * multiplier
+
+  return (
+    <FloatingTooltip
+      cardClassName="info-tip-card"
+      content={
+        <>
+          <strong>공속보정 평균</strong>
+          <span>표기 평균 피해: {formatCompactDecimal(averageDamage)}</span>
+          <span>베이스 공속: {formatBaseSpeed(item.베이스공속)}</span>
+          <span>보정 배율: x{formatCompactDecimal(multiplier)}</span>
+          <span>계산: 평균 피해 x (100 - 베이스공속) / 100</span>
+          <span>실제 공격 프레임 기반 DPS가 아닌 베이스 비교용 값입니다.</span>
+        </>
+      }
+      triggerClassName="info-tip-trigger"
+    >
+      <strong>{formatCompactDecimal(adjustedDamage)}</strong>
+    </FloatingTooltip>
+  )
+}
+
+function averageWeaponDamage(damage: WeaponBaseItem['양손데미지']) {
+  if (damage.최소 === null || damage.최대 === null) {
+    return damage.평균
+  }
+
+  return (damage.최소 + damage.최대) / 2
+}
+
+function baseSpeedDamageMultiplier(baseSpeed: number) {
+  return (100 - baseSpeed) / 100
+}
+
+function formatCompactDecimal(value: number) {
+  return Number(value.toFixed(1)).toLocaleString('ko-KR')
 }
 
 function formatDamageBonusRange(damage: WeaponBaseItem['양손데미지'], multiplier: number) {

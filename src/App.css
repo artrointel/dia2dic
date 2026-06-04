@@ -1001,6 +1001,11 @@
   white-space: nowrap;
 }
 
+.normal-item-recommend.is-starter {
+  border-color: color-mix(in srgb, #38bdf8 48%, var(--border));
+  color: #38bdf8;
+}
+
 .recommend-tip-trigger {
   cursor: help;
   display: inline-flex;
@@ -1032,6 +1037,13 @@
   font-size: 13px;
   font-weight: 700;
   line-height: 1.45;
+}
+
+.recommend-tip-card > span > b {
+  color: var(--text);
+  display: inline-block;
+  font-size: 12px;
+  margin-right: 6px;
 }
 
 .recommend-tip-runewords {
