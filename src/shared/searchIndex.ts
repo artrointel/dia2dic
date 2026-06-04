@@ -262,7 +262,15 @@ function weaponDocuments(data: WeaponBases): SearchDocument[] {
   return data.sections.flatMap((section) =>
     section.items.map((item) => ({
       label: item.이름,
-      text: [data.category, data.type, section.title, section.grade, item.이름, item.전용].join(' '),
+      text: [
+        data.category,
+        data.type,
+        data.type === '활' ? (item.전용 === '아마존 전용' ? '아마존 활' : '일반 활') : '',
+        section.title,
+        section.grade,
+        item.이름,
+        item.전용,
+      ].join(' '),
     })),
   )
 }

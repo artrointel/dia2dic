@@ -4,6 +4,7 @@ import { createPortal } from 'react-dom'
 type FloatingTooltipProps = {
   cardClassName: string
   children: ReactNode
+  collisionTargetSelector?: string
   content: ReactNode
   triggerClassName: string
 }
@@ -15,10 +16,17 @@ type TooltipPosition = {
 }
 
 const TOOLTIP_GAP = 8
+const TOOLTIP_COLLISION_GAP = 10
 const TOUCH_DRAG_DISMISS_THRESHOLD = 12
 const VIEWPORT_MARGIN = 8
 
-export function FloatingTooltip({ cardClassName, children, content, triggerClassName }: FloatingTooltipProps) {
+export function FloatingTooltip({
+  cardClassName,
+  children,
+  collisionTargetSelector,
+  content,
+  triggerClassName,
+}: FloatingTooltipProps) {
   const triggerRef = useRef<HTMLSpanElement>(null)
   const tooltipRef = useRef<HTMLSpanElement>(null)
   const lastTouchTimestampRef = useRef(0)
@@ -82,13 +90,19 @@ export function FloatingTooltip({ cardClassName, children, content, triggerClass
     const aboveFits = aboveTop >= VIEWPORT_MARGIN
     const nextTop = belowFits || !aboveFits ? Math.min(belowTop, window.innerHeight - rect.height - VIEWPORT_MARGIN) : aboveTop
     const safeTop = Math.max(VIEWPORT_MARGIN, nextTop)
+    const adjustedPosition = avoidCollisionWithTarget({
+      left: nextLeft,
+      targetSelector: collisionTargetSelector,
+      tooltip,
+      top: safeTop,
+    })
 
-    if (position.left !== nextLeft || position.top !== safeTop) {
+    if (position.left !== adjustedPosition.left || position.top !== adjustedPosition.top) {
       setPosition((currentPosition) =>
-        currentPosition ? { ...currentPosition, left: nextLeft, top: safeTop } : currentPosition,
+        currentPosition ? { ...currentPosition, left: adjustedPosition.left, top: adjustedPosition.top } : currentPosition,
       )
     }
-  }, [position])
+  }, [collisionTargetSelector, position])
 
   useEffect(() => {
     if (!position) {
@@ -173,4 +187,58 @@ export function FloatingTooltip({ cardClassName, children, content, triggerClass
         : null}
     </span>
   )
+}
+
+function avoidCollisionWithTarget({
+  left,
+  targetSelector,
+  tooltip,
+  top,
+}: {
+  left: number
+  targetSelector: string | undefined
+  tooltip: HTMLElement
+  top: number
+}) {
+  if (!targetSelector) {
+    return { left, top }
+  }
+
+  const target = [...document.querySelectorAll<HTMLElement>(targetSelector)]
+    .filter((element) => element !== tooltip)
+    .find((element) => intersects(element.getBoundingClientRect(), rectAt(tooltip.getBoundingClientRect(), left, top)))
+
+  if (!target) {
+    return { left, top }
+  }
+
+  const targetRect = target.getBoundingClientRect()
+  const tooltipRect = tooltip.getBoundingClientRect()
+  const preferredLeft = targetRect.right + TOOLTIP_COLLISION_GAP
+  const rightSideFits = preferredLeft + tooltipRect.width <= window.innerWidth - VIEWPORT_MARGIN
+  const nextLeft = rightSideFits
+    ? preferredLeft
+    : Math.max(VIEWPORT_MARGIN, targetRect.left - tooltipRect.width - TOOLTIP_COLLISION_GAP)
+  const nextTop = Math.min(
+    Math.max(VIEWPORT_MARGIN, targetRect.top),
+    Math.max(VIEWPORT_MARGIN, window.innerHeight - tooltipRect.height - VIEWPORT_MARGIN),
+  )
+
+  return {
+    left: nextLeft,
+    top: nextTop,
+  }
+}
+
+function intersects(left: DOMRect, right: DOMRect) {
+  return left.left < right.right && left.right > right.left && left.top < right.bottom && left.bottom > right.top
+}
+
+function rectAt(rect: DOMRect, left: number, top: number) {
+  return {
+    bottom: top + rect.height,
+    left,
+    right: left + rect.width,
+    top,
+  } as DOMRect
 }

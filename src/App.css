@@ -875,6 +875,18 @@
   min-width: 0;
 }
 
+.formatted-runeword-name .unique-item-title-line {
+  align-items: baseline;
+  display: flex;
+  gap: 8px;
+  min-width: 0;
+}
+
+.formatted-runeword-name .unique-item-title-line .runeword-name {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
 .unique-primary-stats,
 .set-item-requirements {
   display: inline-grid;

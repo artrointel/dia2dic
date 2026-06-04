@@ -5,6 +5,7 @@ import { useSearchParams } from 'react-router-dom'
 import { ItemDataTable, type ItemDataTableColumn } from '../components/ItemDataTable'
 import { FloatingTooltip } from '../components/FloatingTooltip'
 import { PageHeading } from '../components/PageHeading'
+import type { RecommendationFilter, RecommendationTag } from '../components/RecommendationBadge'
 import { FilterPanel, NameSearch, SegmentedFilter, SortControl, TableToolbar } from '../components/TableControls'
 import {
   armorBases,
@@ -52,7 +53,8 @@ const normalItemCategories: NormalItemCategory[] = [
 ]
 const normalItemGradeFilters: NormalItemGradeFilter[] = ['전체', '노멀', '익셉셔널', '엘리트']
 const normalShieldTypeFilters: NormalShieldTypeFilter[] = ['일반 방패', '팔라딘 방패']
-const normalWeaponTypeFilters: NormalWeaponTypeFilter[] = ['폴암', '활', '창']
+const normalWeaponTypeFilters: NormalWeaponTypeFilter[] = ['폴암', '일반 활', '아마존 활', '창']
+const recommendationFilters: RecommendationFilter[] = ['전체', '추천', '맨땅']
 const armorSortOptions: Array<{ value: NormalItemSortType; label: string }> = [
   { value: 'level-asc', label: '레벨제한' },
   { value: 'strength-asc', label: '요구힘' },
@@ -298,6 +300,7 @@ export function NormalItemsPage() {
   const lastAppliedSearchQuery = useRef(incomingSearchQuery)
   const [selectedCategory, setSelectedCategory] = useState<NormalItemCategory>(initialSearchState.category)
   const [selectedGrade, setSelectedGrade] = useState<NormalItemGradeFilter>('전체')
+  const [selectedRecommendation, setSelectedRecommendation] = useState<RecommendationFilter>('전체')
   const [selectedShieldType, setSelectedShieldType] = useState<NormalShieldTypeFilter>(initialSearchState.shieldType)
   const [selectedWeaponType, setSelectedWeaponType] = useState<NormalWeaponTypeFilter>(initialSearchState.weaponType)
   const [nameQuery, setNameQuery] = useState(initialSearchState.nameQuery)
@@ -309,12 +312,19 @@ export function NormalItemsPage() {
   const helmItems = useMemo(() => getHelmBaseRows(), [])
   const shieldItems = useMemo(() => getShieldBaseRows(shieldBases), [])
   const paladinShieldItems = useMemo(() => getShieldBaseRows(shieldPaladinBases), [])
-  const bowItems = useMemo(() => getWeaponBaseRows(weaponBowBases), [])
+  const bowItems = useMemo(
+    () => getWeaponBaseRows(weaponBowBases, '일반 활', (item) => item.전용 !== '아마존 전용'),
+    [],
+  )
+  const amazonBowItems = useMemo(
+    () => getWeaponBaseRows(weaponBowBases, '아마존 활', (item) => item.전용 === '아마존 전용'),
+    [],
+  )
   const polearmItems = useMemo(() => getWeaponBaseRows(weaponPolearmBases), [])
   const spearItems = useMemo(() => getWeaponBaseRows(weaponSpearBases), [])
   const sortOptions =
     selectedCategory === '무기'
-      ? selectedWeaponType === '활'
+      ? isBowWeaponType(selectedWeaponType)
         ? weaponSortOptions.filter((option) => option.value !== 'range-asc')
         : weaponSortOptions
       : selectedCategory === '갑옷'
@@ -342,8 +352,10 @@ export function NormalItemsPage() {
             ? paladinShieldItems
             : shieldItems
         : selectedCategory === '무기'
-          ? selectedWeaponType === '활'
+          ? selectedWeaponType === '일반 활'
             ? bowItems
+            : selectedWeaponType === '아마존 활'
+              ? amazonBowItems
             : selectedWeaponType === '창'
               ? spearItems
             : polearmItems
@@ -351,10 +363,11 @@ export function NormalItemsPage() {
 
     const gradeRows = sourceItems
       .filter((item) => (selectedGrade === '전체' ? true : item.등급 === selectedGrade))
+      .filter((item) => recommendationMatches(getNormalItemRecommendationTag(item), selectedRecommendation))
 
     return searchItemsByQuery(gradeRows, nameQuery, normalItemSearchText)
       .toSorted((left, right) => sortNormalItems(left, right, activeSortType))
-  }, [activeSortType, armorItems, beltItems, bootItems, bowItems, gloveItems, helmItems, nameQuery, paladinShieldItems, polearmItems, selectedCategory, selectedGrade, selectedShieldType, selectedWeaponType, shieldItems, spearItems])
+  }, [activeSortType, amazonBowItems, armorItems, beltItems, bootItems, bowItems, gloveItems, helmItems, nameQuery, paladinShieldItems, polearmItems, selectedCategory, selectedGrade, selectedRecommendation, selectedShieldType, selectedWeaponType, shieldItems, spearItems])
 
   useEffect(() => {
     if (incomingSearchQuery === lastAppliedSearchQuery.current) {
@@ -385,8 +398,10 @@ export function NormalItemsPage() {
           ? paladinShieldItems.length
           : shieldItems.length
       : selectedCategory === '무기'
-        ? selectedWeaponType === '활'
+        ? selectedWeaponType === '일반 활'
           ? bowItems.length
+          : selectedWeaponType === '아마존 활'
+            ? amazonBowItems.length
           : selectedWeaponType === '창'
             ? spearItems.length
           : polearmItems.length
@@ -456,6 +471,22 @@ export function NormalItemsPage() {
                   type="button"
                 >
                   {grade}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="normal-grade-filter">
+            <span>추천</span>
+            <div>
+              {recommendationFilters.map((filter) => (
+                <button
+                  className={filter === selectedRecommendation ? 'is-active' : ''}
+                  key={filter}
+                  onClick={() => setSelectedRecommendation(filter)}
+                  type="button"
+                >
+                  {filter}
                 </button>
               ))}
             </div>
@@ -532,10 +563,11 @@ function resolveNormalSearchState(query: string): {
   }
 
   const matchingWeaponGroup = [
-    weaponPolearmBases,
-    weaponBowBases,
-    weaponSpearBases,
-  ].find((data) => weaponBasesMatchSearch(data, trimmedQuery))
+    { data: weaponPolearmBases, type: '폴암' as NormalWeaponTypeFilter },
+    { data: weaponBowBases, type: '아마존 활' as NormalWeaponTypeFilter, itemFilter: isAmazonBowItem },
+    { data: weaponBowBases, type: '일반 활' as NormalWeaponTypeFilter, itemFilter: isRegularBowItem },
+    { data: weaponSpearBases, type: '창' as NormalWeaponTypeFilter },
+  ].find(({ data, itemFilter }) => weaponBasesMatchSearch(data, trimmedQuery, itemFilter))
 
   if (matchingWeaponGroup) {
     return { ...defaultState, category: '무기', weaponType: matchingWeaponGroup.type }
@@ -553,16 +585,22 @@ function armorBasesMatchSearch(data: ArmorBases, query: string) {
   return searchItemsByQuery(documents, query, (document) => document).length > 0
 }
 
-function weaponBasesMatchSearch(data: WeaponBases, query: string) {
+function weaponBasesMatchSearch(
+  data: WeaponBases,
+  query: string,
+  itemFilter: (item: WeaponBaseItem) => boolean = () => true,
+) {
   const documents = data.sections.flatMap((section) => [
     [data.category, data.type, section.title, section.grade].join(' '),
-    ...section.items.map((item) => [item.이름, item.전용 ?? ''].join(' ')),
+    ...section.items.filter(itemFilter).map((item) => [item.이름, item.전용 ?? ''].join(' ')),
   ])
 
   return searchItemsByQuery(documents, query, (document) => document).length > 0
 }
 
 function normalItemSearchText(item: NormalListItem) {
+  const recommendationTag = getNormalItemRecommendationTag(item)
+
   return [
     item.이름,
     isArmorItemRow(item) ? item.영문명 ?? '' : '',
@@ -572,7 +610,21 @@ function normalItemSearchText(item: NormalListItem) {
     isWeaponItemRow(item) ? `베이스공속 ${item.베이스공속}` : '',
     isArmorItemRow(item) ? item.무게 ?? '' : '',
     item.전용 ?? '',
+    recommendationTag ?? '',
+    item.추천 ? recommendedItemTips[item.이름]?.note ?? '' : '',
   ].join(' ')
+}
+
+function getNormalItemRecommendationTag(item: NormalListItem): RecommendationTag | null {
+  if (!item.추천) {
+    return null
+  }
+
+  return recommendedItemTips[item.이름]?.tag ?? '추천'
+}
+
+function recommendationMatches(tag: RecommendationTag | null, filter: RecommendationFilter) {
+  return filter === '전체' ? true : tag === filter
 }
 
 function ArmorItemsTable({ items, headerMeta }: { items: NormalItemRow[]; headerMeta: string }) {
@@ -965,7 +1017,7 @@ function recommendedMercenaryTip(item: NormalListItem) {
       return '2막 용병 주력 베이스.'
     }
 
-    if (item.계열 === '활') {
+    if (item.계열 === '일반 활') {
       return '1막 용병용으로도 선택 가능.'
     }
 
@@ -988,7 +1040,7 @@ function recommendedEtherealTip(item: NormalListItem, mercenaryTip: string | nul
     return '본체 소집 스왑용 영혼은 에테리얼도 선호.'
   }
 
-  if (isWeaponItemRow(item) && item.계열 === '활') {
+  if (isWeaponItemRow(item) && isBowWeaponType(item.계열)) {
     return null
   }
 
@@ -1025,13 +1077,15 @@ function recommendedStrengthTip(item: NormalListItem) {
 
 function comparableStrengthItems(item: NormalListItem): NormalListItem[] {
   if (isWeaponItemRow(item)) {
-    const weaponBasesByType: Record<NormalWeaponTypeFilter, WeaponBases> = {
-      창: weaponSpearBases,
-      폴암: weaponPolearmBases,
-      활: weaponBowBases,
+    const weaponBasesByType: Record<NormalWeaponTypeFilter, WeaponItemRow[]> = {
+      창: getWeaponBaseRows(weaponSpearBases),
+      폴암: getWeaponBaseRows(weaponPolearmBases),
+      활: getWeaponBaseRows(weaponBowBases),
+      '일반 활': getWeaponBaseRows(weaponBowBases, '일반 활', isRegularBowItem),
+      '아마존 활': getWeaponBaseRows(weaponBowBases, '아마존 활', isAmazonBowItem),
     }
 
-    return getWeaponBaseRows(weaponBasesByType[item.계열]).filter((candidate) => candidate.등급 === item.등급)
+    return weaponBasesByType[item.계열].filter((candidate) => candidate.등급 === item.등급)
   }
 
   const armorBasesByCategory: Partial<Record<NormalItemCategory, ArmorBases[]>> = {
@@ -1221,16 +1275,34 @@ function getDefensiveBaseRows(data: ArmorBases): NormalItemRow[] {
     )
 }
 
-function getWeaponBaseRows(data: WeaponBases): WeaponItemRow[] {
+function getWeaponBaseRows(
+  data: WeaponBases,
+  typeOverride?: NormalWeaponTypeFilter,
+  itemFilter: (item: WeaponBaseItem) => boolean = () => true,
+): WeaponItemRow[] {
+  const weaponType = typeOverride ?? data.type
+
   return data.sections.flatMap((section) =>
-    section.items.map((item) => ({
+    section.items.filter(itemFilter).map((item) => ({
       ...item,
-      id: `${data.type}-${section.id}-${item.이름}`,
+      id: `${weaponType}-${section.id}-${item.이름}`,
       등급: section.grade,
-      계열: data.type,
+      계열: weaponType,
       카테고리: '무기',
     })),
   )
+}
+
+function isBowWeaponType(type: NormalWeaponTypeFilter) {
+  return type === '활' || type === '일반 활' || type === '아마존 활'
+}
+
+function isRegularBowItem(item: WeaponBaseItem) {
+  return item.전용 !== '아마존 전용'
+}
+
+function isAmazonBowItem(item: WeaponBaseItem) {
+  return item.전용 === '아마존 전용'
 }
 
 function sortNormalItems(left: NormalListItem, right: NormalListItem, sortType: NormalItemSortType) {
