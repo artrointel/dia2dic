@@ -8,6 +8,7 @@ import { EquipmentUpgradesPage } from './pages/EquipmentUpgradesPage'
 import { FrameBreakpointsPage } from './pages/FrameBreakpointsPage'
 import { HomePage } from './pages/HomePage'
 import { LevelingPage } from './pages/LevelingPage'
+import { MiscRecipesPage } from './pages/MiscRecipesPage'
 import { NormalItemsPage } from './pages/NormalItemsPage'
 import { RunesPage } from './pages/RunesPage'
 import { RunewordsPage } from './pages/RunewordsPage'
@@ -62,6 +63,7 @@ function App() {
           <Route path="/cube/equipment-upgrades" element={<EquipmentUpgradesPage />} />
           <Route path="/cube/socket-recipes" element={<SocketRecipesPage />} />
           <Route path="/cube/crafting" element={<CraftingPage />} />
+          <Route path="/cube/recipes" element={<MiscRecipesPage />} />
           <Route path="/items/normal" element={<NormalItemsPage />} />
           <Route path="/items/sets" element={<SetItemsPage />} />
           <Route path="/items/uniques" element={<UniqueItemsPage />} />

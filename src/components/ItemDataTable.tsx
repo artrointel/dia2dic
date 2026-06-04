@@ -26,8 +26,14 @@ type ItemDataTableProps<TItem> = {
   getRowProps?: (item: TItem, index: number, items: TItem[]) => HTMLAttributes<HTMLTableRowElement> | undefined
   items: TItem[]
   fillColumnKey?: string
+  header?: {
+    className?: string
+    meta?: ReactNode
+    title?: ReactNode
+  }
   metaLabel?: ReactNode
   pageSize?: number | 'all'
+  showHeader?: boolean
   stickyFirstColumn?: boolean
   tableClassName?: string
   widthMode?: 'fill' | 'content'
@@ -46,9 +52,11 @@ export function ItemDataTable<TItem>({
   fillColumnKey,
   getRowKey,
   getRowProps,
+  header,
   items,
   metaLabel,
   pageSize = 10,
+  showHeader = true,
   stickyFirstColumn = true,
   tableClassName = '',
   widthMode = 'fill',
@@ -69,6 +77,9 @@ export function ItemDataTable<TItem>({
   const pageStartIndex = hasPagination ? (activePage - 1) * normalizedPageSize : 0
   const visibleItems = hasPagination ? items.slice(pageStartIndex, pageStartIndex + normalizedPageSize) : items
   const paginationItems = useMemo(() => paginationRange(activePage, pageCount), [activePage, pageCount])
+  const headerMeta = header?.meta ?? metaLabel
+  const hasHeaderContent = Boolean(header?.title || headerMeta)
+  const hasFullHeader = Boolean(header?.title)
 
   const tableClasses = ['table-crosshair', 'runewords-table', 'normal-items-table', tableClassName]
     .filter(Boolean)
@@ -147,10 +158,25 @@ export function ItemDataTable<TItem>({
 
   return (
     <div
-      className={['item-data-table-block', widthMode === 'content' ? 'is-content-width' : ''].filter(Boolean).join(' ')}
+      className={[
+        'item-data-table-block',
+        widthMode === 'content' ? 'is-content-width' : '',
+        showHeader && hasFullHeader ? 'has-table-header' : '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
       style={contentWidthStyle}
     >
-      {metaLabel ? <div className="item-data-table-meta">{metaLabel}</div> : null}
+      {showHeader && hasHeaderContent ? (
+        hasFullHeader ? (
+          <div className={['item-data-table-header', header?.className].filter(Boolean).join(' ')}>
+            <h2>{header?.title}</h2>
+            {headerMeta ? <span>{headerMeta}</span> : null}
+          </div>
+        ) : (
+          <div className="item-data-table-meta">{headerMeta}</div>
+        )
+      ) : null}
 
       <div className={['runewords-table-wrap', wrapperClassName].filter(Boolean).join(' ')} style={contentWidthStyle}>
         <div

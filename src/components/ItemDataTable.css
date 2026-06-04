@@ -9,6 +9,15 @@
   max-width: 100%;
 }
 
+.item-data-table-block.has-table-header {
+  gap: 12px;
+}
+
+.item-data-table-header {
+  max-width: 100%;
+  min-width: 0;
+}
+
 .item-data-table-meta {
   color: var(--text-muted);
   font-size: 14px;

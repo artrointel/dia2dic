@@ -16,7 +16,7 @@ import type {
   UniqueItemSortType,
 } from '../shared/appTypes'
 
-const uniqueCategoryFilters: UniqueItemCategoryFilter[] = ['전체', '무기', '방어구', '장신구', '기타']
+const uniqueCategoryFilters: UniqueItemCategoryFilter[] = ['전체', '무기', '방어구', '장신구', '차암', '주얼', '기타']
 const uniqueGradeFilters: UniqueItemGradeFilter[] = ['전체', '노멀', '익셉셔널', '엘리트']
 const weaponCategoryTitles = ['단도', '도검', '도끼', '미늘창', '손톱', '쇠뇌', '지팡이', '창', '철퇴', '홀', '투창', '활']
 const armorCategoryTitles = ['투구', '갑옷', '방패', '장갑', '허리띠', '신발']
@@ -152,13 +152,13 @@ export function UniqueItemsPage() {
 
       <UniqueItemsTable
         items={filteredItems}
-        metaLabel={`총 ${uniqueRows.length}개 중 ${filteredItems.length}개 표시`}
+        headerMeta={`총 ${uniqueRows.length}개 중 ${filteredItems.length}개 표시`}
       />
     </section>
   )
 }
 
-function UniqueItemsTable({ items, metaLabel }: { items: UniqueItemRow[]; metaLabel: string }) {
+function UniqueItemsTable({ items, headerMeta }: { items: UniqueItemRow[]; headerMeta: string }) {
   const columns: ItemDataTableColumn<UniqueItemRow>[] = [
     {
       key: 'name',
@@ -203,8 +203,8 @@ function UniqueItemsTable({ items, metaLabel }: { items: UniqueItemRow[]; metaLa
       emptyMessage="유니크 아이템 데이터가 없습니다."
       fillColumnKey="options"
       getRowKey={(item) => item.id}
+      header={{ meta: headerMeta }}
       items={items}
-      metaLabel={metaLabel}
       pageSize={7}
       widthMode="content"
     />
@@ -365,6 +365,14 @@ function resolveUniqueSearchState(query: string): {
     return { ...defaultState, category: '장신구' }
   }
 
+  if (matchingItem.카테고리 === '차암') {
+    return { ...defaultState, category: '차암' }
+  }
+
+  if (matchingItem.카테고리 === '주얼') {
+    return { ...defaultState, category: '주얼' }
+  }
+
   return { ...defaultState, category: '기타' }
 }
 
@@ -388,6 +396,14 @@ function categoryMatches(
 
   if (category === '장신구') {
     return item.카테고리 === '장신구'
+  }
+
+  if (category === '차암') {
+    return item.카테고리 === '차암'
+  }
+
+  if (category === '주얼') {
+    return item.카테고리 === '주얼'
   }
 
   return item.카테고리 === '기타'

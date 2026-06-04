@@ -6,6 +6,7 @@ import {
   equipmentUpgrades,
   gloveBases,
   helmBases,
+  miscRecipes,
   runeUpgrades,
   runewords,
   setItems,
@@ -102,6 +103,15 @@ const pageIndexes: SearchPageIndex[] = [
     documents: socketRecipes.map((recipe) => ({
       label: `${recipe.대상} 소켓`,
       text: [recipe.대상, recipe.재료.join(' '), recipe.결과].join(' '),
+    })),
+  },
+  {
+    path: '/cube/recipes',
+    title: '기타 조합',
+    description: '파괴참 갱신 등 기타 호라드릭 함 조합식에서 검색합니다.',
+    documents: miscRecipes.map((recipe) => ({
+      label: `${recipe.분류} - ${recipe.결과}`,
+      text: [recipe.분류, recipe.대상, recipe.현재, recipe.결과, recipe.재료.join(' ')].join(' '),
     })),
   },
   {

@@ -131,7 +131,7 @@ export function SetItemsPage() {
 
       {selectedSet && <SetBonusPanel set={selectedSet} />}
 
-      <SetItemsTable items={filteredRows} metaLabel={`총 ${setRows.length}개 중 ${filteredRows.length}개 표시`} />
+      <SetItemsTable items={filteredRows} headerMeta={`총 ${setRows.length}개 중 ${filteredRows.length}개 표시`} />
     </section>
   )
 }
@@ -172,7 +172,7 @@ function SetBonusList({ title, values, variant }: { title: string; values: strin
   )
 }
 
-function SetItemsTable({ items, metaLabel }: { items: SetItemRow[]; metaLabel: string }) {
+function SetItemsTable({ items, headerMeta }: { items: SetItemRow[]; headerMeta: string }) {
   const columns: ItemDataTableColumn<SetItemRow>[] = [
     {
       key: 'name',
@@ -230,8 +230,8 @@ function SetItemsTable({ items, metaLabel }: { items: SetItemRow[]; metaLabel: s
       emptyMessage="세트 아이템 데이터가 없습니다."
       fillColumnKey="options"
       getRowKey={(item) => item.id}
+      header={{ meta: headerMeta }}
       items={items}
-      metaLabel={metaLabel}
       pageSize={7}
       widthMode="content"
     />

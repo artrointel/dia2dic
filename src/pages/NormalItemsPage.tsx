@@ -257,19 +257,19 @@ export function NormalItemsPage() {
       />
       <>
         {selectedCategory === '갑옷' ? (
-          <ArmorItemsTable items={filteredItems.filter(isArmorItemRow)} metaLabel={`총 ${totalItemCount}개 중 ${filteredItems.length}개 표시`} />
+          <ArmorItemsTable items={filteredItems.filter(isArmorItemRow)} headerMeta={`총 ${totalItemCount}개 중 ${filteredItems.length}개 표시`} />
         ) : selectedCategory === '신발' ? (
-          <DefensiveItemsTable emptyMessage="신발 데이터는 아직 준비 중입니다." items={filteredItems.filter(isArmorItemRow)} metaLabel={`총 ${totalItemCount}개 중 ${filteredItems.length}개 표시`} />
+          <DefensiveItemsTable emptyMessage="신발 데이터는 아직 준비 중입니다." items={filteredItems.filter(isArmorItemRow)} headerMeta={`총 ${totalItemCount}개 중 ${filteredItems.length}개 표시`} />
         ) : selectedCategory === '벨트' ? (
-          <DefensiveItemsTable emptyMessage="벨트 데이터는 아직 준비 중입니다." items={filteredItems.filter(isArmorItemRow)} metaLabel={`총 ${totalItemCount}개 중 ${filteredItems.length}개 표시`} />
+          <DefensiveItemsTable emptyMessage="벨트 데이터는 아직 준비 중입니다." items={filteredItems.filter(isArmorItemRow)} headerMeta={`총 ${totalItemCount}개 중 ${filteredItems.length}개 표시`} />
         ) : selectedCategory === '장갑' ? (
-          <DefensiveItemsTable emptyMessage="장갑 데이터는 아직 준비 중입니다." items={filteredItems.filter(isArmorItemRow)} metaLabel={`총 ${totalItemCount}개 중 ${filteredItems.length}개 표시`} />
+          <DefensiveItemsTable emptyMessage="장갑 데이터는 아직 준비 중입니다." items={filteredItems.filter(isArmorItemRow)} headerMeta={`총 ${totalItemCount}개 중 ${filteredItems.length}개 표시`} />
         ) : selectedCategory === '투구' ? (
-          <DefensiveItemsTable emptyMessage="투구 데이터는 아직 준비 중입니다." items={filteredItems.filter(isArmorItemRow)} metaLabel={`총 ${totalItemCount}개 중 ${filteredItems.length}개 표시`} />
+          <DefensiveItemsTable emptyMessage="투구 데이터는 아직 준비 중입니다." items={filteredItems.filter(isArmorItemRow)} headerMeta={`총 ${totalItemCount}개 중 ${filteredItems.length}개 표시`} />
         ) : selectedCategory === '방패' ? (
-          <ShieldItemsTable items={filteredItems.filter(isArmorItemRow)} metaLabel={`총 ${totalItemCount}개 중 ${filteredItems.length}개 표시`} />
+          <ShieldItemsTable items={filteredItems.filter(isArmorItemRow)} headerMeta={`총 ${totalItemCount}개 중 ${filteredItems.length}개 표시`} />
         ) : selectedCategory === '무기' ? (
-          <WeaponItemsTable items={filteredItems.filter(isWeaponItemRow)} metaLabel={`총 ${totalItemCount}개 중 ${filteredItems.length}개 표시`} />
+          <WeaponItemsTable items={filteredItems.filter(isWeaponItemRow)} headerMeta={`총 ${totalItemCount}개 중 ${filteredItems.length}개 표시`} />
         ) : (
           <EmptyNormalItemsTable category={selectedCategory} />
         )}
@@ -344,7 +344,7 @@ function weaponBasesMatchSearch(data: WeaponBases, query: string) {
   )
 }
 
-function ArmorItemsTable({ items, metaLabel }: { items: NormalItemRow[]; metaLabel: string }) {
+function ArmorItemsTable({ items, headerMeta }: { items: NormalItemRow[]; headerMeta: string }) {
   const columns: ItemDataTableColumn<NormalItemRow>[] = [
     {
       key: 'grade',
@@ -401,8 +401,8 @@ function ArmorItemsTable({ items, metaLabel }: { items: NormalItemRow[]; metaLab
       emptyMessage="갑옷 데이터는 아직 준비 중입니다."
       fillColumnKey="name"
       getRowKey={(item) => item.id}
+      header={{ meta: headerMeta }}
       items={items}
-      metaLabel={metaLabel}
       widthMode="content"
       wrapperClassName="armor-items-table"
     />
@@ -412,11 +412,11 @@ function ArmorItemsTable({ items, metaLabel }: { items: NormalItemRow[]; metaLab
 function DefensiveItemsTable({
   emptyMessage,
   items,
-  metaLabel,
+  headerMeta,
 }: {
   emptyMessage: string
   items: NormalItemRow[]
-  metaLabel: string
+  headerMeta: string
 }) {
   const hasSockets = items.some((item) => item.최대홈 !== null && item.최대홈 !== undefined)
   const columns: ItemDataTableColumn<NormalItemRow>[] = [
@@ -473,14 +473,14 @@ function DefensiveItemsTable({
       emptyMessage={emptyMessage}
       fillColumnKey="name"
       getRowKey={(item) => item.id}
+      header={{ meta: headerMeta }}
       items={items}
-      metaLabel={metaLabel}
       widthMode="content"
     />
   )
 }
 
-function ShieldItemsTable({ items, metaLabel }: { items: NormalItemRow[]; metaLabel: string }) {
+function ShieldItemsTable({ items, headerMeta }: { items: NormalItemRow[]; headerMeta: string }) {
   const hasBlockRate = items.some((item) => item.블럭율)
   const hasSmiteDamage = items.some((item) => item.강타피해)
   const columns: ItemDataTableColumn<NormalItemRow>[] = [
@@ -554,14 +554,14 @@ function ShieldItemsTable({ items, metaLabel }: { items: NormalItemRow[]; metaLa
       emptyMessage="방패 데이터는 아직 준비 중입니다."
       fillColumnKey="name"
       getRowKey={(item) => item.id}
+      header={{ meta: headerMeta }}
       items={items}
-      metaLabel={metaLabel}
       widthMode="content"
     />
   )
 }
 
-function WeaponItemsTable({ items, metaLabel }: { items: WeaponItemRow[]; metaLabel: string }) {
+function WeaponItemsTable({ items, headerMeta }: { items: WeaponItemRow[]; headerMeta: string }) {
   const hasRange = items.some((item) => item.사거리 !== null)
   const columns: ItemDataTableColumn<WeaponItemRow>[] = [
     {
@@ -636,8 +636,8 @@ function WeaponItemsTable({ items, metaLabel }: { items: WeaponItemRow[]; metaLa
       emptyMessage="무기 데이터는 아직 준비 중입니다."
       fillColumnKey="name"
       getRowKey={(item) => item.id}
+      header={{ meta: headerMeta }}
       items={items}
-      metaLabel={metaLabel}
       widthMode="content"
     />
   )

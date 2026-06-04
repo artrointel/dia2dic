@@ -105,7 +105,7 @@ export function CraftingPage() {
 
       <CraftRecipesTable
         items={filteredRows}
-        metaLabel={`총 ${nameQuery.trim() ? allRows.length : selectedRows.length}개 중 ${filteredRows.length}개 표시`}
+        headerMeta={`총 ${nameQuery.trim() ? allRows.length : selectedRows.length}개 중 ${filteredRows.length}개 표시`}
       />
     </section>
   )
@@ -121,7 +121,7 @@ function CraftTips({ tips }: { tips: string[] }) {
   )
 }
 
-function CraftRecipesTable({ items, metaLabel }: { items: CraftRecipeRow[]; metaLabel: string }) {
+function CraftRecipesTable({ items, headerMeta }: { items: CraftRecipeRow[]; headerMeta: string }) {
   const columns: ItemDataTableColumn<CraftRecipeRow>[] = [
     {
       key: 'name',
@@ -175,8 +175,8 @@ function CraftRecipesTable({ items, metaLabel }: { items: CraftRecipeRow[]; meta
       emptyMessage="크래프트 조합 데이터가 없습니다."
       fillColumnKey="options"
       getRowKey={(item) => item.id}
+      header={{ meta: headerMeta }}
       items={items}
-      metaLabel={metaLabel}
     />
   )
 }

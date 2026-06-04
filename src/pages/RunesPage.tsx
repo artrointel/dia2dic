@@ -81,8 +81,8 @@ export function RunesPage() {
         columns={columns}
         emptyMessage="룬 데이터가 없습니다."
         getRowKey={(rune) => String(rune.번호)}
+        header={{ meta: `총 ${runeUpgrades.length}개 룬 표시` }}
         items={runeUpgrades}
-        metaLabel={`총 ${runeUpgrades.length}개 룬 표시`}
         tableClassName="runes-table"
         wrapperClassName="runes-table-wrap"
         widthMode="content"

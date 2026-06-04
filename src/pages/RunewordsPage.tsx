@@ -306,8 +306,8 @@ export function RunewordsPage() {
         columns={columns}
         emptyMessage="룬워드 데이터가 없습니다."
         getRowKey={(item) => item.id}
+        header={{ meta: `총 ${runewords.length}개 중 ${filteredRunewords.length}개 표시` }}
         items={filteredRunewords}
-        metaLabel={`총 ${runewords.length}개 중 ${filteredRunewords.length}개 표시`}
         pageSize={7}
         widthMode="content"
       />

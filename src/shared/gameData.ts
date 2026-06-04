@@ -8,6 +8,7 @@ import equipmentUpgradesData from '../data/equipment-upgrades.json'
 import gloveBasesData from '../data/glove-bases.json'
 import helmBasesData from '../data/helm-bases.json'
 import levelingEfficiencyData from '../data/leveling-efficiency.json'
+import miscRecipesData from '../data/misc-recipes.json'
 import runeUpgradesData from '../data/rune-upgrades.json'
 import runewordsData from '../data/runewords.json'
 import setItemsData from '../data/set-items.json'
@@ -24,6 +25,7 @@ import type {
   CraftItemsData,
   EquipmentUpgrade,
   LevelingEfficiency,
+  MiscRecipe,
   RuneUpgrade,
   Runeword,
   SetItemsData,
@@ -41,6 +43,7 @@ export const craftItems = craftItemsData as CraftItemsData
 export const gloveBases = gloveBasesData as ArmorBases
 export const helmBases = helmBasesData as ArmorBases
 export const levelingEfficiency = levelingEfficiencyData as LevelingEfficiency
+export const miscRecipes = miscRecipesData as MiscRecipe[]
 export const runeUpgrades = runeUpgradesData as RuneUpgrade[]
 export const runewords = runewordsData as Runeword[]
 export const setItems = setItemsData as SetItemsData

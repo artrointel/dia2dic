@@ -46,7 +46,7 @@ export type NormalItemSortType =
   | 'damage-max-asc'
   | 'range-asc'
   | 'dexterity-asc'
-export type UniqueItemCategoryFilter = '전체' | '무기' | '방어구' | '장신구' | '기타'
+export type UniqueItemCategoryFilter = '전체' | '무기' | '방어구' | '장신구' | '차암' | '주얼' | '기타'
 export type UniqueItemGradeFilter = '전체' | '노멀' | '익셉셔널' | '엘리트'
 export type UniqueItemSortType = 'level-asc' | 'level-desc' | 'name-asc'
 
@@ -89,6 +89,14 @@ export type SocketRecipe = {
   대상: string
   재료: string[]
   결과: string
+}
+
+export type MiscRecipe = {
+  분류: string
+  대상: string
+  현재: string
+  결과: string
+  재료: string[]
 }
 
 export type BowIasFrameValue = {
