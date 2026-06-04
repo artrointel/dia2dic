@@ -291,9 +291,9 @@ export const recommendedItemTips: Record<string, RecommendedItemTip> = {
     specialOptions: ['선고, 광신, 천상의 주먹, 신성한 방패 등 빌드 핵심 기술 +3이면 고급 재료.'],
   },
   '워 스태프': {
-    note: '초반 화염 기술 옵션을 붙여 잎새를 만들기 쉬운 지팡이 베이스.',
-    runewords: ['잎새', '기억'],
-    specialOptions: ['잎새는 화염구, 온기, 마법부여 등 화염 기술 +3 조합을 우대.'],
+    note: '4홈 기억 재료 후보. 스태프류는 목적 기술 +3 조합 여부가 핵심.',
+    runewords: ['기억'],
+    specialOptions: ['잎새는 워 스태프 고정 추천이 아니라 노멀 2홈 스태프류에 화염구, 온기, 마법부여 등 목적 기술 +3 조합을 우대.'],
     tag: '맨땅',
   },
   '아콘 스태프': {

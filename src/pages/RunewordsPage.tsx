@@ -497,6 +497,10 @@ function createRunewordMaterialRecommendations() {
 }
 
 function getRunewordMaterialRecommendations(item: Runeword) {
+  if (runewordLookupName(item.이름) === '잎새') {
+    return getLeafMaterialRecommendations()
+  }
+
   const curatedRecommendations = runewordMaterialRecommendations.get(runewordLookupName(item.이름)) ?? []
   const equipmentTypes = splitEquipmentTypes(getRunewordEquipment(item))
   const socketCount = item['소켓 수']
@@ -519,6 +523,24 @@ function getRunewordMaterialRecommendations(item: Runeword) {
       ...base,
       note: curatedRecommendations.find((recommendation) => recommendation.name === base.name)?.note ?? materialBaseNote(item, base),
     }))
+}
+
+function getLeafMaterialRecommendations(): RunewordMaterialRecommendation[] {
+  return weaponStaffBases.sections
+    .filter((section) => section.grade === '노멀')
+    .flatMap((section) =>
+      section.items
+        .filter((base) => (base.최대홈 ?? 0) >= 2)
+        .map((base) => ({
+          defenseMax: null,
+          equipmentTypes: ['지팡이(Staff)', '근접 무기(Melee Weapon)', '모든 무기(Weapon)'],
+          grade: section.grade,
+          maxSockets: base.최대홈 ?? null,
+          name: base.이름,
+          note: '2홈이면 충분. 화염구, 온기, 마법부여 등 목적 기술 +3 조합을 우대.',
+          recommended: false,
+        })),
+    )
 }
 
 type RecommendedBaseMetadata = {
