@@ -568,6 +568,31 @@
   grid-row: 1 / span 2;
 }
 
+.search-results-page .search-result-list {
+  max-height: none;
+  overflow: visible;
+}
+
+.search-results-page .search-result-card {
+  min-height: auto;
+  overflow: visible;
+}
+
+.search-results-page .search-result-card p {
+  display: block;
+  overflow: visible;
+  -webkit-line-clamp: unset;
+}
+
+.search-results-page .search-result-card ul {
+  max-height: none;
+  overflow: visible;
+}
+
+.search-results-page .search-result-card li:nth-child(n + 4) {
+  display: list-item;
+}
+
 .image-viewer-overlay {
   align-items: center;
   background: rgb(0 0 0 / 72%);

@@ -56,9 +56,7 @@ export function expandSearchTerms(query: string) {
 
   const terms = new Set<string>()
 
-  if (!isSingleKoreanSyllable(normalizedQuery)) {
-    terms.add(normalizedQuery)
-  }
+  terms.add(normalizedQuery)
 
   normalizedSynonymGroups.forEach((group) => {
     group.forEach((alias) => {
@@ -69,9 +67,7 @@ export function expandSearchTerms(query: string) {
       group.forEach((replacement) => {
         const nextTerm = normalizedQuery === alias ? replacement : normalizedQuery.replaceAll(alias, replacement)
 
-        if (!isSingleKoreanSyllable(nextTerm)) {
-          terms.add(nextTerm)
-        }
+        terms.add(nextTerm)
       })
     })
   })
@@ -99,6 +95,10 @@ function isSingleKoreanSyllable(value: string) {
 }
 
 function matchesSearchTerm(text: string, normalizedText: string, term: string) {
+  if (isSingleKoreanSyllable(term)) {
+    return new RegExp(`(^|[^\\uac00-\\ud7a3])${escapeRegExp(term)}([^\\uac00-\\ud7a3]|$)`).test(text)
+  }
+
   if (isShortLatinRuneTerm(term)) {
     return new RegExp(`(^|[^a-z])${escapeRegExp(term)}([^a-z]|$)`, 'i').test(text)
   }
@@ -107,7 +107,7 @@ function matchesSearchTerm(text: string, normalizedText: string, term: string) {
 }
 
 function isShortLatinRuneTerm(value: string) {
-  return /^(el|eld|eth|io|ko|lo|um)$/.test(value)
+  return /^(el|eld|tir|nef|eth|ith|tal|ral|ort|thul|amn|sol|shael|dol|hel|io|lum|ko|fal|lem|pul|um|mal|ist|gul|vex|ohm|lo|sur|ber|jah|cham|zod)$/.test(value)
 }
 
 function escapeRegExp(value: string) {

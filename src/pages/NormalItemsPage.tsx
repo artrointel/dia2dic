@@ -488,6 +488,8 @@ export function NormalItemsPage() {
     const nextSearchState = resolveNormalSearchState(incomingSearchQuery)
     lastAppliedSearchQuery.current = incomingSearchQuery
     setSelectedCategory(nextSearchState.category)
+    setSelectedGrade('전체')
+    setSelectedRecommendation('전체')
     setSelectedShieldType(nextSearchState.shieldType)
     setSelectedWeaponType(nextSearchState.weaponType)
     setNameQuery(nextSearchState.nameQuery)
@@ -646,62 +648,54 @@ function resolveNormalSearchState(query: string): {
     return defaultState
   }
 
-  const defensiveGroups: Array<{ category: NormalItemCategory; data: ArmorBases }> = [
-    { category: '투구', data: helmBases },
-    { category: '갑옷', data: armorBases },
-    { category: '장갑', data: gloveBases },
-    { category: '벨트', data: beltBases },
-    { category: '신발', data: bootBases },
-  ]
-  const matchingDefensiveGroup = defensiveGroups.find(({ data }) => armorBasesMatchSearch(data, trimmedQuery))
+  const matchingEntry = searchItemsByQuery(normalSearchStateEntries(), trimmedQuery, (entry) =>
+    normalItemSearchText(entry.row),
+  )[0]
 
-  if (matchingDefensiveGroup) {
-    return { ...defaultState, category: matchingDefensiveGroup.category }
-  }
-
-  if (armorBasesMatchSearch(shieldPaladinBases, trimmedQuery)) {
-    return { ...defaultState, category: '방패', shieldType: '팔라딘 방패' }
-  }
-
-  if (armorBasesMatchSearch(shieldBases, trimmedQuery)) {
-    return { ...defaultState, category: '방패' }
-  }
-
-  const matchingWeaponGroup = normalWeaponBaseSources.find(({ data, itemFilter }) =>
-    weaponBasesMatchSearch(data, trimmedQuery, itemFilter),
-  )
-
-  if (matchingWeaponGroup) {
-    return { ...defaultState, category: '무기', weaponType: matchingWeaponGroup.type }
+  if (matchingEntry) {
+    return {
+      ...defaultState,
+      category: matchingEntry.category,
+      shieldType: matchingEntry.shieldType ?? defaultState.shieldType,
+      weaponType: matchingEntry.weaponType ?? defaultState.weaponType,
+    }
   }
 
   return defaultState
 }
 
-function armorBasesMatchSearch(data: ArmorBases, query: string) {
-  const documents = data.sections.flatMap((section) => [
-    [data.category, section.title, section.grade].join(' '),
-    ...section.items.map((item) => [item.이름, item.영문명 ?? '', item.무게 ?? '', item.전용 ?? ''].join(' ')),
-  ])
+function normalSearchStateEntries(): Array<{
+  category: NormalItemCategory
+  row: NormalListItem
+  shieldType?: NormalShieldTypeFilter
+  weaponType?: NormalWeaponTypeFilter
+}> {
+  const groups: Array<{
+    category: NormalItemCategory
+    rows: NormalListItem[]
+    shieldType?: NormalShieldTypeFilter
+    weaponType?: NormalWeaponTypeFilter
+  }> = [
+    { category: '투구', rows: getHelmBaseRows() },
+    { category: '갑옷', rows: getArmorBaseRows() },
+    { category: '장갑', rows: getGloveBaseRows() },
+    { category: '벨트', rows: getBeltBaseRows() },
+    { category: '신발', rows: getBootBaseRows() },
+    { category: '방패', shieldType: '팔라딘 방패', rows: getShieldBaseRows(shieldPaladinBases) },
+    { category: '방패', shieldType: '일반 방패', rows: getShieldBaseRows(shieldBases) },
+    ...normalWeaponBaseSources.map(({ data, itemFilter, type }) => ({
+      category: '무기' as NormalItemCategory,
+      weaponType: type,
+      rows: getWeaponBaseRows(data, type, itemFilter),
+    })),
+  ]
 
-  return searchItemsByQuery(documents, query, (document) => document).length > 0
-}
-
-function weaponBasesMatchSearch(
-  data: WeaponBases,
-  query: string,
-  itemFilter: (item: WeaponBaseItem) => boolean = () => true,
-) {
-  const documents = data.sections.flatMap((section) => [
-    [data.category, data.type, section.title, section.grade].join(' '),
-    ...section.items.filter(itemFilter).map((item) => [item.이름, item.전용 ?? ''].join(' ')),
-  ])
-
-  return searchItemsByQuery(documents, query, (document) => document).length > 0
+  return groups.flatMap(({ rows, ...group }) => rows.map((row) => ({ ...group, row })))
 }
 
 function normalItemSearchText(item: NormalListItem) {
   const recommendationTag = getNormalItemRecommendationTag(item)
+  const recommendationTip = recommendedItemTips[item.이름]
 
   return [
     item.이름,
@@ -713,7 +707,9 @@ function normalItemSearchText(item: NormalListItem) {
     isArmorItemRow(item) ? item.무게 ?? '' : '',
     item.전용 ?? '',
     recommendationTag ?? '',
-    item.추천 ? recommendedItemTips[item.이름]?.note ?? '' : '',
+    recommendationTip?.note ?? '',
+    recommendationTip?.runewords.join(' ') ?? '',
+    recommendationTip?.specialOptions?.join(' ') ?? '',
   ].join(' ')
 }
 
@@ -1433,6 +1429,7 @@ function getDefensiveBaseRows(data: ArmorBases): NormalItemRow[] {
     .flatMap((section) =>
       section.items.map((item) => ({
         ...item,
+        추천: item.추천 || Boolean(recommendedItemTips[item.이름]),
         id: `${data.category}-${section.id}-${item.이름}`,
         등급: section.grade,
         카테고리: data.category as NormalItemCategory,
