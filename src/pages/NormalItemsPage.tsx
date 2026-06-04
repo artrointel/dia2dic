@@ -34,6 +34,7 @@ import type {
   NormalListItem,
   NormalShieldTypeFilter,
   NormalWeaponTypeFilter,
+  SocketByItemLevel,
   WeaponBaseItem,
   WeaponBases,
   WeaponItemRow,
@@ -373,7 +374,7 @@ function ArmorItemsTable({ items, headerMeta }: { items: NormalItemRow[]; header
       key: 'sockets',
       header: '최대홈',
       className: 'normal-item-col-socket',
-      render: (item) => formatNullableNumber(item.최대홈),
+      render: (item) => <MaxSocketCell item={item} />,
     },
     {
       key: 'weight',
@@ -449,7 +450,7 @@ function DefensiveItemsTable({
             key: 'sockets',
             header: '최대홈',
             className: 'normal-item-col-socket',
-            render: (item: NormalItemRow) => formatNullableNumber(item.최대홈),
+            render: (item: NormalItemRow) => <MaxSocketCell item={item} />,
           },
         ]
       : []),
@@ -512,7 +513,7 @@ function ShieldItemsTable({ items, headerMeta }: { items: NormalItemRow[]; heade
       key: 'sockets',
       header: '최대홈',
       className: 'normal-item-col-socket',
-      render: (item) => formatNullableNumber(item.최대홈),
+      render: (item) => <MaxSocketCell item={item} />,
     },
     ...(hasBlockRate
       ? [
@@ -608,7 +609,7 @@ function WeaponItemsTable({ items, headerMeta }: { items: WeaponItemRow[]; heade
       key: 'sockets',
       header: '최대홈',
       className: 'normal-item-col-socket',
-      render: (item) => formatNullableNumber(item.최대홈),
+      render: (item) => <MaxSocketCell item={item} />,
     },
     {
       key: 'strength',
@@ -789,6 +790,7 @@ function getDefensiveBaseRows(data: ArmorBases): NormalItemRow[] {
         ...item,
         id: `${data.category}-${section.id}-${item.이름}`,
         등급: section.grade,
+        카테고리: data.category as NormalItemCategory,
       })),
     )
 }
@@ -800,6 +802,7 @@ function getWeaponBaseRows(data: WeaponBases): WeaponItemRow[] {
       id: `${data.type}-${section.id}-${item.이름}`,
       등급: section.grade,
       계열: data.type,
+      카테고리: '무기',
     })),
   )
 }
@@ -894,6 +897,121 @@ function weightNameClass(weight: string | undefined) {
 
 function formatNullableNumber(value: number | null | undefined) {
   return value ?? '-'
+}
+
+function MaxSocketCell({ item }: { item: NormalListItem }) {
+  if (item.최대홈 === null || item.최대홈 === undefined) {
+    return <span className="muted-text">-</span>
+  }
+
+  if (!item.숨렙별최대홈) {
+    return <strong>{item.최대홈}</strong>
+  }
+
+  return (
+    <FloatingTooltip
+      cardClassName="max-socket-card"
+      content={<MaxSocketTooltip item={item} sockets={item.숨렙별최대홈} />}
+      triggerClassName="max-socket-trigger"
+    >
+      <strong>{item.최대홈}</strong>
+    </FloatingTooltip>
+  )
+}
+
+function MaxSocketTooltip({ item, sockets }: { item: NormalListItem; sockets: SocketByItemLevel }) {
+  const rollSides = cubeSocketRollSides(item)
+  const rows = [
+    { isHighest: true, label: '숨렙 41+', value: sockets['41+'] },
+    { isHighest: false, label: '숨렙 26~40', value: sockets['26-40'] },
+    { isHighest: false, label: '숨렙 1~25', value: sockets['1-25'] },
+  ]
+  const maxSocket = Math.max(...rows.map((row) => row.value))
+
+  return (
+    <>
+      <strong>{item.이름} 최대 홈</strong>
+      <span className="max-socket-note">라주크 보상은 해당 숨렙 구간의 최대 홈으로 확정</span>
+
+      <table className="max-socket-ilvl-table">
+        <thead>
+          <tr>
+            <th>숨렙</th>
+            <th>최대</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr className={row.isHighest ? 'is-highest-ilvl' : ''} key={row.label}>
+              <td>{row.label}</td>
+              <td>{row.value}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <span className="max-socket-note">큐브 소켓 공식: 1~{rollSides} 균등 굴림, 최대 홈 초과값은 최대 홈으로 보정</span>
+
+      <table className="max-socket-probability-table">
+        <thead>
+          <tr>
+            <th>숨렙</th>
+            {Array.from({ length: maxSocket }, (_, index) => (
+              <th key={index + 1}>{index + 1}홈</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr className={row.isHighest ? 'is-highest-ilvl' : ''} key={row.label}>
+              <td>{row.label.replace('숨렙 ', '')}</td>
+              {Array.from({ length: maxSocket }, (_, index) => {
+                const socketCount = index + 1
+
+                return <td key={socketCount}>{formatSocketChance(cubeSocketChance(row.value, socketCount, rollSides))}</td>
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>
+  )
+}
+
+function cubeSocketRollSides(item: NormalListItem) {
+  if (isWeaponItemRow(item)) {
+    return 6
+  }
+
+  if (item.카테고리 === '투구') {
+    return 3
+  }
+
+  if (item.카테고리 === '갑옷' || item.카테고리 === '방패') {
+    return 4
+  }
+
+  return Math.max(item.최대홈 ?? 1, 1)
+}
+
+function cubeSocketChance(maxSocket: number, socketCount: number, rollSides: number) {
+  if (socketCount > maxSocket) {
+    return 0
+  }
+
+  if (socketCount === maxSocket) {
+    return (rollSides - maxSocket + 1) / rollSides
+  }
+
+  return 1 / rollSides
+}
+
+function formatSocketChance(chance: number) {
+  if (chance <= 0) {
+    return '-'
+  }
+
+  return `${Number((chance * 100).toFixed(1))}%`
 }
 
 function MaxDefenseHeaderTip() {

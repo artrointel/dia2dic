@@ -13,20 +13,64 @@
   max-width: 760px;
 }
 
-.section-grid {
+.home-category-list {
   display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
   padding: 32px 0 56px;
 }
 
-.section-card {
+.home-category-group {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 8px;
-  color: inherit;
-  min-height: 172px;
-  padding: 24px;
+  overflow: hidden;
+}
+
+.home-category-header {
+  align-items: center;
+  background: color-mix(in srgb, var(--surface-strong) 76%, transparent);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 10px;
+  padding: 16px 18px;
+}
+
+.home-category-header svg {
+  color: var(--accent);
+  flex: 0 0 auto;
+}
+
+.home-category-header h2 {
+  color: var(--text-strong);
+  font-size: 18px;
+  margin: 0;
+}
+
+.home-category-header span {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 800;
+  margin-left: auto;
+}
+
+.home-category-pages {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: 12px;
+}
+
+.home-page-card {
+  align-items: center;
+  background: color-mix(in srgb, var(--surface) 84%, var(--surface-strong));
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  display: grid;
+  gap: 12px;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  min-height: 96px;
+  padding: 16px;
   text-decoration: none;
   transition:
     border-color 0.2s,
@@ -34,18 +78,37 @@
     background 0.2s;
 }
 
-.section-card:hover {
+.home-page-card:hover {
   background: var(--surface-strong);
   border-color: rgba(196, 138, 69, 0.72);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
-.section-card svg {
+.home-page-card > svg {
   color: var(--accent);
+  flex: 0 0 auto;
 }
 
-.section-card h2 {
-  margin-top: 20px;
+.home-page-card span {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.home-page-card strong {
+  color: var(--text-strong);
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.home-page-card small {
+  color: var(--text-muted);
+  display: -webkit-box;
+  font-size: 13px;
+  line-height: 1.45;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .category-page {
@@ -1283,6 +1346,7 @@
 }
 
 .max-defense-trigger,
+.max-socket-trigger,
 .weapon-damage-trigger {
   cursor: help;
   display: inline-flex;
@@ -1290,11 +1354,13 @@
 }
 
 .max-defense-trigger > strong,
+.max-socket-trigger > strong,
 .weapon-damage-trigger > strong {
   font-weight: 800;
 }
 
 .max-defense-card,
+.max-socket-card,
 .weapon-damage-card {
   background: var(--surface-strong);
   border: 1px solid var(--border);
@@ -1320,6 +1386,12 @@
   min-width: 210px;
 }
 
+.max-socket-card {
+  gap: 10px;
+  min-width: 300px;
+  width: max-content;
+}
+
 .max-defense-card span,
 .weapon-damage-card span {
   align-items: center;
@@ -1339,6 +1411,58 @@
   color: var(--table-name);
   font-size: 13px;
   text-shadow: var(--table-text-shadow);
+}
+
+.max-socket-card > strong {
+  color: var(--table-name);
+  font-size: 14px;
+  line-height: 1.25;
+  text-shadow: var(--table-text-shadow);
+}
+
+.max-socket-note {
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.max-socket-ilvl-table,
+.max-socket-probability-table {
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.max-socket-ilvl-table th,
+.max-socket-ilvl-table td,
+.max-socket-probability-table th,
+.max-socket-probability-table td {
+  border: 1px solid var(--border);
+  padding: 5px 7px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.max-socket-ilvl-table th,
+.max-socket-probability-table th {
+  background: color-mix(in srgb, var(--surface) 72%, var(--surface-strong));
+  color: var(--text-strong);
+}
+
+.max-socket-ilvl-table td,
+.max-socket-probability-table td {
+  color: var(--table-option);
+  font-weight: 500;
+}
+
+.max-socket-ilvl-table td:first-child,
+.max-socket-probability-table td:first-child {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.max-socket-ilvl-table tr.is-highest-ilvl td,
+.max-socket-probability-table tr.is-highest-ilvl td {
+  font-weight: 800;
 }
 
 .floating-stat-card {
@@ -1636,6 +1760,7 @@
 
 .info-tip-card.floating-stat-card,
 .max-defense-card.floating-stat-card,
+.max-socket-card.floating-stat-card,
 .weapon-damage-card.floating-stat-card,
 .bow-ias-mini-card.floating-stat-card,
 .version-popup.floating-stat-card,
@@ -1650,6 +1775,7 @@
 
 .info-tip-card.floating-stat-card.is-above,
 .max-defense-card.floating-stat-card.is-above,
+.max-socket-card.floating-stat-card.is-above,
 .weapon-damage-card.floating-stat-card.is-above,
 .bow-ias-mini-card.floating-stat-card.is-above,
 .version-popup.floating-stat-card.is-above,
@@ -1668,8 +1794,16 @@
     padding-top: 38px;
   }
 
-  .section-grid {
+  .home-category-pages {
     grid-template-columns: 1fr;
+  }
+
+  .home-category-header {
+    align-items: start;
+  }
+
+  .home-category-header span {
+    white-space: nowrap;
   }
 
   .search-result-card {

@@ -11,6 +11,7 @@ export type Page = {
 }
 
 export type NavigationItem = {
+  description?: string
   title: string
   path?: string
   href?: string
@@ -262,6 +263,7 @@ export type ArmorBaseItem = {
   필요힘?: number | null
   무게?: string
   최대홈?: number | null
+  숨렙별최대홈?: SocketByItemLevel | null
   블럭율?: string | null
   강타피해?: {
     최소: number | null
@@ -292,6 +294,7 @@ export type ArmorBases = {
 export type NormalItemRow = ArmorBaseItem & {
   id: string
   등급: string
+  카테고리: NormalItemCategory
 }
 
 export type WeaponBaseItem = {
@@ -309,6 +312,13 @@ export type WeaponBaseItem = {
   필요힘: number | null
   필요민첩: number | null
   최대홈: number | null
+  숨렙별최대홈?: SocketByItemLevel | null
+}
+
+export type SocketByItemLevel = {
+  '1-25': number
+  '26-40': number
+  '41+': number
 }
 
 export type WeaponBaseSection = {
@@ -333,6 +343,7 @@ export type WeaponItemRow = WeaponBaseItem & {
   id: string
   등급: string
   계열: NormalWeaponTypeFilter
+  카테고리: '무기'
 }
 
 export type NormalListItem = NormalItemRow | WeaponItemRow

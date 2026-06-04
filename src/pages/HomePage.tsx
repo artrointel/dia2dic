@@ -1,8 +1,17 @@
 import { ArrowRight } from 'lucide-react'
 import { NavLink, useSearchParams } from 'react-router-dom'
-import { pages } from '../navigation/navigation'
+import { navigationItems, routePages } from '../navigation/navigation'
+import type { NavigationItem } from '../shared/appTypes'
 import { searchPageCandidates } from '../shared/searchIndex'
 import { readPageSearchQuery, searchDestinationPath } from '../shared/searchNavigation'
+
+const pageDescriptionByPath = new Map(routePages.map((page) => [page.path, page.description]))
+const homeNavigationGroups = navigationItems
+  .map((item) => ({
+    ...item,
+    children: visibleNavigationPages(item),
+  }))
+  .filter((item) => item.children.length > 0)
 
 export function HomePage() {
   const [searchParams] = useSearchParams()
@@ -48,19 +57,58 @@ export function HomePage() {
         </section>
       ) : null}
 
-      <section className="section-grid" aria-label="자료 분류">
-        {pages.map((page) => {
-          const Icon = page.icon
+      <section className="home-category-list" aria-label="자료 분류">
+        {homeNavigationGroups.map((group) => {
+          const Icon = group.icon
 
           return (
-            <NavLink className="section-card" key={page.path} to={page.path}>
-              <Icon aria-hidden="true" size={24} />
-              <h2>{page.title}</h2>
-              <p>{page.description}</p>
-            </NavLink>
+            <section className="home-category-group" key={group.title}>
+              <header className="home-category-header">
+                {Icon ? <Icon aria-hidden="true" size={21} /> : null}
+                <h2>{group.title}</h2>
+                <span>{group.children.length}개 페이지</span>
+              </header>
+
+              <div className="home-category-pages">
+                {group.children.map((page) => {
+                  const PageIcon = page.icon
+                  const description = page.description ?? (page.path
+                    ? pageDescriptionByPath.get(page.path) ?? '자료 페이지로 이동합니다.'
+                    : '외부 페이지로 이동합니다.')
+                  const content = (
+                    <>
+                      {PageIcon ? <PageIcon aria-hidden="true" size={20} /> : null}
+                      <span>
+                        <strong>{page.title}</strong>
+                        <small>{description}</small>
+                      </span>
+                      <ArrowRight aria-hidden="true" size={18} />
+                    </>
+                  )
+
+                  return page.path ? (
+                    <NavLink className="home-page-card" key={page.path} to={page.path}>
+                      {content}
+                    </NavLink>
+                  ) : (
+                    <a className="home-page-card" href={page.href} key={page.href} rel="noreferrer" target="_blank">
+                      {content}
+                    </a>
+                  )
+                })}
+              </div>
+            </section>
           )
         })}
       </section>
     </>
   )
+}
+
+function visibleNavigationPages(item: NavigationItem): NavigationItem[] {
+  if (item.children) {
+    return item.children.filter((child) => child.path || child.href)
+  }
+
+  return item.path || item.href ? [item] : []
 }

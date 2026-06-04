@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { AppHeader } from './components/AppHeader'
+import { ScrollToTopButton } from './components/ScrollToTopButton'
 import { routePages } from './navigation/navigation'
 import { CategoryPage } from './pages/CategoryPage'
 import { CraftingPage } from './pages/CraftingPage'
@@ -77,6 +78,7 @@ function App() {
           ))}
         </Routes>
       </main>
+      <ScrollToTopButton />
     </div>
   )
 }
