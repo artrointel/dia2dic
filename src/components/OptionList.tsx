@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { OptionAlternative } from './OptionAlternative'
 import './OptionList.css'
 
 type OptionListProps = {
@@ -13,7 +14,7 @@ export function OptionList({ className = '', getItemClassName, items, renderItem
     <ul className={['option-list', className].filter(Boolean).join(' ')}>
       {items.map((item, index) => (
         <li className={getItemClassName?.(item)} key={`${item}-${index}`}>
-          {renderItem ? renderItem(item) : item}
+          {renderItem ? renderItem(item) : <OptionAlternative value={item} />}
         </li>
       ))}
     </ul>

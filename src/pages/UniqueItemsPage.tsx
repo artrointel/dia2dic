@@ -3,6 +3,7 @@ import { PackageSearch } from 'lucide-react'
 import { useSearchParams } from 'react-router-dom'
 import { FloatingTooltip } from '../components/FloatingTooltip'
 import { ItemDataTable, type ItemDataTableColumn } from '../components/ItemDataTable'
+import { OptionAlternative } from '../components/OptionAlternative'
 import { OptionList } from '../components/OptionList'
 import { PageHeading } from '../components/PageHeading'
 import { FilterPanel, NameSearch, SegmentedFilter, SortControl, TableToolbar } from '../components/TableControls'
@@ -283,7 +284,7 @@ function UniqueTooltipSection({ className = '', values }: { className?: string; 
   return (
     <span className={['unique-tooltip-section', className].filter(Boolean).join(' ')}>
       {values.map((value) => (
-        <span key={value}>{value}</span>
+        <span key={value}>{className === 'unique-tooltip-options' ? <OptionAlternative value={value} /> : value}</span>
       ))}
     </span>
   )

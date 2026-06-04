@@ -1,0 +1,60 @@
+.option-alternative-card {
+  align-items: center;
+  display: inline-flex;
+  gap: 5px;
+  max-width: min(100%, 28rem);
+  vertical-align: top;
+}
+
+.option-alternative-choices {
+  border: 1px solid color-mix(in srgb, var(--table-option) 38%, transparent);
+  border-radius: 6px;
+  display: grid;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.option-alternative-choice {
+  color: inherit;
+  display: block;
+  line-height: 1.35;
+  padding: 4px 8px;
+  white-space: normal;
+}
+
+.option-alternative-choice + .option-alternative-choice {
+  border-top: 1px solid color-mix(in srgb, var(--table-option) 28%, transparent);
+}
+
+.option-alternative-badge {
+  background: var(--option-alternative-badge-bg);
+  border: 1px solid color-mix(in srgb, var(--table-option) 34%, transparent);
+  border-radius: 999px;
+  color: var(--table-option);
+  flex: 0 0 auto;
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1;
+  padding: 1px 5px 2px;
+  text-shadow: none;
+}
+
+.unique-tooltip-options .option-alternative-choices {
+  border-color: color-mix(in srgb, var(--unique-tooltip-option) 42%, transparent);
+  max-width: 100%;
+}
+
+.unique-tooltip-options .option-alternative-choice {
+  color: var(--unique-tooltip-option);
+}
+
+.unique-tooltip-options .option-alternative-choice + .option-alternative-choice {
+  border-top-color: color-mix(in srgb, var(--unique-tooltip-option) 32%, transparent);
+}
+
+.unique-tooltip-options .option-alternative-badge {
+  background: var(--option-alternative-badge-bg);
+  border-color: color-mix(in srgb, var(--unique-tooltip-option) 36%, transparent);
+  color: var(--unique-tooltip-option);
+}

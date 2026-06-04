@@ -25,6 +25,7 @@
   --table-row-hover: #211b22;
   --table-row-odd: #100d12;
   --table-text-shadow: 0 1px 2px rgba(0, 0, 0, 0.82);
+  --option-alternative-badge-bg: rgba(0, 0, 0, 0.72);
   --set-bonus-complete: #f2c76d;
   --set-bonus-partial: #7ed88c;
   --text: #b8b0a7;
@@ -72,6 +73,7 @@
   --table-row-hover: #eadfce;
   --table-row-odd: #f5ecde;
   --table-text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+  --option-alternative-badge-bg: rgba(255, 255, 255, 0.72);
   --set-bonus-complete: #8c5a13;
   --set-bonus-partial: #187343;
   --text: #625548;

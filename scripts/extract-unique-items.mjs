@@ -26,6 +26,8 @@ for (const page of pages) {
   }
 }
 
+applyUniqueMiscAdjustments(categoryMap)
+
 const categories = [...categoryMap.values()]
 
 const data = {
@@ -75,6 +77,363 @@ function addCategoryItem(categoryMap, title, url, item) {
   }
 
   categoryMap.get(title).items.push(item)
+}
+
+function applyUniqueMiscAdjustments(categoryMap) {
+  const miscCategory = categoryMap.get('기타')
+
+  if (!miscCategory) {
+    return
+  }
+
+  const remainingMiscItems = []
+  const charmItems = []
+  const jewelItems = []
+
+  for (const item of miscCategory.items) {
+    if (item.베이스.includes('부적') || item.분류.includes('부적')) {
+      charmItems.push(item)
+      continue
+    }
+
+    if (item.베이스 === '주얼' || item.분류 === '주얼') {
+      jewelItems.push(enrichUniqueJewel(item))
+      continue
+    }
+
+    remainingMiscItems.push(item)
+  }
+
+  for (const item of supplementalRainbowFacetItems()) {
+    if (!jewelItems.some((candidate) => candidate.이름 === item.이름 && candidate.비고 === item.비고)) {
+      jewelItems.push(item)
+    }
+  }
+
+  for (const item of supplementalSunderCharmItems(charmItems)) {
+    if (!charmItems.some((candidate) => candidate.이름 === item.이름)) {
+      charmItems.push(item)
+    }
+  }
+
+  categoryMap.set('차암', {
+    id: '차암',
+    title: '차암',
+    url: miscCategory.url,
+    items: charmItems.map((item, index) => withCategoryId(item, '차암', index)),
+  })
+  categoryMap.set('주얼', {
+    id: '주얼',
+    title: '주얼',
+    url: miscCategory.url,
+    items: jewelItems.map((item, index) => withCategoryId(item, '주얼', index)),
+  })
+
+  if (remainingMiscItems.length > 0) {
+    miscCategory.items = remainingMiscItems.map((item, index) => withCategoryId(item, '기타', index))
+  } else {
+    categoryMap.delete('기타')
+  }
+}
+
+function withCategoryId(item, categoryTitle, index) {
+  return {
+    ...item,
+    id: uniqueItemId(categoryTitle, item.이름, index),
+  }
+}
+
+function enrichUniqueJewel(item) {
+  const override = ancientJewelOverrides[item.이름]
+
+  if (!override) {
+    return item
+  }
+
+  return {
+    ...item,
+    별칭: override.aliases ?? item.별칭,
+    요구레벨: 75,
+    기본속성: ['요구 레벨: 75'],
+    옵션: override.options,
+    비고: override.note ?? item.비고,
+    이미지: override.image ?? item.이미지,
+  }
+}
+
+const ancientJewelOverrides = {
+  '수호자의 불': {
+    aliases: ["Defender's Fire"],
+    note: '탈릭: 수호자의 불 or 수호자의 역정',
+    image: 'https://d2db.net/images/fragment_cold.webp',
+    options: [
+      '피격 시 1% 확률로 25 레벨 불길 시전',
+      '화염 피해 20 - 60 추가',
+      '화염 기술 피해 +5~10%',
+      '적의 화염 저항 -5~10%',
+      '경험치 획득량 +3~5%',
+      '괴물에게서 얻는 금화 25~50% 증가',
+      '마법 아이템 발견 확률 15~35% 증가',
+    ],
+  },
+  '수호자의 역정': {
+    aliases: ["Defender's Bile"],
+    note: '탈릭: 수호자의 불 or 수호자의 역정',
+    image: 'https://d2db.net/images/fragment_magic.webp',
+    options: [
+      '피격 시 1% 확률로 25 레벨 뼈 갑옷 시전',
+      '독 피해 +95 (1초에 걸쳐)',
+      '독 기술 피해 +5~10%',
+      '적의 독 저항 -5~10%',
+      '경험치 획득량 +3~5%',
+      '괴물에게서 얻는 금화 25~50% 증가',
+      '마법 아이템 발견 확률 15~35% 증가',
+    ],
+  },
+  '보호자의 돌': {
+    aliases: ["Protector's Stone"],
+    note: '콜릭: 보호자의 돌 or 보호자의 서리',
+    image: 'https://d2db.net/images/fragment_fire.webp',
+    options: [
+      '피격 시 1% 확률로 15 레벨 흐리기 시전',
+      '피해 +30~50% 증가',
+      '피해 10 - 30 추가',
+      '적의 물리 피해 저항 -5~10%',
+      '경험치 획득량 +3~5%',
+      '괴물에게서 얻는 금화 25~50% 증가',
+      '마법 아이템 발견 확률 15~35% 증가',
+    ],
+  },
+  '보호자의 서리': {
+    aliases: ["Protector's Frost"],
+    note: '콜릭: 보호자의 돌 or 보호자의 서리',
+    image: 'https://d2db.net/images/fragment_lightning.webp',
+    options: [
+      '피격 시 1% 확률로 25 레벨 얼어붙은 갑옷 시전',
+      '냉기 피해 10 - 30 추가',
+      '적의 냉기 저항 -5~10%',
+      '냉기 기술 피해 +5~10%',
+      '경험치 획득량 +3~5%',
+      '괴물에게서 얻는 금화 25~50% 증가',
+      '마법 아이템 발견 확률 15~35% 증가',
+    ],
+  },
+  '감시자의 빛': {
+    aliases: ["Guardian's Light"],
+    note: '마도크: 감시자의 빛 or 감시자의 천둥',
+    image: 'https://d2db.net/images/fragment_poison.webp',
+    options: [
+      '피격 시 1% 확률로 25 레벨 정신 결계 시전',
+      '마법 피해 15 - 35 추가',
+      '적의 마법 저항 -5~10%',
+      '마법 기술 피해 +5~10%',
+      '경험치 획득량 +3~5%',
+      '괴물에게서 얻는 금화 25~50% 증가',
+      '마법 아이템 발견 확률 15~35% 증가',
+    ],
+  },
+  '감시자의 천둥': {
+    aliases: ["Guardian's Thunder"],
+    note: '마도크: 감시자의 빛 or 감시자의 천둥',
+    image: 'https://d2db.net/images/fragment_physical.webp',
+    options: [
+      '피격 시 1% 확률로 25 레벨 회오리 갑옷 시전',
+      '번개 피해 1 - 75 추가',
+      '번개 기술 피해 +5~10%',
+      '적의 번개 저항 -5~10%',
+      '경험치 획득량 +3~5%',
+      '괴물에게서 얻는 금화 25~50% 증가',
+      '마법 아이템 발견 확률 15~35% 증가',
+    ],
+  },
+}
+
+function supplementalRainbowFacetItems() {
+  const image = 'https://d2db.net/images/unique392.webp'
+  const variants = [
+    {
+      label: '냉기',
+      aliases: ['레인보우 패시트(냉기)', 'Rainbow Facet(Cold)'],
+      trigger: '사망 시 100% 확률로 37 레벨 눈보라 시전 or 레벨 상승 시 100% 확률로 43 레벨 서릿발 시전',
+      damage: '냉기 피해 24 - 38 추가',
+      skill: '냉기 기술 피해 +3~5%',
+      pierce: '적의 냉기 저항 -3~5%',
+    },
+    {
+      label: '화염',
+      aliases: ['레인보우 패시트(화염)', 'Rainbow Facet(Fire)'],
+      trigger: '사망 시 100% 확률로 31 레벨 운석 낙하 시전 or 레벨 상승 시 100% 확률로 29 레벨 불길 시전',
+      damage: '화염 피해 17 - 45 추가',
+      skill: '화염 기술 피해 +3~5%',
+      pierce: '적의 화염 저항 -3~5%',
+    },
+    {
+      label: '번개',
+      aliases: ['레인보우 패시트(번개)', 'Rainbow Facet(Lightning)'],
+      trigger: '사망 시 100% 확률로 41 레벨 번개 파장 시전 or 레벨 상승 시 100% 확률로 47 레벨 연쇄 번개 시전',
+      damage: '번개 피해 1 - 74 추가',
+      skill: '번개 기술 피해 +3~5%',
+      pierce: '적의 번개 저항 -3~5%',
+    },
+    {
+      label: '독',
+      aliases: ['레인보우 패시트(독)', 'Rainbow Facet(Poison)'],
+      trigger: '사망 시 100% 확률로 51 레벨 맹독 확산 시전 or 레벨 상승 시 100% 확률로 23 레벨 맹독 시전',
+      damage: '독 피해 +37 (2초에 걸쳐)',
+      skill: '독 기술 피해 +3~5%',
+      pierce: '적의 독 저항 -3~5%',
+    },
+  ]
+
+  return variants.map((variant) => ({
+    이름: '무지개 자락',
+    별칭: variant.aliases,
+    베이스: '주얼',
+    분류: '주얼',
+    등급: null,
+    요구레벨: 49,
+    필요힘: null,
+    필요민첩: null,
+    내구도: null,
+    피해: null,
+    방어력: null,
+    막기확률: null,
+    공격속도: null,
+    기본속성: ['요구 레벨: 49'],
+    옵션: [variant.trigger, variant.damage, variant.skill, variant.pierce],
+    비고: `${variant.label} 변형`,
+    태그: [],
+    이미지: image,
+    url: `${SOURCE_URL}#s-5.3.1`,
+  }))
+}
+
+function supplementalSunderCharmItems(charmItems) {
+  const entries = [
+    {
+      latentName: '잠복된 추위의 파열',
+      renewedName: '새로워진 추위의 파열',
+      aliases: ['Latent Cold Rupture', 'Renewed Cold Rupture'],
+      originalName: '추위의 파열',
+      immunity: '냉기',
+      latentPenalty: '냉기 저항 -(70~90)%',
+      renewedPenalty: '냉기 저항 -70%',
+      offensiveOption: '냉기 기술 피해 +5~15% or 적의 냉기 저항 -5~10%',
+    },
+    {
+      latentName: '잠복된 불길의 균열',
+      renewedName: '새로워진 불길의 균열',
+      aliases: ['Latent Flame Rift', 'Renewed Flame Rift'],
+      originalName: '불길의 균열',
+      immunity: '화염',
+      latentPenalty: '화염 저항 -(70~90)%',
+      renewedPenalty: '화염 저항 -70%',
+      offensiveOption: '화염 기술 피해 +5~15% or 적의 화염 저항 -5~10%',
+    },
+    {
+      latentName: '잠복된 천상의 틈',
+      renewedName: '새로워진 천상의 틈',
+      aliases: ['Latent Crack of the Heavens', 'Renewed Crack of the Heavens'],
+      originalName: '천상의 틈',
+      immunity: '번개',
+      latentPenalty: '번개 저항 -(70~90)%',
+      renewedPenalty: '번개 저항 -70%',
+      offensiveOption: '번개 기술 피해 +5~15% or 적의 번개 저항 -5~10%',
+    },
+    {
+      latentName: '잠복된 부패의 분열',
+      renewedName: '새로워진 부패의 분열',
+      aliases: ['Latent Rotting Fissure', 'Renewed Rotting Fissure'],
+      originalName: '부패의 분열',
+      immunity: '독',
+      latentPenalty: '독 저항 -(70~90)%',
+      renewedPenalty: '독 저항 -70%',
+      offensiveOption: '독 기술 피해 +5~15% or 적의 독 저항 -5~10%',
+    },
+    {
+      latentName: '잠복된 칠흑의 천공',
+      renewedName: '새로워진 칠흑의 천공',
+      aliases: ['Latent Black Cleft', 'Renewed Black Cleft'],
+      originalName: '칠흑의 천공',
+      immunity: '마법',
+      latentPenalty: '마법 저항 -(45~65)%',
+      renewedPenalty: '마법 저항 -45%',
+      offensiveOption: '마법 기술 피해 +10~15% or 적의 마법 저항 -5~10%',
+    },
+    {
+      latentName: '잠복된 뼈의 분쇄',
+      renewedName: '새로워진 뼈의 분쇄',
+      aliases: ['Latent Bone Break', 'Renewed Bone Break'],
+      originalName: '뼈의 분쇄',
+      immunity: '물리',
+      latentPenalty: '받는 물리 피해 10~20% 증가',
+      renewedPenalty: '받는 물리 피해 10% 증가',
+      offensiveOption: '피해 +75~100% 증가 or 적의 물리 피해 저항 -5~10%',
+    },
+  ]
+
+  return entries.flatMap((entry) => {
+    const image = charmItems.find((item) => item.이름 === entry.originalName)?.이미지 ?? null
+
+    return [latentSunderCharm(entry, image), renewedSunderCharm(entry, image)]
+  })
+}
+
+function latentSunderCharm(entry, image) {
+  return {
+    이름: entry.latentName,
+    별칭: [entry.aliases[0]],
+    베이스: '거대 부적',
+    분류: '파괴참',
+    등급: null,
+    요구레벨: 75,
+    필요힘: null,
+    필요민첩: null,
+    내구도: null,
+    피해: null,
+    방어력: null,
+    막기확률: null,
+    공격속도: null,
+    기본속성: ['요구 레벨: 75'],
+    옵션: [`괴물의 ${entry.immunity} 면역이 파괴됨`, entry.latentPenalty, 'Herald 계열 몬스터 및 일반 드랍풀에서 획득 가능'],
+    비고: '잠복된 파괴참',
+    태그: [],
+    이미지: image,
+    url: 'https://news.blizzard.com/en-us/article/24261478/diablo-ii-resurrected-ladder-season-14-now-live',
+  }
+}
+
+function renewedSunderCharm(entry, image) {
+  return {
+    이름: entry.renewedName,
+    별칭: [entry.aliases[1]],
+    베이스: '거대 부적',
+    분류: '파괴참',
+    등급: null,
+    요구레벨: 75,
+    필요힘: null,
+    필요민첩: null,
+    내구도: null,
+    피해: null,
+    방어력: null,
+    막기확률: null,
+    공격속도: null,
+    기본속성: ['요구 레벨: 75'],
+    옵션: [
+      `괴물의 ${entry.immunity} 면역이 파괴됨`,
+      entry.renewedPenalty,
+      entry.offensiveOption,
+      '마법 아이템 발견 확률 14~25% 증가 or 괴물에게서 얻는 금화 20~55% 증가',
+      '생명력 +10~65 or 마나 +10~75',
+      '달리기/걷기 속도 +5~10% or 타격 회복 속도 +12~24% or 모든 능력치 +3~8',
+      '마법 피해 감소 5~10 or 피해 감소 5~10',
+      '새로워진 파괴참은 각 옵션 묶음에서 하나씩 선택됨',
+    ],
+    비고: '새로워진 파괴참',
+    태그: [],
+    이미지: image,
+    url: 'https://d2db.net/sundering-charms-guide',
+  }
 }
 
 function resolveOutputCategoryTitle(page, item) {
