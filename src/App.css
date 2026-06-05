@@ -953,6 +953,50 @@
   white-space: nowrap;
 }
 
+.normal-base-guide-card {
+  background: color-mix(in srgb, var(--surface-strong) 82%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  color: var(--text-muted);
+  display: grid;
+  gap: 7px;
+  line-height: 1.5;
+  margin: 0 0 14px;
+  max-width: 760px;
+  padding: 13px 15px;
+}
+
+.normal-base-guide-card > strong {
+  color: var(--table-name);
+  font-size: 15px;
+  text-shadow: var(--table-text-shadow);
+}
+
+.normal-base-guide-card > span {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.normal-base-guide-details {
+  border-top: 1px solid var(--border);
+  display: grid;
+  gap: 6px;
+  padding-top: 8px;
+}
+
+.normal-base-guide-details span {
+  color: var(--text-muted);
+  display: block;
+}
+
+.normal-base-guide-details b {
+  color: var(--text);
+  display: inline-block;
+  font-size: 12px;
+  margin-right: 7px;
+}
+
 .unique-item-name-cell {
   align-items: center;
 }

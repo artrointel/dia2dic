@@ -510,7 +510,7 @@ function getRunewordMaterialRecommendations(item: Runeword) {
       base.maxSockets >= socketCount &&
       equipmentTypes.some((equipmentType) => materialEquipmentMatches(equipmentType, base.equipmentTypes)),
   )
-  const contextFilteredBases = filterBasesByRunewordContext(item, compatibleBases)
+  const contextFilteredBases = uniqueMaterialBasesByName(filterBasesByRunewordContext(item, compatibleBases))
   const curatedNames = new Set(curatedRecommendations.map((recommendation) => recommendation.name))
   const curatedBases = contextFilteredBases.filter((base) => curatedNames.has(base.name))
   const fallbackBases = contextFilteredBases.filter((base) => base.recommended)
@@ -523,6 +523,10 @@ function getRunewordMaterialRecommendations(item: Runeword) {
       ...base,
       note: curatedRecommendations.find((recommendation) => recommendation.name === base.name)?.note ?? materialBaseNote(item, base),
     }))
+}
+
+function uniqueMaterialBasesByName(bases: RecommendedBaseMetadata[]) {
+  return [...new Map(bases.map((base) => [base.name, base])).values()]
 }
 
 function getLeafMaterialRecommendations(): RunewordMaterialRecommendation[] {
@@ -544,6 +548,7 @@ function getLeafMaterialRecommendations(): RunewordMaterialRecommendation[] {
 }
 
 type RecommendedBaseMetadata = {
+  classOnly?: string | null
   defenseMax: number | null
   equipmentTypes: string[]
   grade: string
@@ -569,13 +574,14 @@ function createAllRunewordBaseMetadata() {
     data.sections.forEach((section) => {
       section.items.forEach((item) => {
         bases.push({
+          classOnly: item.전용 ?? null,
           defenseMax: null,
           equipmentTypes,
           grade: section.grade,
           maxSockets: item.최대홈 ?? null,
           name: item.이름,
           note: '',
-          recommended: item.추천,
+          recommended: Boolean(recommendedItemTips[item.이름]),
         })
       })
     })
@@ -585,19 +591,22 @@ function createAllRunewordBaseMetadata() {
 }
 
 function addArmorBaseMetadata(bases: RecommendedBaseMetadata[], data: ArmorBases, equipmentTypes: string[]) {
-  data.sections.forEach((section) => {
-    section.items.forEach((item) => {
-      bases.push({
-        defenseMax: item.방어력.최대,
-        equipmentTypes,
-        grade: section.grade,
-        maxSockets: item.최대홈 ?? null,
-        name: item.이름,
-        note: '',
-        recommended: item.추천,
+  data.sections
+    .filter((section) => section.kind === 'base' || section.kind === 'class-specific')
+    .forEach((section) => {
+      section.items.forEach((item) => {
+        bases.push({
+          classOnly: item.전용 ?? null,
+          defenseMax: item.방어력.최대,
+          equipmentTypes,
+          grade: section.grade,
+          maxSockets: item.최대홈 ?? null,
+          name: item.이름,
+          note: '',
+          recommended: Boolean(recommendedItemTips[item.이름]),
+        })
       })
     })
-  })
 }
 
 const weaponMetadataSources: Array<{ data: WeaponBases; equipmentTypes: string[] }> = [
@@ -664,7 +673,15 @@ const highRuneThreshold = runeRankByName.get('렘') ?? 20
 function filterBasesByRunewordContext(item: Runeword, bases: RecommendedBaseMetadata[]) {
   let filteredBases = bases
   const lookupName = runewordLookupName(item.이름)
-  const shouldPreferElite = isHighRuneRuneword(item) && lookupName !== '수수께끼'
+  const shouldPreferElite = isHighRuneRuneword(item) && lookupName !== '수수께끼' && lookupName !== '탈태'
+
+  if (lookupName === '탈태') {
+    const druidPelts = filteredBases.filter((base) => base.classOnly === '드루이드')
+
+    if (druidPelts.length > 0) {
+      filteredBases = druidPelts
+    }
+  }
 
   if (shouldPreferElite) {
     const eliteBases = filteredBases.filter((base) => base.grade === '엘리트')
@@ -723,6 +740,10 @@ function gradeSortValue(grade: string) {
 }
 
 function materialBaseNote(item: Runeword, base: RecommendedBaseMetadata) {
+  if (runewordLookupName(item.이름) === '탈태') {
+    return '드루이드 전용 펠트. 분노, 늑대인간, 변신술 등 목적 기술 +3 조합을 우대.'
+  }
+
   if (isArmorRuneword(item) && hasDefenseIncreaseOption(item) && base.defenseMax !== null) {
     return `방어력 증가 옵션을 살리기 좋은 ${base.grade} 베이스.`
   }

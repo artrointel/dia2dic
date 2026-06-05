@@ -65,6 +65,8 @@ const normalItemCategories: NormalItemCategory[] = [
   '방패',
 ]
 const normalItemGradeFilters: NormalItemGradeFilter[] = ['전체', '노멀', '익셉셔널', '엘리트']
+type NormalHelmTypeFilter = '전체 투구' | '일반 투구' | '바바리안 투구' | '드루이드 투구'
+const normalHelmTypeFilters: NormalHelmTypeFilter[] = ['전체 투구', '일반 투구', '바바리안 투구', '드루이드 투구']
 const normalShieldTypeFilters: NormalShieldTypeFilter[] = ['일반 방패', '팔라딘 방패']
 const normalWeaponBaseSources: Array<{
   data: WeaponBases
@@ -114,17 +116,24 @@ const weaponSortOptions: Array<{ value: NormalItemSortType; label: string }> = [
 ]
 
 export type RecommendedItemTip = {
+  details?: Array<{ label: string; text: string }>
   note: string
   runewords: string[]
   specialOptions?: string[]
   tag?: RecommendationTag
 }
 
+type NormalBaseGuide = {
+  details: Array<{ label: string; text: string }>
+  summary: string
+  title: string
+}
+
 // eslint-disable-next-line react-refresh/only-export-components
 export const recommendedItemTips: Record<string, RecommendedItemTip> = {
   '브레스트 플레이트': {
-    note: '초반 힘 요구치가 낮고 3홈 방어구 제작에 무난한 베이스.',
-    runewords: ['잠행', '연기', '신화'],
+    note: '초반 힘 요구치가 낮아 잠행/연기용으로 챙겨볼 만한 경갑 베이스.',
+    runewords: ['잠행', '연기'],
     tag: '맨땅',
   },
   '고딕 플레이트': {
@@ -133,102 +142,46 @@ export const recommendedItemTips: Record<string, RecommendedItemTip> = {
   },
   '메이지 플레이트': {
     note: '힘 요구치가 낮은 3홈 방어구라 수수께끼 재료로 선호.',
-    runewords: ['수수께끼', '배신'],
+    runewords: ['수수께끼'],
   },
   '더스크 슈라우드': {
     note: '힘 요구치 대비 방어력이 좋아 범용 엘리트 갑옷으로 인기.',
-    runewords: ['수수께끼', '인내', '명예의 굴레', '협박'],
-  },
-  '스캐럽 허스크': {
-    note: '힘 요구치와 방어력 균형이 좋은 엘리트 갑옷.',
-    runewords: ['인내', '명예의 굴레', '스톤', '협박'],
-  },
-  '와이어 플리스': {
-    note: '가벼운 엘리트 갑옷군으로 용병/캐릭터 방어구 재료로 사용.',
-    runewords: ['인내', '명예의 굴레', '배신', '협박'],
-  },
-  '그레이트 허버크': {
-    note: '낮은 힘 요구치와 준수한 방어력의 4홈 엘리트 갑옷.',
-    runewords: ['인내', '명예의 굴레', '스톤', '협박'],
+    runewords: ['수수께끼', '인내'],
   },
   '아콘 플레이트': {
     note: '방어력과 힘 요구치 균형이 좋아 대표적인 고급 갑옷 베이스.',
-    runewords: ['수수께끼', '인내', '명예의 굴레', '협박'],
+    runewords: ['수수께끼', '인내'],
   },
   '세이크리드 아머': {
-    note: '매우 높은 방어력을 노리는 용병용 중갑 베이스.',
-    runewords: ['인내', '스톤', '명예의 굴레', '협박'],
-  },
-  헬름: {
-    note: '초반 2홈 투구 제작에 쓰기 쉬운 기본 베이스.',
-    runewords: ['학식', '천저'],
-    tag: '맨땅',
-  },
-  '본 헬름': {
-    note: '2홈 투구 룬워드와 강령술사 테마 장비에 어울리는 베이스.',
-    runewords: ['학식', '천저'],
-    tag: '맨땅',
-  },
-  '워 햇': {
-    note: '가벼운 익셉셔널 투구 베이스.',
-    runewords: ['학식'],
-    tag: '맨땅',
-  },
-  샐릿: {
-    note: '방어력과 요구치가 무난한 익셉셔널 투구.',
-    runewords: ['학식'],
-    tag: '맨땅',
-  },
-  캐스크: {
-    note: '2홈 투구 룬워드용으로 부담 없는 익셉셔널 베이스.',
-    runewords: ['학식', '천저'],
-    tag: '맨땅',
+    note: '에테리얼 고방어 용병 갑옷을 노릴 때 보는 중갑 베이스.',
+    runewords: ['인내'],
   },
   '데스 마스크': {
-    note: '3홈까지 가능해 고급 투구 룬워드 후보가 되는 베이스.',
-    runewords: ['치료', '착란', '꿈'],
-  },
-  '그림 헬름': {
-    note: '2홈 익셉셔널 투구 중 방어력 기대치가 높은 편.',
-    runewords: ['학식', '천저'],
+    note: '초중반 3홈 치료 용병 투구 후보가 되는 익셉셔널 베이스.',
+    runewords: ['치료'],
     tag: '맨땅',
   },
   데몬헤드: {
-    note: '3홈까지 가능해 꿈/착란 제작 후보로 볼 수 있는 엘리트 투구.',
-    runewords: ['치료', '꿈', '착란'],
+    note: '3홈까지 가능해 치료/꿈 제작 후보로 볼 수 있는 엘리트 투구.',
+    runewords: ['치료', '꿈'],
   },
   '본 비지즈': {
     note: '3홈 엘리트 투구 중 방어력이 높아 꿈 재료 후보.',
-    runewords: ['치료', '꿈', '착란'],
+    runewords: ['치료', '꿈'],
   },
-  '라지 쉴드': {
-    note: '초반 3홈 방패 룬워드에 접근하기 쉬운 베이스.',
-    runewords: ['고대인의 서약', '각운'],
+  타아지: {
+    note: '노말 카우 등에서 4홈 영혼을 빠르게 노릴 수 있는 초반 팔라딘 방패.',
+    runewords: ['영혼'],
     tag: '맨땅',
   },
-  '본 쉴드': {
-    note: '2홈 방패 룬워드에 자주 쓰이는 초반 베이스.',
-    runewords: ['각운'],
-    tag: '맨땅',
-  },
-  스큐텀: {
-    note: '익셉셔널 3홈 방패로 초중반 저항 보강에 사용.',
-    runewords: ['고대인의 서약', '각운'],
+  론다쉬: {
+    note: '초반 팔라딘 전용 저항 옵션과 4홈 영혼을 함께 노릴 수 있는 방패.',
+    runewords: ['영혼'],
     tag: '맨땅',
   },
   모너크: {
     note: '비팔라딘 방패 중 4홈 영혼 제작의 대표 베이스. 에테 모너크는 소집 스왑용 영혼으로도 선호.',
     runewords: ['영혼', '불사조'],
-  },
-  '아카란 타아지': {
-    note: '노말 카우 등에서 4홈 영혼을 빠르게 노릴 수 있는 맨땅 팔라딘 방패.',
-    runewords: ['영혼'],
-    tag: '맨땅',
-  },
-  '아카란 론다쉬': {
-    note: '전용 저항 옵션과 4홈 영혼을 함께 노리는 맨땅 팔라딘 방패.',
-    runewords: ['영혼'],
-    tag: '맨땅',
   },
   '세이크리드 타아지': {
     note: '낮은 힘 요구치와 팔라딘 전용 옵션으로 영혼 재료 선호도가 높음.',
@@ -238,21 +191,14 @@ export const recommendedItemTips: Record<string, RecommendedItemTip> = {
     note: '방어력과 요구치 균형이 좋은 팔라딘 전용 방패.',
     runewords: ['영혼', '망명', '꿈'],
   },
-  '쿠라스트 쉴드': {
-    note: '높은 방어력의 팔라딘 4홈 방패 후보.',
-    runewords: ['영혼', '망명'],
-  },
-  '자카룸 쉴드': {
-    note: '방어력과 막기 성능을 함께 보는 팔라딘 전용 베이스.',
-    runewords: ['영혼', '망명'],
-  },
   '볼텍스 쉴드': {
     note: '높은 방어력으로 망명 재료 후보가 되는 팔라딘 방패.',
-    runewords: ['망명', '영혼', '꿈'],
+    runewords: ['망명'],
   },
   '크리스탈 소드': {
     note: '요구치가 낮아 4홈 영혼과 5홈 소집 재료로 널리 쓰이는 도검 베이스.',
     runewords: ['영혼', '소집'],
+    tag: '맨땅',
   },
   크리스: {
     note: '3홈 공허 제작이 가능한 단도 베이스.',
@@ -263,43 +209,23 @@ export const recommendedItemTips: Record<string, RecommendedItemTip> = {
     note: '내구도 소모가 없고 빠른 공속으로 고급 한손 도검 룬워드의 대표 베이스.',
     runewords: ['슬픔', '마지막 소원', '집행자', '초승달', '정의의손길'],
   },
-  '콜로서스 블레이드': {
-    note: '6홈 양손 도검 중 피해 기대치가 높아 고룬 무기 재료 후보.',
-    runewords: ['죽음의 숨결', '마지막 소원', '침묵'],
-  },
   '버서커 액스': {
     note: '한손 도끼 중 사거리와 피해가 좋아 고급 무기 룬워드 재료로 선호.',
     runewords: ['슬픔', '야수', '죽음의 숨결', '파멸', '마지막 소원'],
-  },
-  '글로리어스 액스': {
-    note: '6홈 양손 도끼 중 피해가 높아 죽음의 숨결 같은 고룬 무기 후보.',
-    runewords: ['죽음의 숨결', '침묵'],
   },
   프레일: {
     note: '낮은 요구치와 4~5홈 접근성으로 오심/소집 재료로 널리 쓰이는 베이스.',
     runewords: ['참나무의 심장', '소집'],
   },
-  '워 셉터': {
-    note: '초반 성기사 기술 옵션을 노릴 수 있는 3홈 홀 베이스.',
-    runewords: ['왕의 은총', '집행자'],
-    specialOptions: ['유효 성기사 기술 +3 조합은 맨땅/전용 빌드에서 가치가 크게 상승.'],
-    tag: '맨땅',
-  },
   카두세우스: {
     note: '성기사 기술 옵션과 빠른 공속을 함께 노리는 엘리트 홀 베이스.',
-    runewords: ['야수', '집행자', '왕 시해자'],
+    runewords: ['야수', '소집', '정의의손길'],
     specialOptions: ['선고, 광신, 천상의 주먹, 신성한 방패 등 빌드 핵심 기술 +3이면 고급 재료.'],
-  },
-  '워 스태프': {
-    note: '4홈 기억 재료 후보. 스태프류는 목적 기술 +3 조합 여부가 핵심.',
-    runewords: ['기억'],
-    specialOptions: ['잎새는 워 스태프 고정 추천이 아니라 노멀 2홈 스태프류에 화염구, 온기, 마법부여 등 목적 기술 +3 조합을 우대.'],
-    tag: '맨땅',
   },
   '아콘 스태프': {
     note: '언데드 추가 피해와 높은 기본 피해로 악마술사 에테 4홈 통찰 재료로 선호.',
-    runewords: ['통찰', '침묵', '죽음의 숨결'],
-    specialOptions: ['고급 스태프는 마력 보호막, 냉기 갑옷류, 화력 기술 등 목적 기술 +3 여부가 중요. 숨렙 26~40 구간은 라주크 4홈 확정.'],
+    runewords: ['통찰', '집착'],
+    specialOptions: ['통찰은 에테리얼 4홈, 집착은 원소술사 핵심 기술 +3 조합 여부가 중요. 숨렙 26~40 구간은 라주크 4홈 확정.'],
   },
   쉴레일리: {
     note: '언데드 추가 피해가 붙는 4홈 엘리트 스태프라 악마술사 에테 통찰 재료로 활용.',
@@ -311,11 +237,6 @@ export const recommendedItemTips: Record<string, RecommendedItemTip> = {
     runewords: ['순백'],
     specialOptions: ['순백 재료는 뼈 창, 뼈 영혼, 부활, 저주 계열 등 목적 기술 +3 조합을 우대.'],
     tag: '맨땅',
-  },
-  '그레이브 원드': {
-    note: '익셉셔널 2홈 완드로 순백 재료 후보.',
-    runewords: ['순백'],
-    specialOptions: ['뼈 창/뼈 영혼 같은 핵심 강령술사 기술 +3이면 가치가 크게 상승.'],
   },
   '그레이터 탤런': {
     note: '빠른 공속과 암살자 기술 옵션을 함께 노리는 손톱 베이스.',
@@ -332,29 +253,9 @@ export const recommendedItemTips: Record<string, RecommendedItemTip> = {
     runewords: ['혼돈', '역병', '분노'],
     specialOptions: ['암살자 핵심 기술 +3과 보조 유효 기술이 같이 붙으면 특급 재료.'],
   },
-  '블레이드 보우': {
-    note: '빠른 기본 속도와 4홈으로 활용도가 있는 엘리트 활.',
-    runewords: ['신뢰', '조화'],
-  },
-  '쉐도우 보우': {
-    note: '5홈까지 가능하고 피해/속도 균형이 좋은 엘리트 활.',
-    runewords: ['신뢰', '안개'],
-  },
-  '그레이트 보우': {
-    note: '빠른 공속의 4홈 엘리트 활 베이스.',
-    runewords: ['신뢰', '조화'],
-  },
-  '다이아몬드 보우': {
-    note: '5홈까지 가능해 신뢰/안개 재료 후보.',
-    runewords: ['신뢰', '안개'],
-  },
-  '히드라 보우': {
-    note: '높은 피해와 6홈을 노릴 수 있는 엘리트 활.',
-    runewords: ['죽음의 숨결', '침묵'],
-  },
   '메이트리어컬 보우': {
     note: '아마존 전용 +3 활/쇠뇌 기술 옵션을 노릴 수 있는 빠른 베이스.',
-    runewords: ['신뢰', '조화', '안개'],
+    runewords: ['신뢰', '안개'],
     specialOptions: ['아마존 전용 활은 활과 쇠뇌 기술 +3이 붙은 4~5홈 베이스를 우대.'],
   },
   '그랜드 메이트런 보우': {
@@ -364,36 +265,28 @@ export const recommendedItemTips: Record<string, RecommendedItemTip> = {
   },
   싸이드: {
     note: '낮은 요구치와 빠른 공속으로 저힘 세팅의 무한 재료 후보.',
-    runewords: ['무한', '통찰'],
+    runewords: ['무한'],
   },
   파르티잔: {
     note: '악몽 구간 통찰용으로 접근하기 쉬운 폴암.',
-    runewords: ['통찰', '순종'],
+    runewords: ['통찰'],
     tag: '맨땅',
-  },
-  벡드코방: {
-    note: '6홈까지 가능하고 중반 용병 무기 재료로 사용.',
-    runewords: ['죽음의 숨결', '순종'],
   },
   쓰레셔: {
     note: '빠른 기본 속도로 용병 공격 횟수를 챙기기 좋은 엘리트 폴암.',
-    runewords: ['통찰', '무한', '순종', '긍지'],
-  },
-  '크립틱 액스': {
-    note: '높은 피해와 5홈으로 용병 화력형 폴암 후보.',
-    runewords: ['통찰', '무한', '순종'],
+    runewords: ['통찰', '무한', '긍지'],
   },
   '그레이트 폴액스': {
     note: '높은 피해와 6홈까지 가능한 대표 엘리트 폴암.',
-    runewords: ['무한', '죽음의 숨결', '긍지', '침묵'],
+    runewords: ['무한', '죽음의 숨결', '긍지'],
   },
   '자이언트 쓰레셔': {
     note: '빠른 속도와 6홈을 모두 갖춘 최상급 용병 폴암 후보.',
-    runewords: ['무한', '통찰', '긍지', '죽음의 숨결', '침묵'],
+    runewords: ['무한', '통찰', '긍지', '죽음의 숨결'],
   },
   맨캐쳐: {
     note: '빠른 공속과 긴 사거리로 용병 무한 재료 후보가 되는 창 베이스.',
-    runewords: ['무한', '순종'],
+    runewords: ['무한'],
   },
 }
 
@@ -401,6 +294,50 @@ const runewordSocketByName = new Map(
   runewords.flatMap((runeword) =>
     runewordDisplayNames(runeword.이름).map((name) => [name, runeword['소켓 수']] as const),
   ),
+)
+const runewordRuneRankByName = new Map(
+  [
+    '엘',
+    '엘드',
+    '티르',
+    '네프',
+    '에드',
+    '아이드',
+    '탈',
+    '랄',
+    '오르트',
+    '주울',
+    '앰',
+    '솔',
+    '샤엘',
+    '돌',
+    '헬',
+    '이오',
+    '포',
+    '룸',
+    '코',
+    '팔',
+    '렘',
+    '풀',
+    '우움',
+    '말',
+    '이스트',
+    '굴',
+    '벡스',
+    '오움',
+    '로',
+    '수르',
+    '베르',
+    '자',
+    '참',
+    '조드',
+  ].map((name, index) => [name, index + 1]),
+)
+const eliteDefenseRuneThreshold = runewordRuneRankByName.get('렘') ?? 20
+const elitePreferredDefenseRunewords = new Set(
+  runewords
+    .filter((runeword) => hasDefenseIncreaseOption(runeword) && hasRuneAtLeast(runeword, eliteDefenseRuneThreshold))
+    .flatMap((runeword) => runewordDisplayNames(runeword.이름)),
 )
 
 const mercenaryArmorBases = new Set([
@@ -423,6 +360,7 @@ export function NormalItemsPage() {
   const [selectedCategory, setSelectedCategory] = useState<NormalItemCategory>(initialSearchState.category)
   const [selectedGrade, setSelectedGrade] = useState<NormalItemGradeFilter>('전체')
   const [selectedRecommendation, setSelectedRecommendation] = useState<RecommendationFilter>('전체')
+  const [selectedHelmType, setSelectedHelmType] = useState<NormalHelmTypeFilter>(initialSearchState.helmType)
   const [selectedShieldType, setSelectedShieldType] = useState<NormalShieldTypeFilter>(initialSearchState.shieldType)
   const [selectedWeaponType, setSelectedWeaponType] = useState<NormalWeaponTypeFilter>(initialSearchState.weaponType)
   const [nameQuery, setNameQuery] = useState(initialSearchState.nameQuery)
@@ -439,6 +377,8 @@ export function NormalItemsPage() {
     () => weaponItemsByType[selectedWeaponType] ?? [],
     [selectedWeaponType, weaponItemsByType],
   )
+  const usesRecommendationFilter = selectedCategory !== '투구' || !isClassSpecificHelmFilter(selectedHelmType)
+  const activeRecommendationFilter = usesRecommendationFilter ? selectedRecommendation : '전체'
   const sortOptions =
     selectedCategory === '무기'
       ? isBowWeaponType(selectedWeaponType)
@@ -472,13 +412,17 @@ export function NormalItemsPage() {
           ? selectedWeaponItems
           : []
 
-    const gradeRows = sourceItems
+    const helmRows =
+      selectedCategory === '투구'
+        ? sourceItems.filter((item) => helmTypeMatches(item, selectedHelmType))
+        : sourceItems
+    const gradeRows = helmRows
       .filter((item) => (selectedGrade === '전체' ? true : item.등급 === selectedGrade))
-      .filter((item) => recommendationMatches(getNormalItemRecommendationTag(item), selectedRecommendation))
+      .filter((item) => recommendationMatches(getNormalItemRecommendationTag(item), activeRecommendationFilter))
 
     return searchItemsByQuery(gradeRows, nameQuery, normalItemSearchText)
       .toSorted((left, right) => sortNormalItems(left, right, activeSortType))
-  }, [activeSortType, armorItems, beltItems, bootItems, gloveItems, helmItems, nameQuery, paladinShieldItems, selectedCategory, selectedGrade, selectedRecommendation, selectedShieldType, selectedWeaponItems, shieldItems])
+  }, [activeRecommendationFilter, activeSortType, armorItems, beltItems, bootItems, gloveItems, helmItems, nameQuery, paladinShieldItems, selectedCategory, selectedGrade, selectedHelmType, selectedShieldType, selectedWeaponItems, shieldItems])
 
   useEffect(() => {
     if (incomingSearchQuery === lastAppliedSearchQuery.current) {
@@ -490,6 +434,7 @@ export function NormalItemsPage() {
     setSelectedCategory(nextSearchState.category)
     setSelectedGrade('전체')
     setSelectedRecommendation('전체')
+    setSelectedHelmType(nextSearchState.helmType)
     setSelectedShieldType(nextSearchState.shieldType)
     setSelectedWeaponType(nextSearchState.weaponType)
     setNameQuery(nextSearchState.nameQuery)
@@ -505,7 +450,7 @@ export function NormalItemsPage() {
       : selectedCategory === '장갑'
         ? gloveItems.length
       : selectedCategory === '투구'
-        ? helmItems.length
+        ? helmItems.filter((item) => helmTypeMatches(item, selectedHelmType)).length
       : selectedCategory === '방패'
         ? selectedShieldType === '팔라딘 방패'
           ? paladinShieldItems.length
@@ -567,6 +512,29 @@ export function NormalItemsPage() {
             </div>
           )}
 
+          {selectedCategory === '투구' && (
+            <div className="normal-grade-filter">
+              <span>투구 계열</span>
+              <div>
+                {normalHelmTypeFilters.map((helmType) => (
+                  <button
+                    className={helmType === selectedHelmType ? 'is-active' : ''}
+                    key={helmType}
+                    onClick={() => {
+                      setSelectedHelmType(helmType)
+                      if (isClassSpecificHelmFilter(helmType)) {
+                        setSelectedRecommendation('전체')
+                      }
+                    }}
+                    type="button"
+                  >
+                    {helmType}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="normal-grade-filter">
             <span>등급</span>
             <div>
@@ -583,21 +551,23 @@ export function NormalItemsPage() {
             </div>
           </div>
 
-          <div className="normal-grade-filter">
-            <span>추천</span>
-            <div>
-              {recommendationFilters.map((filter) => (
-                <button
-                  className={filter === selectedRecommendation ? 'is-active' : ''}
-                  key={filter}
-                  onClick={() => setSelectedRecommendation(filter)}
-                  type="button"
-                >
-                  {filter}
-                </button>
-              ))}
+          {usesRecommendationFilter && (
+            <div className="normal-grade-filter">
+              <span>추천</span>
+              <div>
+                {recommendationFilters.map((filter) => (
+                  <button
+                    className={filter === selectedRecommendation ? 'is-active' : ''}
+                    key={filter}
+                    onClick={() => setSelectedRecommendation(filter)}
+                    type="button"
+                  >
+                    {filter}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </FilterPanel>
       </TableToolbar>
 
@@ -606,6 +576,14 @@ export function NormalItemsPage() {
         placeholder="예: 메이지 플레이트, 아콘"
         value={nameQuery}
         onChange={setNameQuery}
+      />
+      <NormalBaseGuideCard
+        guide={getNormalBaseGuide({
+          category: selectedCategory,
+          helmType: selectedHelmType,
+          shieldType: selectedShieldType,
+          weaponType: selectedWeaponType,
+        })}
       />
       <>
         {selectedCategory === '갑옷' ? (
@@ -632,6 +610,7 @@ export function NormalItemsPage() {
 
 function resolveNormalSearchState(query: string): {
   category: NormalItemCategory
+  helmType: NormalHelmTypeFilter
   nameQuery: string
   shieldType: NormalShieldTypeFilter
   weaponType: NormalWeaponTypeFilter
@@ -639,6 +618,7 @@ function resolveNormalSearchState(query: string): {
   const trimmedQuery = query.trim()
   const defaultState = {
     category: '갑옷' as NormalItemCategory,
+    helmType: '전체 투구' as NormalHelmTypeFilter,
     nameQuery: trimmedQuery,
     shieldType: '일반 방패' as NormalShieldTypeFilter,
     weaponType: '폴암' as NormalWeaponTypeFilter,
@@ -656,12 +636,236 @@ function resolveNormalSearchState(query: string): {
     return {
       ...defaultState,
       category: matchingEntry.category,
+      helmType: resolveNormalHelmType(matchingEntry.row),
       shieldType: matchingEntry.shieldType ?? defaultState.shieldType,
       weaponType: matchingEntry.weaponType ?? defaultState.weaponType,
     }
   }
 
   return defaultState
+}
+
+function helmTypeMatches(item: NormalListItem, filter: NormalHelmTypeFilter) {
+  if (filter === '전체 투구') {
+    return true
+  }
+
+  if (filter === '일반 투구') {
+    return !item.전용
+  }
+
+  if (filter === '바바리안 투구') {
+    return item.전용 === '바바리안'
+  }
+
+  return item.전용 === '드루이드'
+}
+
+function isClassSpecificHelmFilter(filter: NormalHelmTypeFilter) {
+  return filter === '바바리안 투구' || filter === '드루이드 투구'
+}
+
+function NormalBaseGuideCard({ guide }: { guide: NormalBaseGuide | null }) {
+  if (!guide) {
+    return null
+  }
+
+  return (
+    <section className="normal-base-guide-card">
+      <strong>{guide.title}</strong>
+      <span>{guide.summary}</span>
+      <span className="normal-base-guide-details">
+        {guide.details.map((detail) => (
+          <span key={`${detail.label}-${detail.text}`}>
+            <b>{detail.label}</b>
+            {detail.text}
+          </span>
+        ))}
+      </span>
+    </section>
+  )
+}
+
+function getNormalBaseGuide({
+  category,
+  helmType,
+  shieldType,
+  weaponType,
+}: {
+  category: NormalItemCategory
+  helmType: NormalHelmTypeFilter
+  shieldType: NormalShieldTypeFilter
+  weaponType: NormalWeaponTypeFilter
+}): NormalBaseGuide | null {
+  if (category === '투구') {
+    return helmBaseGuide(helmType)
+  }
+
+  if (category === '방패' && shieldType === '팔라딘 방패') {
+    return {
+      title: '팔라딘 전용 방패',
+      summary: '베이스명보다 자동 옵션이 중요합니다. 영혼은 저항, 망명은 에테리얼 고방어와 자동 옵션을 함께 봅니다.',
+      details: [
+        { label: '영혼', text: '모든 저항 +35~45 자동 옵션과 4홈 후보를 우대.' },
+        { label: '망명', text: '에테리얼, 높은 방어력, 모든 저항 또는 피해/명중률 자동 옵션을 우대.' },
+        { label: '꿈', text: '3홈 후보 중 요구치와 세팅 목적에 맞는 베이스를 확인.' },
+      ],
+    }
+  }
+
+  if (category === '무기') {
+    return weaponBaseGuide(weaponType)
+  }
+
+  return null
+}
+
+function helmBaseGuide(helmType: NormalHelmTypeFilter): NormalBaseGuide | null {
+  if (helmType === '바바리안 투구') {
+    return {
+      title: '바바리안 전용 투구',
+      summary: '베이스명보다 핵심 야만용사 기술 +3 조합과 3홈 여부가 중요합니다.',
+      details: [
+        { label: '함성바바', text: '전투 지시 +3, 전투 명령 +3, 외침 +3, 포효 +3 조합 우대.' },
+        { label: '전투바바', text: '광폭화 +3, 소용돌이 +3, 도약 공격 +3 조합이면 전용 빌드 후보.' },
+        { label: '룬워드', text: '마녀단은 핵심 기술 조합이 붙은 3홈 후보일 때만 확인.' },
+      ],
+    }
+  }
+
+  if (helmType === '드루이드 투구') {
+    return {
+      title: '드루이드 전용 펠트',
+      summary: '베이스명보다 빌드 핵심 스킬 +3 조합과 3홈 여부가 중요합니다.',
+      details: [
+        { label: '엘리드루', text: '회오리바람 +3, 허리케인 +3, 회오리 갑옷 +3 조합 우대.' },
+        { label: '소환드루', text: '소환 회색곰 +3, 광포한 늑대 +3, 참나무 현자 +3 조합 확인.' },
+        { label: '늑드루', text: '분노 +3, 늑대인간 +3, 변신술 +3, 흉포한 격노 +3 조합 우대.' },
+        { label: '화염드루', text: '균열 +3, 화산 +3, 타오르는 바위 +3, 화염폭풍 +3 조합 확인.' },
+        { label: '룬워드', text: '탈태, 꺼져가는 불길은 목적 스킬 조합이 붙었을 때 확인.' },
+      ],
+    }
+  }
+
+  return null
+}
+
+function weaponBaseGuide(weaponType: NormalWeaponTypeFilter): NormalBaseGuide | null {
+  if (weaponType === '손톱') {
+    return {
+      title: '암살자 손톱',
+      summary: '손톱은 암살자 개별 기술이 붙을 수 있어, 주력 기술과 보조 기술이 같이 붙으면 가치가 크게 오릅니다.',
+      details: [
+        { label: '트랩씬', text: '번개 파수기 +3, 죽음 파수기 +3 조합 우대.' },
+        { label: '혼돈/역병', text: '용의 비상, 정신 폭발, 죽음 파수기, 맹독 등 유효 기술 조합 확인.' },
+        { label: '보조 기술', text: '흐리기, 무기 막기, 정신 폭발 같은 생존/제어 기술이 같이 붙으면 가치 상승.' },
+      ],
+    }
+  }
+
+  if (weaponType === '아마존 활') {
+    return {
+      title: '아마존 전용 활',
+      summary: '아마존 전용 활은 활과 쇠뇌 기술 +3 자동 옵션이 핵심입니다.',
+      details: [
+        { label: '룬워드', text: '신뢰, 안개를 주요 후보로 확인.' },
+        { label: '신뢰', text: '활과 쇠뇌 기술 +3, 4홈 후보를 우대.' },
+        { label: '안개', text: '활과 쇠뇌 기술 +3, 5홈 후보를 확인.' },
+        { label: '베이스', text: '공속/피해 균형 때문에 메이트리어컬 보우와 그랜드 메이트런 보우를 주로 비교.' },
+      ],
+    }
+  }
+
+  if (weaponType === '아마존 전용') {
+    return {
+      title: '아마존 전용 무기',
+      summary: '자동 기술 +3 여부가 먼저입니다. 활은 룬워드 재료, 투창/창은 기술 옵션 자체의 가치가 중심입니다.',
+      details: [
+        { label: '활 룬워드', text: '신뢰, 안개 후보는 활과 쇠뇌 기술 +3과 소켓 조건을 함께 확인.' },
+        { label: '투창', text: '투창과 창 기술 +3 조합은 재벌린 계열 가치 판단의 핵심.' },
+        { label: '창 룬워드', text: '무한이 주요 후보. 순종은 예산/실험 후보로만 확인.' },
+        { label: '창 옵션', text: '창 기술 +3과 에테리얼 여부를 함께 확인.' },
+      ],
+    }
+  }
+
+  if (weaponType === '창') {
+    return {
+      title: '창',
+      summary: '창 룬워드는 용병/특수 빌드 목적이 섞여 있어 베이스 속도, 피해, 에테리얼 여부를 함께 봅니다.',
+      details: [
+        { label: '무한', text: '4홈 창 후보. 번개 계열 특수 세팅에서 의미가 큼.' },
+        { label: '순종', text: '5홈 예산 화력 후보. 에테리얼이면 가치 상승.' },
+        { label: '긍지', text: '4홈 오라 목적 후보지만 직접 화력용으로는 신중히 확인.' },
+      ],
+    }
+  }
+
+  if (weaponType === '오브') {
+    return {
+      title: '원소술사 오브',
+      summary: '오브는 룬워드 재료보다 원소술사 개별 기술 조합이 가치 판단의 중심입니다.',
+      details: [
+        { label: '냉기', text: '눈보라, 얼음 보주, 냉기 숙련 등 주력 냉기 기술 +3 조합 확인.' },
+        { label: '화염', text: '화염구, 운석, 화염 숙련 등 목적 기술 +3 조합 확인.' },
+        { label: '번개', text: '번개, 연쇄 번개, 번개 숙련 등 주력 번개 기술 +3 조합 확인.' },
+      ],
+    }
+  }
+
+  if (weaponType === '홀') {
+    return {
+      title: '홀',
+      summary: '홀은 성기사 개별 기술이 붙을 수 있어, 목적 빌드의 핵심 기술 +3 여부가 중요합니다.',
+      details: [
+        { label: '오라', text: '선고, 광신 등 목적 오라 +3 조합 확인.' },
+        { label: '전투 기술', text: '천상의 주먹, 축복받은 망치, 신성한 방패 등 핵심 기술 +3 조합 우대.' },
+        { label: '룬워드', text: '야수, 소집, 정의의손길 후보는 목적 기술 조합이 붙었을 때 확인.' },
+      ],
+    }
+  }
+
+  if (weaponType === '완드') {
+    return {
+      title: '완드',
+      summary: '완드는 강령술사 개별 기술이 붙을 수 있어, 순백/전용 빌드용 핵심 기술 +3 조합을 우대합니다.',
+      details: [
+        { label: '뼈', text: '뼈 창, 뼈 영혼, 뼈 갑옷 등 핵심 기술 조합 확인.' },
+        { label: '소환', text: '부활, 해골 숙련, 해골 되살리기 등 목적 빌드 기술 확인.' },
+        { label: '저주', text: '피해 증폭, 노화, 저항 감소 같은 보조 저주가 같이 붙으면 가치 상승.' },
+      ],
+    }
+  }
+
+  if (weaponType === '지팡이') {
+    return {
+      title: '지팡이',
+      summary: '지팡이는 원소술사 개별 기술이 붙을 수 있어, 잎새/기억/집착은 목적 기술 +3 여부가 중요합니다.',
+      details: [
+        { label: '잎새', text: '화염구, 온기, 마법부여 등 초반 화염 기술 +3 조합 확인.' },
+        { label: '기억', text: '마력 보호막, 냉기 갑옷류 등 보조 기술 조합 확인.' },
+        { label: '집착', text: '주력 원소 기술 +3과 보조 유효 기술이 함께 붙은 6홈 후보 우대.' },
+      ],
+    }
+  }
+
+  return null
+}
+
+function resolveNormalHelmType(item: NormalListItem): NormalHelmTypeFilter {
+  if (item.카테고리 !== '투구') {
+    return '전체 투구'
+  }
+
+  if (item.전용 === '바바리안') {
+    return '바바리안 투구'
+  }
+
+  if (item.전용 === '드루이드') {
+    return '드루이드 투구'
+  }
+
+  return '일반 투구'
 }
 
 function normalSearchStateEntries(): Array<{
@@ -695,7 +899,8 @@ function normalSearchStateEntries(): Array<{
 
 function normalItemSearchText(item: NormalListItem) {
   const recommendationTag = getNormalItemRecommendationTag(item)
-  const recommendationTip = recommendedItemTips[item.이름]
+  const recommendationTip = item.추천 ? getRecommendedItemTip(item) : recommendedItemTips[item.이름]
+  const visibleRecommendedRunewords = recommendationTip ? recommendedRunewordsForItem(recommendationTip.runewords, item) : []
 
   return [
     item.이름,
@@ -708,8 +913,9 @@ function normalItemSearchText(item: NormalListItem) {
     item.전용 ?? '',
     recommendationTag ?? '',
     recommendationTip?.note ?? '',
-    recommendationTip?.runewords.join(' ') ?? '',
+    visibleRecommendedRunewords.join(' '),
     recommendationTip?.specialOptions?.join(' ') ?? '',
+    recommendationTip?.details?.map((detail) => `${detail.label} ${detail.text}`).join(' ') ?? '',
   ].join(' ')
 }
 
@@ -718,7 +924,7 @@ function getNormalItemRecommendationTag(item: NormalListItem): RecommendationTag
     return null
   }
 
-  return recommendedItemTips[item.이름]?.tag ?? '추천'
+  return getRecommendedItemTip(item).tag ?? '추천'
 }
 
 function recommendationMatches(tag: RecommendationTag | null, filter: RecommendationFilter) {
@@ -741,6 +947,7 @@ function ArmorItemsTable({ items, headerMeta }: { items: NormalItemRow[]; header
         <span className="normal-item-name-cell">
           <span className={`runeword-name ${weightNameClass(item.무게)}`}>{item.이름}</span>
           <RecommendBadge item={item} />
+          <ExclusiveBadge item={item} />
         </span>
       ),
     },
@@ -815,6 +1022,7 @@ function DefensiveItemsTable({
         <span className="normal-item-name-cell">
           <span className="runeword-name">{item.이름}</span>
           <RecommendBadge item={item} />
+          <ExclusiveBadge item={item} />
         </span>
       ),
     },
@@ -879,7 +1087,7 @@ function ShieldItemsTable({ items, headerMeta }: { items: NormalItemRow[]; heade
         <span className="normal-item-name-cell">
           <span className="runeword-name">{item.이름}</span>
           <RecommendBadge item={item} />
-          {item.전용 ? <span className="normal-item-recommend">{item.전용}</span> : null}
+          <ExclusiveBadge item={item} />
         </span>
       ),
     },
@@ -959,7 +1167,7 @@ function WeaponItemsTable({ items, headerMeta }: { items: WeaponItemRow[]; heade
         <span className="normal-item-name-cell">
           <WeaponName item={item} />
           <RecommendBadge item={item} />
-          {item.전용 ? <span className="normal-item-recommend">{item.전용}</span> : null}
+          <ExclusiveBadge item={item} />
         </span>
       ),
     },
@@ -1048,15 +1256,20 @@ function WeaponName({ item }: { item: WeaponItemRow }) {
   )
 }
 
+function ExclusiveBadge({ item }: { item: NormalListItem }) {
+  if (!item.전용 || item.카테고리 === '무기' || item.카테고리 === '방패' || isClassSpecificHelm(item)) {
+    return null
+  }
+
+  return <span className="normal-item-recommend">{item.전용}</span>
+}
+
 function RecommendBadge({ item }: { item: NormalListItem }) {
   if (!item.추천) {
     return null
   }
 
-  const tip = recommendedItemTips[item.이름] ?? {
-    note: '룬워드 재료로 활용도가 높은 베이스.',
-    runewords: [],
-  }
+  const tip = getRecommendedItemTip(item)
   const tag = tip.tag ?? '추천'
 
   return (
@@ -1077,12 +1290,24 @@ function RecommendBadge({ item }: { item: NormalListItem }) {
   )
 }
 
+function getRecommendedItemTip(item: NormalListItem): RecommendedItemTip {
+  return recommendedItemTips[item.이름] ?? {
+    note: '룬워드 재료로 활용도가 높은 베이스.',
+    runewords: [],
+  }
+}
+
+function isClassSpecificHelm(item: NormalListItem) {
+  return item.카테고리 === '투구' && (item.전용 === '바바리안' || item.전용 === '드루이드')
+}
+
 function RecommendTipContent({ item, tip }: { item: NormalListItem; tip: RecommendedItemTip }) {
   const demonologistTip = recommendedDemonologistTip(item)
   const mercenaryTip = demonologistTip ? null : recommendedMercenaryTip(item)
   const etherealTip = recommendedEtherealTip(item, mercenaryTip, demonologistTip)
   const strengthTip = recommendedStrengthTip(item)
   const specialOptionTips = recommendedSpecialOptionTips(item, tip)
+  const recommendedRunewords = recommendedRunewordsForItem(tip.runewords, item)
 
   return (
     <>
@@ -1100,6 +1325,12 @@ function RecommendTipContent({ item, tip }: { item: NormalListItem; tip: Recomme
           <span>{specialOptionTips.join(' ')}</span>
         </span>
       ) : null}
+      {tip.details?.map((detail) => (
+        <span key={`${detail.label}-${detail.text}`}>
+          <b>{detail.label}</b>
+          {detail.text}
+        </span>
+      ))}
       {mercenaryTip ? (
         <span>
           <b>용병</b>
@@ -1118,10 +1349,10 @@ function RecommendTipContent({ item, tip }: { item: NormalListItem; tip: Recomme
           {strengthTip}
         </span>
       ) : null}
-      {tip.runewords.length > 0 ? (
+      {recommendedRunewords.length > 0 ? (
         <span className="recommend-tip-runewords">
           <b>대표 룬워드</b>
-          <span>{tip.runewords.map(formatRecommendedRuneword).join(', ')}</span>
+          <span>{recommendedRunewords.map(formatRecommendedRuneword).join(', ')}</span>
         </span>
       ) : null}
     </>
@@ -1260,10 +1491,40 @@ function comparableStrengthItems(item: NormalListItem): NormalListItem[] {
     .filter((candidate) => candidate.등급 === item.등급)
 }
 
+function recommendedRunewordsForItem(names: string[], item: NormalListItem) {
+  return names.filter((name) => !shouldExcludeDefenseRunewordForBase(name, item))
+}
+
 function formatRecommendedRuneword(name: string) {
   const socketCount = runewordSocketByName.get(name) ?? runewordSocketByName.get(normalizeRecommendedRunewordName(name))
 
   return socketCount ? `${name}(${socketCount})` : name
+}
+
+function shouldExcludeDefenseRunewordForBase(name: string, item: NormalListItem) {
+  if (!isArmorItemRow(item) || item.등급 === '엘리트') {
+    return false
+  }
+
+  if (item.카테고리 !== '갑옷' && item.카테고리 !== '투구' && item.카테고리 !== '방패') {
+    return false
+  }
+
+  const lookupNames = runewordDisplayNames(name)
+
+  return lookupNames.some((lookupName) => elitePreferredDefenseRunewords.has(lookupName))
+}
+
+function hasDefenseIncreaseOption(runeword: (typeof runewords)[number]) {
+  return runeword.options.some((option) => option.includes('방어력') && option.includes('증가'))
+}
+
+function hasRuneAtLeast(runeword: (typeof runewords)[number], threshold: number) {
+  return runeword.룬조합
+    .filter((line) => !line.trim().startsWith('('))
+    .flatMap((line) => line.split('+'))
+    .map((rune) => rune.replace(/룬/g, '').trim())
+    .some((rune) => (runewordRuneRankByName.get(rune) ?? 0) >= threshold)
 }
 
 function runewordDisplayNames(name: string) {
@@ -1425,16 +1686,20 @@ function getShieldBaseRows(data: ArmorBases): NormalItemRow[] {
 
 function getDefensiveBaseRows(data: ArmorBases): NormalItemRow[] {
   return data.sections
-    .filter((section) => section.kind === 'base')
+    .filter(isVisibleArmorBaseSection)
     .flatMap((section) =>
       section.items.map((item) => ({
         ...item,
-        추천: item.추천 || Boolean(recommendedItemTips[item.이름]),
+        추천: Boolean(recommendedItemTips[item.이름]),
         id: `${data.category}-${section.id}-${item.이름}`,
         등급: section.grade,
         카테고리: data.category as NormalItemCategory,
       })),
     )
+}
+
+function isVisibleArmorBaseSection(section: ArmorBases['sections'][number]) {
+  return section.kind === 'base' || section.kind === 'class-specific'
 }
 
 function getWeaponBaseRows(
@@ -1447,7 +1712,7 @@ function getWeaponBaseRows(
   return data.sections.flatMap((section) =>
     section.items.filter(itemFilter).map((item) => ({
       ...item,
-      추천: item.추천 || Boolean(recommendedItemTips[item.이름]),
+      추천: Boolean(recommendedItemTips[item.이름]),
       id: `${weaponType}-${section.id}-${item.이름}`,
       등급: section.grade,
       계열: weaponType,
