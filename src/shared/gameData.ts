@@ -13,6 +13,7 @@ import runeUpgradesData from '../data/rune-upgrades.json'
 import runewordsData from '../data/runewords.json'
 import setItemsData from '../data/set-items.json'
 import shieldBasesData from '../data/shield-bases.json'
+import shieldNecromancerBasesData from '../data/shield-necromancer-bases.json'
 import shieldPaladinBasesData from '../data/shield-paladin-bases.json'
 import uniqueItemsData from '../data/unique-items.json'
 import weaponAmazonBasesData from '../data/weapon-amazon-bases.json'
@@ -61,6 +62,7 @@ export const runeUpgrades = runeUpgradesData as RuneUpgrade[]
 export const runewords = runewordsData as Runeword[]
 export const setItems = setItemsData as SetItemsData
 export const shieldBases = shieldBasesData as ArmorBases
+export const shieldNecromancerBases = shieldNecromancerBasesData as ArmorBases
 export const shieldPaladinBases = shieldPaladinBasesData as ArmorBases
 export const uniqueItems = uniqueItemsData as UniqueItemsData
 export const weaponAmazonBases = weaponAmazonBasesData as WeaponBases

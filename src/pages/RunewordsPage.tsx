@@ -15,6 +15,7 @@ import {
   helmBases,
   runewords,
   shieldBases,
+  shieldNecromancerBases,
   shieldPaladinBases,
   weaponAmazonBases,
   weaponAxeBases,
@@ -569,6 +570,7 @@ function createAllRunewordBaseMetadata() {
   addArmorBaseMetadata(bases, helmBases, ['투구(Helm)'])
   addArmorBaseMetadata(bases, shieldBases, ['방패(Shield)'])
   addArmorBaseMetadata(bases, shieldPaladinBases, ['팔라딘 전용 방패(Paladin Shield)', '방패(Shield)'])
+  addArmorBaseMetadata(bases, shieldNecromancerBases, ['네크 전용 방패(Necromancer Shield)', '방패(Shield)'])
 
   weaponMetadataSources.forEach(({ data, equipmentTypes }) => {
     data.sections.forEach((section) => {

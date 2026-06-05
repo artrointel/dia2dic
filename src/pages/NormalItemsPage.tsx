@@ -15,6 +15,7 @@ import {
   gloveBases,
   helmBases,
   shieldBases,
+  shieldNecromancerBases,
   shieldPaladinBases,
   weaponAmazonBases,
   weaponAxeBases,
@@ -67,7 +68,7 @@ const normalItemCategories: NormalItemCategory[] = [
 const normalItemGradeFilters: NormalItemGradeFilter[] = ['전체', '노멀', '익셉셔널', '엘리트']
 type NormalHelmTypeFilter = '전체 투구' | '일반 투구' | '바바리안 투구' | '드루이드 투구'
 const normalHelmTypeFilters: NormalHelmTypeFilter[] = ['전체 투구', '일반 투구', '바바리안 투구', '드루이드 투구']
-const normalShieldTypeFilters: NormalShieldTypeFilter[] = ['일반 방패', '팔라딘 방패']
+const normalShieldTypeFilters: NormalShieldTypeFilter[] = ['일반 방패', '팔라딘 방패', '네크로맨서 방패']
 const normalWeaponBaseSources: Array<{
   data: WeaponBases
   itemFilter?: (item: WeaponBaseItem) => boolean
@@ -372,12 +373,26 @@ export function NormalItemsPage() {
   const helmItems = useMemo(() => getHelmBaseRows(), [])
   const shieldItems = useMemo(() => getShieldBaseRows(shieldBases), [])
   const paladinShieldItems = useMemo(() => getShieldBaseRows(shieldPaladinBases), [])
+  const necromancerShieldItems = useMemo(() => getShieldBaseRows(shieldNecromancerBases), [])
+  const selectedShieldItems = useMemo(() => {
+    if (selectedShieldType === '팔라딘 방패') {
+      return paladinShieldItems
+    }
+
+    if (selectedShieldType === '네크로맨서 방패') {
+      return necromancerShieldItems
+    }
+
+    return shieldItems
+  }, [necromancerShieldItems, paladinShieldItems, selectedShieldType, shieldItems])
   const weaponItemsByType = useMemo(() => getWeaponItemsByType(), [])
   const selectedWeaponItems = useMemo(
     () => weaponItemsByType[selectedWeaponType] ?? [],
     [selectedWeaponType, weaponItemsByType],
   )
-  const usesRecommendationFilter = selectedCategory !== '투구' || !isClassSpecificHelmFilter(selectedHelmType)
+  const usesRecommendationFilter =
+    (selectedCategory !== '투구' || !isClassSpecificHelmFilter(selectedHelmType)) &&
+    (selectedCategory !== '방패' || selectedShieldType !== '네크로맨서 방패')
   const activeRecommendationFilter = usesRecommendationFilter ? selectedRecommendation : '전체'
   const sortOptions =
     selectedCategory === '무기'
@@ -405,9 +420,7 @@ export function NormalItemsPage() {
         : selectedCategory === '투구'
           ? helmItems
         : selectedCategory === '방패'
-          ? selectedShieldType === '팔라딘 방패'
-            ? paladinShieldItems
-            : shieldItems
+          ? selectedShieldItems
         : selectedCategory === '무기'
           ? selectedWeaponItems
           : []
@@ -422,7 +435,7 @@ export function NormalItemsPage() {
 
     return searchItemsByQuery(gradeRows, nameQuery, normalItemSearchText)
       .toSorted((left, right) => sortNormalItems(left, right, activeSortType))
-  }, [activeRecommendationFilter, activeSortType, armorItems, beltItems, bootItems, gloveItems, helmItems, nameQuery, paladinShieldItems, selectedCategory, selectedGrade, selectedHelmType, selectedShieldType, selectedWeaponItems, shieldItems])
+  }, [activeRecommendationFilter, activeSortType, armorItems, beltItems, bootItems, gloveItems, helmItems, nameQuery, selectedCategory, selectedGrade, selectedHelmType, selectedShieldItems, selectedWeaponItems])
 
   useEffect(() => {
     if (incomingSearchQuery === lastAppliedSearchQuery.current) {
@@ -452,9 +465,7 @@ export function NormalItemsPage() {
       : selectedCategory === '투구'
         ? helmItems.filter((item) => helmTypeMatches(item, selectedHelmType)).length
       : selectedCategory === '방패'
-        ? selectedShieldType === '팔라딘 방패'
-          ? paladinShieldItems.length
-          : shieldItems.length
+        ? selectedShieldItems.length
       : selectedCategory === '무기'
         ? selectedWeaponItems.length
       : 0
@@ -502,7 +513,12 @@ export function NormalItemsPage() {
                   <button
                     className={shieldType === selectedShieldType ? 'is-active' : ''}
                     key={shieldType}
-                    onClick={() => setSelectedShieldType(shieldType)}
+                    onClick={() => {
+                      setSelectedShieldType(shieldType)
+                      if (shieldType === '네크로맨서 방패') {
+                        setSelectedRecommendation('전체')
+                      }
+                    }}
                     type="button"
                   >
                     {shieldType}
@@ -713,6 +729,19 @@ function getNormalBaseGuide({
     }
   }
 
+  if (category === '방패' && shieldType === '네크로맨서 방패') {
+    return {
+      title: '네크로맨서 전용 방패',
+      summary: '베이스명보다 강령술사 개별 기술 조합이 중요합니다. 최대 2홈이라 각운, 광채, 경계 후보를 주로 확인합니다.',
+      details: [
+        { label: '독뼈', text: '뼈 창 +3, 뼈 영혼 +3, 뼈 갑옷 +3, 시체 폭발 +3 조합 우대.' },
+        { label: '소환', text: '해골 되살리기 +3, 해골 숙련 +3, 부활 +3, 점토 골렘 +3 조합 확인.' },
+        { label: '저주', text: '피해 증폭, 노화, 저항 감소 같은 핵심 저주가 같이 붙으면 가치 상승.' },
+        { label: '룬워드', text: '각운, 광채, 경계는 목적 기술 조합이 붙은 2홈 후보일 때 확인.' },
+      ],
+    }
+  }
+
   if (category === '무기') {
     return weaponBaseGuide(weaponType)
   }
@@ -885,6 +914,7 @@ function normalSearchStateEntries(): Array<{
     { category: '장갑', rows: getGloveBaseRows() },
     { category: '벨트', rows: getBeltBaseRows() },
     { category: '신발', rows: getBootBaseRows() },
+    { category: '방패', shieldType: '네크로맨서 방패', rows: getShieldBaseRows(shieldNecromancerBases) },
     { category: '방패', shieldType: '팔라딘 방패', rows: getShieldBaseRows(shieldPaladinBases) },
     { category: '방패', shieldType: '일반 방패', rows: getShieldBaseRows(shieldBases) },
     ...normalWeaponBaseSources.map(({ data, itemFilter, type }) => ({
@@ -911,12 +941,25 @@ function normalItemSearchText(item: NormalListItem) {
     isWeaponItemRow(item) ? `베이스공속 ${item.베이스공속}` : '',
     isArmorItemRow(item) ? item.무게 ?? '' : '',
     item.전용 ?? '',
+    normalItemSearchAliases(item),
     recommendationTag ?? '',
     recommendationTip?.note ?? '',
     visibleRecommendedRunewords.join(' '),
     recommendationTip?.specialOptions?.join(' ') ?? '',
     recommendationTip?.details?.map((detail) => `${detail.label} ${detail.text}`).join(' ') ?? '',
   ].join(' ')
+}
+
+function normalItemSearchAliases(item: NormalListItem) {
+  if (isArmorItemRow(item) && item.카테고리 === '방패' && item.전용 === '강령술사 전용') {
+    return '네크 방패 네크로맨서 방패 네크 전용 방패 강령술사 방패'
+  }
+
+  if (isArmorItemRow(item) && item.카테고리 === '방패' && item.전용 === '팔라딘 전용') {
+    return '팔라 방패 팔라딘 방패 성기사 방패 성기사 전용 방패'
+  }
+
+  return ''
 }
 
 function getNormalItemRecommendationTag(item: NormalListItem): RecommendationTag | null {
@@ -1482,7 +1525,7 @@ function comparableStrengthItems(item: NormalListItem): NormalListItem[] {
 
   const armorBasesByCategory: Partial<Record<NormalItemCategory, ArmorBases[]>> = {
     갑옷: [armorBases],
-    방패: [shieldBases, shieldPaladinBases],
+    방패: [shieldBases, shieldPaladinBases, shieldNecromancerBases],
     투구: [helmBases],
   }
 

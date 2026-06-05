@@ -11,6 +11,7 @@ import {
   runewords,
   setItems,
   shieldBases,
+  shieldNecromancerBases,
   shieldPaladinBases,
   socketRecipes,
   uniqueItems,
@@ -266,6 +267,7 @@ function normalItemDocuments(): SearchDocument[] {
     ...armorDocuments(bootBases),
     ...armorDocuments(shieldBases),
     ...armorDocuments(shieldPaladinBases),
+    ...armorDocuments(shieldNecromancerBases),
     ...weaponDocuments(weaponDaggerBases),
     ...weaponDocuments(weaponSwordBases),
     ...weaponDocuments(weaponAxeBases),
@@ -289,7 +291,7 @@ function armorDocuments(data: ArmorBases): SearchDocument[] {
   return data.sections.flatMap((section) =>
     section.items.map((item) => ({
       label: item.이름,
-      text: [data.category, section.title, section.grade, item.이름, item.영문명, item.무게, item.전용].join(' '),
+      text: [data.category, data.type, section.title, section.grade, item.이름, item.영문명, item.무게, item.전용].join(' '),
     })),
   )
 }

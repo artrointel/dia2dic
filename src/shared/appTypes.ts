@@ -36,7 +36,7 @@ export type FilterType = 'socket' | 'equipment' | 'rune' | 'option' | 'ladder'
 export type SortType = 'level-asc' | 'level-desc' | 'socket-asc' | 'socket-desc'
 export type NormalItemCategory = '투구' | '갑옷' | '장갑' | '벨트' | '신발' | '무기' | '방패' | '목걸이' | '반지'
 export type NormalItemGradeFilter = '전체' | '노멀' | '익셉셔널' | '엘리트'
-export type NormalShieldTypeFilter = '일반 방패' | '팔라딘 방패'
+export type NormalShieldTypeFilter = '일반 방패' | '팔라딘 방패' | '네크로맨서 방패'
 export type NormalWeaponTypeFilter =
   | '단도'
   | '도검'
@@ -305,6 +305,7 @@ export type ArmorBases = {
     url: string
   }
   category: string
+  type?: string
   notes: string[]
   sections: ArmorBaseSection[]
 }
