@@ -1057,8 +1057,8 @@
     "sourceUrl": "https://tradia.me/diablo2/item/746476"
   },
   {
-    "id": "43-이유있는-항변-voice-of-reason-도검-sword-철퇴-mace",
-    "이름": "이유있는 항변(Voice of Reason)",
+    "id": "43-이성의-목소리-voice-of-reason-도검-sword-철퇴-mace",
+    "이름": "이성의 목소리[Voice of Reason, 구: 이유있는 항변]",
     "렙제": 43,
     "소켓 수": 4,
     "장비": "도검(Sword)/철퇴(Mace)",
@@ -1510,7 +1510,8 @@
     ],
     "버전": [
       "2.6 신규 룬워드",
-      "래더 전용"
+      "한시적 비래더 전용",
+      "사기적인 성능으로 비래더 전용 전환"
     ],
     "options": [
       "필살기가 충전을 소모하지 않을 확률 +50%",
@@ -1531,7 +1532,7 @@
     "이름": "경계(Vigilance)",
     "렙제": 53,
     "소켓 수": 2,
-    "장비": "악마술사 전용 방패(Demonologist Shield)/방패(Shield)/네크 전용 방패(Necromancer Shield)/팔라딘 전용 방패(Paladin Shield)",
+    "장비": "모든 방패(Shield)/악마술사 전용 방패(Demonologist Shield)/네크 전용 방패(Necromancer Shield)/팔라딘 전용 방패(Paladin Shield)",
     "룬조합": [
       "돌+굴",
       "(Dol+Gul)"

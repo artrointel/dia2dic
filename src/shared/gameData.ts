@@ -148,6 +148,8 @@ export const EQUIPMENT_FILTER_GROUPS = [
   },
 ]
 
+const hiddenEquipmentFilterTypes = new Set(['모든 방패(Shield)'])
+
 export function getRunewordEquipment(item: Runeword) {
   return item.장비 ?? item['방어구 부위'] ?? ''
 }
@@ -160,7 +162,7 @@ export function splitEquipmentTypes(equipment: string) {
 }
 
 export function groupEquipmentTypes(equipmentTypes: string[]) {
-  const availableTypes = new Set(equipmentTypes)
+  const availableTypes = new Set(equipmentTypes.filter((equipmentType) => !hiddenEquipmentFilterTypes.has(equipmentType)))
   const groupedTypes = new Set<string>()
   const groups = EQUIPMENT_FILTER_GROUPS.map((group) => {
     const items = group.items.filter((item) => availableTypes.has(item))
@@ -168,7 +170,7 @@ export function groupEquipmentTypes(equipmentTypes: string[]) {
 
     return { ...group, items }
   }).filter((group) => group.items.length > 0)
-  const etcItems = equipmentTypes.filter((item) => !groupedTypes.has(item))
+  const etcItems = equipmentTypes.filter((item) => !groupedTypes.has(item) && !hiddenEquipmentFilterTypes.has(item))
 
   return etcItems.length > 0 ? [...groups, { label: '기타', items: etcItems }] : groups
 }

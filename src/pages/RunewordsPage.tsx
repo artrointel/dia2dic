@@ -86,6 +86,8 @@ const runewordSortOptions: Array<{ value: SortType; label: string }> = [
   { value: 'socket-desc', label: '소켓수 내림차순' },
 ]
 
+const hiddenEquipmentFilterTypes = new Set(['모든 방패(Shield)'])
+
 const runewordMercenaryRecommendations: Record<string, RecommendationInfo> = {
   통찰: {
     tag: '용병',
@@ -145,7 +147,7 @@ function splitEquipmentTypes(equipment: string) {
 }
 
 function groupEquipmentTypes(equipmentTypes: string[]) {
-  const availableTypes = new Set(equipmentTypes)
+  const availableTypes = new Set(equipmentTypes.filter((equipmentType) => !hiddenEquipmentFilterTypes.has(equipmentType)))
   const groupedTypes = new Set<string>()
   const groups = EQUIPMENT_FILTER_GROUPS.map((group) => {
     const items = group.items.filter((item) => availableTypes.has(item))
@@ -153,7 +155,7 @@ function groupEquipmentTypes(equipmentTypes: string[]) {
 
     return { ...group, items }
   }).filter((group) => group.items.length > 0)
-  const etcItems = equipmentTypes.filter((item) => !groupedTypes.has(item))
+  const etcItems = equipmentTypes.filter((item) => !groupedTypes.has(item) && !hiddenEquipmentFilterTypes.has(item))
 
   return etcItems.length > 0 ? [...groups, { label: '기타', items: etcItems }] : groups
 }
@@ -167,6 +169,8 @@ function createFilter(next: Partial<RunewordFilter> = {}): RunewordFilter {
     socketMin: '',
     socketMax: '',
     equipmentType: '',
+    ladderExcluded: false,
+    ladderIncluded: true,
     text: '',
     ...next,
   }
@@ -231,7 +235,11 @@ export function RunewordsPage() {
 
       if (filter.type === 'equipment') {
         rows = filter.equipmentType
-          ? rows.filter((item) => splitEquipmentTypes(getRunewordEquipment(item)).includes(filter.equipmentType))
+          ? rows.filter((item) =>
+              splitEquipmentTypes(getRunewordEquipment(item)).some((equipmentType) =>
+                runewordEquipmentFilterMatches(filter.equipmentType, equipmentType),
+              ),
+            )
           : rows
         return
       }
@@ -242,7 +250,15 @@ export function RunewordsPage() {
       }
 
       if (filter.type === 'ladder') {
-        rows = rows.filter((item) => item.버전.some((version) => version.replace(/\s+/g, '').includes('래더전용')))
+        if (!filter.ladderIncluded && !filter.ladderExcluded) {
+          return
+        }
+
+        rows = rows.filter((item) => {
+          const ladderOnly = isLadderOnlyRuneword(item)
+
+          return (filter.ladderIncluded && ladderOnly) || (filter.ladderExcluded && !ladderOnly)
+        })
         return
       }
 
@@ -383,7 +399,9 @@ function resolveRunewordSearchState(query: string): {
 
   const matchingEquipmentType = [
     ...new Set(runewords.flatMap((item) => splitEquipmentTypes(getRunewordEquipment(item)))),
-  ].find((equipmentType) => searchItemsByQuery([equipmentType], trimmedQuery, (item) => item).length > 0)
+  ]
+    .filter((equipmentType) => !hiddenEquipmentFilterTypes.has(equipmentType))
+    .find((equipmentType) => searchItemsByQuery([equipmentType], trimmedQuery, (item) => item).length > 0)
 
   if (matchingEquipmentType) {
     return {
@@ -720,6 +738,32 @@ function hasDefenseIncreaseOption(item: Runeword) {
   return item.options.some((option) => option.includes('방어력') && option.includes('증가'))
 }
 
+function isLadderOnlyVersion(version: string) {
+  const normalizedVersion = version.replace(/\s+/g, '')
+
+  return normalizedVersion.includes('래더전용') && !normalizedVersion.includes('비래더전용')
+}
+
+function isLadderOnlyRuneword(item: Runeword) {
+  return item.버전.some(isLadderOnlyVersion)
+}
+
+function runewordEquipmentFilterMatches(filterType: string, equipmentType: string) {
+  if (filterType === equipmentType) {
+    return true
+  }
+
+  if (filterType === '방패(Shield)' && equipmentType === '모든 방패(Shield)') {
+    return true
+  }
+
+  if (filterType === '모든 방패(Shield)' && equipmentType.includes('방패(')) {
+    return true
+  }
+
+  return false
+}
+
 function sortRunewordMaterialBases(left: RecommendedBaseMetadata, right: RecommendedBaseMetadata) {
   return (
     Number(right.recommended) - Number(left.recommended) ||
@@ -966,7 +1010,7 @@ function RunewordFilterRow({
         <option value="equipment">장비 부위</option>
         <option value="rune">룬</option>
         <option value="option">옵션</option>
-        <option value="ladder">래더전용</option>
+        <option value="ladder">래더 여부</option>
       </select>
 
       <div className="filter-config">
@@ -1029,7 +1073,24 @@ function RunewordFilterRow({
         )}
 
         {filter.type === 'ladder' && (
-          <span className="fixed-filter-label">래더 전용 룬워드만 표시</span>
+          <div className="ladder-state-filter">
+            <label className="ladder-state-option">
+              <input
+                checked={filter.ladderIncluded}
+                type="checkbox"
+                onChange={(event) => onUpdate({ ladderIncluded: event.target.checked })}
+              />
+              래더용
+            </label>
+            <label className="ladder-state-option">
+              <input
+                checked={filter.ladderExcluded}
+                type="checkbox"
+                onChange={(event) => onUpdate({ ladderExcluded: event.target.checked })}
+              />
+              래더제외
+            </label>
+          </div>
         )}
       </div>
 

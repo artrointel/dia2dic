@@ -162,6 +162,36 @@
   min-width: 0;
 }
 
+.ladder-state-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ladder-state-option {
+  align-items: center;
+  background: var(--search-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-strong);
+  display: inline-flex;
+  font-size: 14px;
+  font-weight: 800;
+  gap: 8px;
+  min-height: 38px;
+  padding: 0 12px;
+}
+
+.filter-row .ladder-state-option input[type='checkbox'] {
+  background: transparent;
+  border: 0;
+  flex: 0 0 auto;
+  height: 16px;
+  min-height: 0;
+  padding: 0;
+  width: 16px;
+}
+
 .range-filter {
   display: grid;
   gap: 8px;

@@ -76,6 +76,8 @@ export type RunewordFilter = {
   socketMin: string
   socketMax: string
   equipmentType: string
+  ladderExcluded: boolean
+  ladderIncluded: boolean
   text: string
 }
 
